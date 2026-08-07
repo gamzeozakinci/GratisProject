@@ -1,0 +1,64 @@
+package com.gratis.base;
+
+import com.gratis.config.ConfigReader;
+import com.gratis.driver.PlaywrightFactory;
+import com.microsoft.playwright.Page;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
+
+import java.io.File;
+import java.nio.file.Path;
+
+/**
+ * Every test class extends this. A fresh browser context + page is created per
+ * @Test method (mirrors the "clean session per scenario" precondition most of the
+ * gratis.com test cases call out, e.g. TC_001 "guest status, session cookies cleared").
+ *
+ * viewport="mobile" as a TestNG @Parameter lets TC_007 (mobile hamburger menu) reuse
+ * the same base class while running at the mobile breakpoint - see testng.xml.
+ */
+public abstract class BaseTest {
+
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected Page page;
+
+    @BeforeMethod(alwaysRun = true)
+    @Parameters("viewport")
+    public void setUp(@Optional("desktop") String viewport, ITestResult result) {
+        page = "mobile".equalsIgnoreCase(viewport)
+                ? PlaywrightFactory.initMobilePage()
+                : PlaywrightFactory.initDesktopPage();
+
+        page.navigate(ConfigReader.baseUrl());
+        log.info("Navigated to {} for test [{}] (viewport={})",
+                ConfigReader.baseUrl(), result.getMethod().getMethodName(), viewport);
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void tearDown(ITestResult result) {
+        if (result.getStatus() == ITestResult.FAILURE && ConfigReader.getBoolean("screenshot.on.failure")) {
+            takeScreenshot(result.getMethod().getMethodName());
+        }
+        PlaywrightFactory.tearDown();
+    }
+
+    private void takeScreenshot(String testName) {
+        try {
+            Path dir = Path.of(ConfigReader.get("screenshot.dir"));
+            File dirFile = dir.toFile();
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+            Path target = dir.resolve(testName + "_" + System.currentTimeMillis() + ".png");
+            page.screenshot(new Page.ScreenshotOptions().setPath(target).setFullPage(true));
+            log.warn("Test {} failed - screenshot saved to {}", testName, target);
+        } catch (Exception e) {
+            log.error("Could not capture failure screenshot for {}", testName, e);
+        }
+    }
+}
