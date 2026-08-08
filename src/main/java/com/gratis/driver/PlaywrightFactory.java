@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Owns Playwright / Browser / BrowserContext / Page per test thread.
- *
+ * <p>
  * Everything is ThreadLocal so `mvn test -DforkCount / parallel="methods"` in testng.xml
  * is safe out of the box. This is the Playwright equivalent of the
  * ThreadLocal&lt;WebDriverWait&gt; pattern used in the Selenium/Cucumber project -

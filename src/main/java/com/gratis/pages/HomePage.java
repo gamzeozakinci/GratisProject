@@ -12,7 +12,9 @@ public class HomePage extends BasePage {
         this.header = new HeaderComponent(page);
     }
 
-    /** Opens the single phone+OTP flow that handles both login and registration. */
+    /**
+     * Opens the single phone+OTP flow that handles both login and registration.
+     */
     public LoginPage goToAuth() {
         header.openLoginOrRegister();
         return new LoginPage(page);

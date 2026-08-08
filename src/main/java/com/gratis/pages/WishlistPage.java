@@ -10,9 +10,17 @@ public class WishlistPage extends BasePage {
         super(page);
     }
 
-    private Locator wishlistItems() { return page.locator(".wishlist-item"); }
-    private Locator emptyMessage() { return page.getByText("Favori listenizde ürün bulunmamaktadır."); }
-    private Locator removeIcon(int index) { return wishlistItems().nth(index).locator(".remove-icon, .heart-icon"); }
+    private Locator wishlistItems() {
+        return page.locator(".wishlist-item");
+    }
+
+    private Locator emptyMessage() {
+        return page.getByText("Favori listenizde ürün bulunmamaktadır.");
+    }
+
+    private Locator removeIcon(int index) {
+        return wishlistItems().nth(index).locator(".remove-icon, .heart-icon");
+    }
 
     public boolean containsProduct(String titleContains) {
         return wishlistItems().filter(new Locator.FilterOptions().setHasText(titleContains)).count() > 0;

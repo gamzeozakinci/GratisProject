@@ -19,24 +19,63 @@ public class PLPPage extends BasePage {
         super(page);
     }
 
-    private Locator plpHeader() { return page.locator("h1.plp-title"); }
-    private Locator breadcrumbs() { return page.locator(".breadcrumbs"); }
-    private Locator resultsCount() { return page.locator(".results-count"); }
-    private Locator noResultsMessage() { return page.getByText("Aramanıza uygun sonuç bulunamadı."); }
-    private Locator productCards() { return page.locator(".product-card"); }
-    private Locator productPrices() { return page.locator(".product-card .price"); }
+    private Locator plpHeader() {
+        return page.locator("h1.plp-title");
+    }
+
+    private Locator breadcrumbs() {
+        return page.locator(".breadcrumbs");
+    }
+
+    private Locator resultsCount() {
+        return page.locator(".results-count");
+    }
+
+    private Locator noResultsMessage() {
+        return page.getByText("Aramanıza uygun sonuç bulunamadı.");
+    }
+
+    private Locator productCards() {
+        return page.locator(".product-card");
+    }
+
+    private Locator productPrices() {
+        return page.locator(".product-card .price");
+    }
 
     // Filters
-    private Locator brandFilterAccordion() { return page.getByText("Marka"); }
-    private Locator brandCheckbox(String brand) { return page.locator("label").filter(new Locator.FilterOptions().setHasText(brand)); }
-    private Locator priceFilterAccordion() { return page.getByText("Fiyat"); }
-    private Locator priceMinInput() { return page.locator("input[name='priceMin']"); }
-    private Locator priceMaxInput() { return page.locator("input[name='priceMax']"); }
-    private Locator applyPriceButton() { return page.getByText("Uygula"); }
-    private Locator activeFilterBadges() { return page.locator(".filter-badge"); }
+    private Locator brandFilterAccordion() {
+        return page.getByText("Marka");
+    }
+
+    private Locator brandCheckbox(String brand) {
+        return page.locator("label").filter(new Locator.FilterOptions().setHasText(brand));
+    }
+
+    private Locator priceFilterAccordion() {
+        return page.getByText("Fiyat");
+    }
+
+    private Locator priceMinInput() {
+        return page.locator("input[name='priceMin']");
+    }
+
+    private Locator priceMaxInput() {
+        return page.locator("input[name='priceMax']");
+    }
+
+    private Locator applyPriceButton() {
+        return page.getByText("Uygula");
+    }
+
+    private Locator activeFilterBadges() {
+        return page.locator(".filter-badge");
+    }
 
     // Sort
-    private Locator sortDropdown() { return page.locator(".sort-dropdown, select[name='sort']"); }
+    private Locator sortDropdown() {
+        return page.locator(".sort-dropdown, select[name='sort']");
+    }
 
     public String headerText() {
         return plpHeader().innerText().trim();
