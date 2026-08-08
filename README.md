@@ -62,6 +62,17 @@ All environment/test-data values live in `src/test/resources/config.properties`
 (base URL, browser, headless flag, viewport sizes, known test accounts, promo codes,
 mock OTP). Override any key at the CLI, e.g. `mvn test -Dbrowser=firefox -Dheadless=false`.
 
+`config.properties` is gitignored because `registered.phone.number` ends up holding a
+real phone number once you're testing against your own account. First-time setup:
+
+```bash
+cp src/test/resources/config.properties.example src/test/resources/config.properties
+# then fill in registered.phone.number (and anything else) with your real test values
+```
+
+`config.properties.example` (committed, placeholders only) stays in sync with whatever
+keys the framework actually reads — update both files together when you add a key.
+
 ## Auth Flow (verified against the live site)
 
 gratis.com does **not** have an email/password form, and there is no separate
