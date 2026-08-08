@@ -26,10 +26,10 @@ src/main/java/com/gratis/
 ├── base/        BasePage (common Playwright actions), BaseTest (TestNG lifecycle)
 ├── config/      ConfigReader (loads config.properties)
 ├── driver/      PlaywrightFactory (ThreadLocal browser/context/page per test thread)
-├── pages/       Page Objects: HeaderComponent, HomePage, RegisterPage, LoginPage,
-│                ForgotPasswordPage, PLPPage, PDPPage, WishlistPage, CartPage,
-│                CheckoutPage, OrderPage
-└── utils/       Constants (payloads, group names), TestDataGenerator (unique emails/phones)
+├── pages/       Page Objects: HeaderComponent, HomePage, LoginPage (handles both
+│                login AND registration - see "Auth Flow" below), PLPPage, PDPPage,
+│                WishlistPage, CartPage, CheckoutPage, OrderPage
+└── utils/       Constants (payloads, group names), TestDataGenerator (unique phone numbers)
 
 src/test/java/com/gratis/tests/
 ├── RegistrationTests.java   TC_001, TC_002
@@ -62,6 +62,31 @@ All environment/test-data values live in `src/test/resources/config.properties`
 (base URL, browser, headless flag, viewport sizes, known test accounts, promo codes,
 mock OTP). Override any key at the CLI, e.g. `mvn test -Dbrowser=firefox -Dheadless=false`.
 
+## Auth Flow (verified against the live site)
+
+gratis.com does **not** have an email/password form, and there is no separate
+registration page or "forgot password" flow. Opening "Üye olun ya da Giriş Yapın"
+shows a single screen ("Giriş Yap / Üye Ol - Telefon numaranızla giriş yapabilir ya da
+yeni bir hesap oluşturabilirsiniz") that takes a phone number, then an OTP code, and
+transparently creates the account on first use or logs an existing number straight in.
+
+This was confirmed by opening the live flow in a browser, not inferred from a spec, so
+`LoginPage` (phone + OTP), `HomePage.goToAuth()`, `RegistrationTests` (TC_001, TC_002)
+and `LoginTests` (TC_003-TC_005) are built directly against it. Two deliberate scope
+changes from a typical email/password suite:
+
+- **No `RegisterPage`** - registration and login are the same form/flow, so both test
+  classes share `LoginPage`.
+- **No `ForgotPasswordPage`** - there's no password to forget. TC_005 was repurposed
+  from "forgot password" to "an invalid phone number format blocks 'DEVAM ET'
+  before an OTP is ever sent," which is the closest equivalent negative case this
+  auth mechanism actually has.
+
+The exact input/button selectors in `LoginPage` are still best-effort (see the section
+below) - only the *flow itself* (phone → OTP → logged in) is DOM-verified. `mock.otp` in
+`config.properties` assumes a test/sandbox environment where OTP codes are predictable;
+a real SMS round-trip needs a provider API (Twilio, etc.) wired into the fixture instead.
+
 ## ⚠️ Important: Locators Need Verification Against the Live DOM
 
 This framework was built directly from a **written test case specification**
@@ -86,15 +111,18 @@ detail.
 ## Assumptions & Fixture Data
 
 Several test cases assume backend state that a UI-only framework can't create on the
-fly (an existing account, seeded in/out-of-stock products, an active promo code, a
-cart pre-loaded with 100 TL of goods). These are documented per-test as comments and
-centralized in `config.properties` — replace the placeholder values/slugs with your
-test environment's real seeded data or a `@BeforeMethod` API/DB setup call.
+fly (an existing account reachable at `registered.phone.number`, seeded in/out-of-stock
+products, an active promo code, a cart pre-loaded with 100 TL of goods). These are
+documented per-test as comments and centralized in `config.properties` — replace the
+placeholder values/slugs with your test environment's real seeded data or a
+`@BeforeMethod` API/DB setup call.
 
 ## Out of Scope / Future Work
 
-- **Email verification** (TC_005 reset link, TC_030 confirmation email) needs a
-  mailbox API such as Mailinator's REST API — not implemented here.
+- **Real OTP/SMS delivery** (TC_001-TC_005 login/registration, TC_028 3D Secure) and
+  **email verification** (TC_030 order confirmation) need a real SMS provider API and
+  a mailbox API (e.g. Mailinator's REST API) respectively — not implemented here;
+  `mock.otp` in `config.properties` stands in for a sandboxed/predictable OTP.
 - **DB/API assertions** (e.g. TC_001 checking `/api/auth/register` returns a JWT,
   TC_028 checking order status = `PAID` in the database) need either Playwright's
   `page.waitForResponse()` for the network layer, or a DB connector for backend

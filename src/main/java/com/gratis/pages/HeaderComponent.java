@@ -127,7 +127,7 @@ public class HeaderComponent extends BasePage {
     }
 
     public void clickMegaMenuLink(String linkText) {
-        click(page.getByText(linkText, new Locator.GetByTextOptions().setExact(true)));
+        click(page.getByText(linkText, new Page.GetByTextOptions().setExact(true)));
     }
 
     public void tapMobileMenuItem(String label) {

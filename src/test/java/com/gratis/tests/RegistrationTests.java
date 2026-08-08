@@ -3,51 +3,47 @@ package com.gratis.tests;
 import com.gratis.base.BaseTest;
 import com.gratis.config.ConfigReader;
 import com.gratis.pages.HomePage;
-import com.gratis.pages.RegisterPage;
+import com.gratis.pages.LoginPage;
 import com.gratis.utils.Constants;
 import com.gratis.utils.TestDataGenerator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * gratis.com has no separate registration form: "Giriş Yap / Üye Ol" is a single
+ * phone-number + OTP flow that creates the account on first use. TC_001/TC_002 exercise
+ * that flow through LoginPage rather than a dedicated RegisterPage - see README "Auth Flow".
+ */
 public class RegistrationTests extends BaseTest {
 
-    @Test(description = "TC_001 - User Registration with Valid Details",
+    @Test(description = "TC_001 - Registering with a brand-new phone number completes the OTP flow and logs the user in",
             groups = {Constants.GROUP_SMOKE, Constants.GROUP_LOGIN})
-    public void registerWithValidDetails() {
+    public void newPhoneNumberCompletesRegistration() {
         HomePage home = new HomePage(page);
-        RegisterPage registerPage = home.goToRegister();
+        LoginPage loginPage = home.goToAuth();
 
-        String email = TestDataGenerator.uniqueEmail();
-        String phone = TestDataGenerator.turkishMobile("555");
-        String password = TestDataGenerator.validPassword();
+        loginPage.enterPhoneNumber(TestDataGenerator.uniquePhoneNumber());
+        loginPage.submitPhoneNumber();
+        loginPage.enterOtp(ConfigReader.get("mock.otp"));
+        HomePage postAuth = loginPage.submitOtp();
 
-        registerPage.fillForm("Ayşe", "Yılmaz", email, phone, password);
-        registerPage.acceptAllAgreements();
-        registerPage.submit();
-        registerPage.completeOtp(ConfigReader.get("mock.otp"));
-
-        Assert.assertTrue(registerPage.isSuccessToastVisible(), "Success toast should appear after registration");
-        Assert.assertTrue(registerPage.successToastText().contains("başarıyla"),
-                "Toast should confirm the membership was created");
-        Assert.assertTrue(home.isOnHomepage(), "User should be redirected to the homepage");
-        Assert.assertTrue(home.header.isUserLoggedIn("Ayşe"), "Header should show the user's first name after registration");
+        Assert.assertFalse(loginPage.isErrorVisible(),
+                "No error should be shown after submitting a valid OTP for a brand-new number");
+        Assert.assertTrue(postAuth.header.isUserLoggedIn("Hesabım"),
+                "Header should show the account entry point after a successful sign-up");
     }
 
-    @Test(description = "TC_002 - User Registration with Existing Email Address (Negative)",
+    @Test(description = "TC_002 - An already-registered phone number routes through the same OTP login, not a duplicate signup",
             groups = {Constants.GROUP_SMOKE, Constants.GROUP_LOGIN})
-    public void registerWithExistingEmailIsBlocked() {
+    public void existingPhoneNumberRoutesToLogin() {
         HomePage home = new HomePage(page);
-        RegisterPage registerPage = home.goToRegister();
+        LoginPage loginPage = home.goToAuth();
 
-        registerPage.fillForm("Fatma", "Kaya", ConfigReader.get("existing.user.email"),
-                TestDataGenerator.turkishMobile("505"), "ValidPass123!");
-        registerPage.acceptAllAgreements();
-        registerPage.submit();
+        loginPage.enterPhoneNumber(ConfigReader.get("registered.phone.number"));
+        loginPage.submitPhoneNumber();
 
-        Assert.assertTrue(registerPage.emailErrorText().contains("kayıtlı bir hesap bulunmaktadır"),
-                "Error should state the account already exists");
-        Assert.assertTrue(registerPage.isPasswordFieldStillFilled(),
-                "Password field should remain filled (masked) after the failed submission");
-        Assert.assertFalse(home.isOnHomepage(), "User should not be redirected on a blocked registration");
+        Assert.assertFalse(loginPage.isErrorVisible(),
+                "Gratis merges login/registration behind one phone+OTP form, so an existing " +
+                        "number should also reach the OTP step, not a 'duplicate account' error");
     }
 }

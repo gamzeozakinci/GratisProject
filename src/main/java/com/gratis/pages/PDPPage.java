@@ -25,7 +25,7 @@ public class PDPPage extends BasePage {
     private Locator wishlistToast() { return page.getByText("Ürün favorilerinize eklenmiştir."); }
     private Locator loginPromptModal() { return page.locator(".auth-modal, .login-modal"); }
     private Locator loginPromptMessage() { return page.getByText("Favorilerinize ürün eklemek için giriş yapmalısınız."); }
-    private Locator accordionTab(String label) { return page.getByText(label, new Locator.GetByTextOptions().setExact(true)); }
+    private Locator accordionTab(String label) { return page.getByText(label, new Page.GetByTextOptions().setExact(true)); }
 
     public String title() {
         return textOf(productTitle());

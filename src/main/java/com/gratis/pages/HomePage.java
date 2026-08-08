@@ -1,7 +1,6 @@
 package com.gratis.pages;
 
 import com.gratis.base.BasePage;
-import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
 public class HomePage extends BasePage {
@@ -13,15 +12,9 @@ public class HomePage extends BasePage {
         this.header = new HeaderComponent(page);
     }
 
-    public RegisterPage goToRegister() {
+    /** Opens the single phone+OTP flow that handles both login and registration. */
+    public LoginPage goToAuth() {
         header.openLoginOrRegister();
-        click(page.getByText("Üye Ol", new Locator.GetByTextOptions().setExact(true)));
-        return new RegisterPage(page);
-    }
-
-    public LoginPage goToLogin() {
-        header.openLoginOrRegister();
-        click(page.getByText("Giriş Yap", new Locator.GetByTextOptions().setExact(true)));
         return new LoginPage(page);
     }
 

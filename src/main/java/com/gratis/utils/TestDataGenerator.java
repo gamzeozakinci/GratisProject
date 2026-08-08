@@ -1,12 +1,10 @@
 package com.gratis.utils;
 
-import java.time.Instant;
 import java.util.Random;
 
 /**
  * Generates unique-per-run test data so tests like TC_001 (registration) are
- * re-runnable without manual DB cleanup. Mirrors the placeholder conventions in
- * the source test case doc: "{random_timestamp}", "{random_7_digits}".
+ * re-runnable without manual DB cleanup.
  */
 public final class TestDataGenerator {
 
@@ -15,22 +13,18 @@ public final class TestDataGenerator {
     private TestDataGenerator() {
     }
 
-    /** e.g. qa_gratis_test_1723027200000@mailinator.com (TC_001) */
-    public static String uniqueEmail() {
-        return "qa_gratis_test_" + Instant.now().toEpochMilli() + "@mailinator.com";
-    }
-
-    /** e.g. 555XXXXXXX - valid Turkish mobile prefix + 7 random digits (TC_001) */
-    public static String turkishMobile(String prefix) {
-        StringBuilder sb = new StringBuilder(prefix);
+    /**
+     * A syntactically valid, freshly-random Turkish mobile number (5XX XXX XX XX,
+     * no leading 0/country code - matches the "0(5 )" phone field on gratis.com).
+     * Not guaranteed to be deliverable/receive a real OTP; swap for a provisioned
+     * test-SIM number if the target environment requires a real SMS round-trip.
+     */
+    public static String uniquePhoneNumber() {
+        int operatorPrefix = 30 + RANDOM.nextInt(30); // 5(30-59)... covers most TR mobile ranges
+        StringBuilder subscriberNumber = new StringBuilder();
         for (int i = 0; i < 7; i++) {
-            sb.append(RANDOM.nextInt(10));
+            subscriberNumber.append(RANDOM.nextInt(10));
         }
-        return sb.toString();
-    }
-
-    /** Meets: 1 upper, 1 lower, 1 digit, 1 special char, min 8 chars (TC_001 rule) */
-    public static String validPassword() {
-        return "GratisTest" + (2000 + RANDOM.nextInt(100)) + "!";
+        return "5" + operatorPrefix + subscriberNumber; // 10 digits total: 5XX XXX XX XX
     }
 }
