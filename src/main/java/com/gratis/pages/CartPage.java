@@ -39,7 +39,7 @@ public class CartPage extends BasePage {
 
     public void increaseQuantity(int rowIndex, int times) {
         for (int i = 0; i < times; i++) {
-            click(quantityIncrease(rowIndex));
+            quantityIncrease(rowIndex).click();
         }
     }
 
@@ -50,43 +50,43 @@ public class CartPage extends BasePage {
     }
 
     public boolean isStockLimitToastVisible() {
-        return isVisible(stockLimitToast());
+        return stockLimitToast().isVisible();
     }
 
     public boolean isDeleteConfirmPopupVisible() {
-        return isVisible(deleteConfirmPopup());
+        return deleteConfirmPopup().isVisible();
     }
 
     public void removeItem(int rowIndex) {
-        click(deleteIcon(rowIndex));
-        if (isVisible(confirmDeleteButton())) {
-            click(confirmDeleteButton());
+        deleteIcon(rowIndex).click();
+        if (confirmDeleteButton().isVisible()) {
+            confirmDeleteButton().click();
         }
     }
 
-    public String subtotalText() { return textOf(subtotal()); }
-    public String shippingFeeText() { return textOf(shippingFee()); }
-    public String grandTotalText() { return textOf(grandTotal()); }
+    public String subtotalText() { return subtotal().innerText().trim(); }
+    public String shippingFeeText() { return shippingFee().innerText().trim(); }
+    public String grandTotalText() { return grandTotal().innerText().trim(); }
 
     public void applyPromoCode(String code) {
-        type(promoCodeInput(), code);
-        click(promoApplyButton());
+        promoCodeInput().fill(code);
+        promoApplyButton().click();
     }
 
     public boolean isPromoSuccessVisible() {
-        return isVisible(promoSuccessIndicator());
+        return promoSuccessIndicator().isVisible();
     }
 
     public boolean isPromoErrorVisible() {
-        return isVisible(promoErrorMessage());
+        return promoErrorMessage().isVisible();
     }
 
     public String couponDiscountText() {
-        return textOf(couponDiscountLine());
+        return couponDiscountLine().innerText().trim();
     }
 
     public CheckoutPage proceedToCheckout() {
-        click(page.getByText("Ödemeye Geç"));
+        page.getByText("Ödemeye Geç").click();
         return new CheckoutPage(page);
     }
 }

@@ -23,22 +23,22 @@ public class OrderPage extends BasePage {
     private Locator detailShippingMethod() { return page.locator(".order-detail-shipping-method"); }
 
     public boolean isOrderListed(String orderId) {
-        return isVisible(orderRow(orderId));
+        return orderRow(orderId).isVisible();
     }
 
     public void openOrderDetail(String orderId) {
-        click(orderDetailButton(orderId));
+        orderDetailButton(orderId).click();
     }
 
     public String detailProductsText() {
-        return textOf(detailProductList());
+        return detailProductList().innerText().trim();
     }
 
     public String detailAddressText() {
-        return textOf(detailAddress());
+        return detailAddress().innerText().trim();
     }
 
     public String detailShippingMethodText() {
-        return textOf(detailShippingMethod());
+        return detailShippingMethod().innerText().trim();
     }
 }

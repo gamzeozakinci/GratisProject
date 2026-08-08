@@ -43,77 +43,77 @@ public class CheckoutPage extends BasePage {
     private Locator paymentFailureBanner() { return page.locator(".payment-error-banner"); }
 
     // Shipping actions
-    public void chooseStorePickup() { click(storePickupOption()); }
-    public void chooseHomeDelivery() { click(homeDeliveryOption()); }
+    public void chooseStorePickup() { storePickupOption().click(); }
+    public void chooseHomeDelivery() { homeDeliveryOption().click(); }
 
     public void selectStore(String city, String district, String storeName) {
         citySelect().selectOption(new SelectOption().setLabel(city));
         districtSelect().selectOption(new SelectOption().setLabel(district));
-        click(storeListItem(storeName));
+        storeListItem(storeName).click();
     }
 
     public String shippingFeeText() {
-        return textOf(shippingFeeSummaryRow());
+        return shippingFeeSummaryRow().innerText().trim();
     }
 
     public void addNewAddress(String title, String city, String district, String neighborhood,
                                String fullAddress, String zip) {
-        click(addNewAddressButton());
-        type(addressTitleInput(), title);
+        addNewAddressButton().click();
+        addressTitleInput().fill(title);
         citySelect().selectOption(new SelectOption().setLabel(city));
         districtSelect().selectOption(new SelectOption().setLabel(district));
-        type(neighborhoodInput(), neighborhood);
-        type(fullAddressInput(), fullAddress);
-        type(zipCodeInput(), zip);
-        click(saveAddressButton());
+        neighborhoodInput().fill(neighborhood);
+        fullAddressInput().fill(fullAddress);
+        zipCodeInput().fill(zip);
+        saveAddressButton().click();
     }
 
     public void selectSavedAddress(String title) {
-        click(addressCard(title));
+        addressCard(title).click();
     }
 
     public void continueToPayment() {
-        click(continueToPaymentButton());
+        continueToPaymentButton().click();
     }
 
     // Payment actions
-    public void choosePayWithCard() { click(payWithCardOption()); }
+    public void choosePayWithCard() { payWithCardOption().click(); }
 
     public void fillCardDetails(String name, String number, String expiry, String cvcValue) {
-        type(cardholderName(), name);
-        type(cardNumber(), number);
-        type(expiryDate(), expiry);
-        type(cvc(), cvcValue);
+        cardholderName().fill(name);
+        cardNumber().fill(number);
+        expiryDate().fill(expiry);
+        cvc().fill(cvcValue);
     }
 
     public void acceptLegalAgreement() {
-        click(legalAgreementCheckbox());
+        legalAgreementCheckbox().click();
     }
 
     public void pay() {
-        click(payButton());
+        payButton().click();
     }
 
     public void completeThreeDSecure(String otpCode) {
         otpInput().waitFor();
-        type(otpInput(), otpCode);
-        click(otpConfirmButton());
+        otpInput().fill(otpCode);
+        otpConfirmButton().click();
     }
 
     public boolean isOrderSuccessVisible() {
-        return isVisible(orderReceivedHeading());
+        return orderReceivedHeading().isVisible();
     }
 
     public String orderId() {
-        return textOf(orderIdText());
+        return orderIdText().innerText().trim();
     }
 
     public boolean isPaymentFailureBannerVisible() {
-        return isVisible(paymentFailureBanner());
+        return paymentFailureBanner().isVisible();
     }
 
     public String paymentFailureText() {
-        return textOf(paymentFailureBanner());
+        return paymentFailureBanner().innerText().trim();
     }
 
     public boolean isStillOnPaymentPage() {

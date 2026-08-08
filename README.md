@@ -23,7 +23,8 @@ JMeter project).
 
 ```
 src/main/java/com/gratis/
-├── base/        BasePage (common Playwright actions), BaseTest (TestNG lifecycle)
+├── base/        BasePage (just the shared Page + logger - Page Objects call
+│                Playwright's own Locator/Page methods directly), BaseTest (TestNG lifecycle)
 ├── config/      ConfigReader (loads config.properties)
 ├── driver/      PlaywrightFactory (ThreadLocal browser/context/page per test thread)
 ├── pages/       Page Objects: HeaderComponent, HomePage, LoginPage (handles both

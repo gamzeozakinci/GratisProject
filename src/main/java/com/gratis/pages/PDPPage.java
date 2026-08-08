@@ -28,7 +28,7 @@ public class PDPPage extends BasePage {
     private Locator accordionTab(String label) { return page.getByText(label, new Page.GetByTextOptions().setExact(true)); }
 
     public String title() {
-        return textOf(productTitle());
+        return productTitle().innerText().trim();
     }
 
     public boolean isAddToCartEnabled() {
@@ -36,22 +36,22 @@ public class PDPPage extends BasePage {
     }
 
     public boolean isOutOfStockLabelVisible() {
-        return isVisible(outOfStockLabel());
+        return outOfStockLabel().isVisible();
     }
 
     public void selectQuantity(int qty) {
         for (int i = 1; i < qty; i++) {
-            click(quantityIncrease());
+            quantityIncrease().click();
         }
     }
 
     public void addToCart() {
-        click(addToCartButton());
+        addToCartButton().click();
         addedToCartLabel().waitFor();
     }
 
     public void clickThumbnail(int index) {
-        click(thumbnails().nth(index));
+        thumbnails().nth(index).click();
     }
 
     public boolean isThumbnailHighlighted(int index) {
@@ -60,7 +60,7 @@ public class PDPPage extends BasePage {
     }
 
     public void toggleWishlist() {
-        click(wishlistHeartButton());
+        wishlistHeartButton().click();
     }
 
     public boolean isWishlistHeartFilled() {
@@ -69,18 +69,18 @@ public class PDPPage extends BasePage {
     }
 
     public boolean isWishlistToastVisible() {
-        return isVisible(wishlistToast());
+        return wishlistToast().isVisible();
     }
 
     public boolean isLoginPromptVisible() {
-        return isVisible(loginPromptModal()) || currentUrl().contains("/login");
+        return loginPromptModal().isVisible() || currentUrl().contains("/login");
     }
 
     public String loginPromptMessageText() {
-        return textOf(loginPromptMessage());
+        return loginPromptMessage().innerText().trim();
     }
 
     public void openAccordionTab(String label) {
-        click(accordionTab(label));
+        accordionTab(label).click();
     }
 }

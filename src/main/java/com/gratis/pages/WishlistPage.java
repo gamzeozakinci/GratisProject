@@ -19,10 +19,10 @@ public class WishlistPage extends BasePage {
     }
 
     public void removeFirstItem() {
-        click(removeIcon(0));
+        removeIcon(0).click();
     }
 
     public boolean isEmptyStateVisible() {
-        return isVisible(emptyMessage());
+        return emptyMessage().isVisible();
     }
 }

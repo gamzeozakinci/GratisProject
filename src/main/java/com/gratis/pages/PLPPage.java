@@ -39,19 +39,19 @@ public class PLPPage extends BasePage {
     private Locator sortDropdown() { return page.locator(".sort-dropdown, select[name='sort']"); }
 
     public String headerText() {
-        return textOf(plpHeader());
+        return plpHeader().innerText().trim();
     }
 
     public String breadcrumbText() {
-        return textOf(breadcrumbs());
+        return breadcrumbs().innerText().trim();
     }
 
     public boolean isNoResultsMessageVisible() {
-        return isVisible(noResultsMessage());
+        return noResultsMessage().isVisible();
     }
 
     public String resultsCountText() {
-        return isVisible(resultsCount()) ? textOf(resultsCount()) : "";
+        return resultsCount().isVisible() ? resultsCount().innerText().trim() : "";
     }
 
     public int productCount() {
@@ -72,15 +72,15 @@ public class PLPPage extends BasePage {
     }
 
     public void filterByBrand(String brand) {
-        click(brandFilterAccordion());
-        click(brandCheckbox(brand));
+        brandFilterAccordion().click();
+        brandCheckbox(brand).click();
     }
 
     public void filterByPriceRange(String min, String max) {
-        click(priceFilterAccordion());
-        type(priceMinInput(), min);
-        type(priceMaxInput(), max);
-        click(applyPriceButton());
+        priceFilterAccordion().click();
+        priceMinInput().fill(min);
+        priceMaxInput().fill(max);
+        applyPriceButton().click();
     }
 
     public List<String> activeFilterBadgeTexts() {
@@ -93,15 +93,15 @@ public class PLPPage extends BasePage {
     }
 
     public void openProductCard(int index) {
-        click(productCards().nth(index));
+        productCards().nth(index).click();
     }
 
     public void openProductCard(String titleContains) {
-        click(page.locator(".product-card").filter(new Locator.FilterOptions().setHasText(titleContains)).first());
+        page.locator(".product-card").filter(new Locator.FilterOptions().setHasText(titleContains)).first().click();
     }
 
     public void addFirstProductToCart() {
-        click(productCards().first().getByRole(AriaRole.BUTTON,
-                new Locator.GetByRoleOptions().setName("Sepete Ekle")));
+        productCards().first().getByRole(AriaRole.BUTTON,
+                new Locator.GetByRoleOptions().setName("Sepete Ekle")).click();
     }
 }

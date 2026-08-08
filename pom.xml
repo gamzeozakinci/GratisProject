@@ -10,7 +10,9 @@
     <packaging>jar</packaging>
 
     <name>Gratis.com Playwright + TestNG Automation Framework</name>
-    <description>UI + light API automation for gratis.com covering Auth, Navigation, Search, Catalog, Cart and Checkout modules.</description>
+    <description>UI + light API automation for gratis.com covering Auth, Navigation, Search, Catalog, Cart and Checkout
+        modules.
+    </description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
