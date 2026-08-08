@@ -7,7 +7,7 @@ import com.microsoft.playwright.Page;
 /**
  * The header/nav is present on almost every page, so it's modeled as a component
  * rather than duplicated inside HomePage/PLPPage/PDPPage/CartPage.
- *
+ * <p>
  * NOTE ON LOCATORS: selectors below are written from the acceptance-criteria text in
  * the source test case doc (element names, Turkish labels) since this framework was
  * built against the spec rather than a live DOM inspection session. Swap the raw

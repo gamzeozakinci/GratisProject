@@ -18,9 +18,17 @@ public class OrderPage extends BasePage {
         return orderRow(orderId).getByText("Sipariş Detayı");
     }
 
-    private Locator detailProductList() { return page.locator(".order-detail-products"); }
-    private Locator detailAddress() { return page.locator(".order-detail-address"); }
-    private Locator detailShippingMethod() { return page.locator(".order-detail-shipping-method"); }
+    private Locator detailProductList() {
+        return page.locator(".order-detail-products");
+    }
+
+    private Locator detailAddress() {
+        return page.locator(".order-detail-address");
+    }
+
+    private Locator detailShippingMethod() {
+        return page.locator(".order-detail-shipping-method");
+    }
 
     public boolean isOrderListed(String orderId) {
         return orderRow(orderId).isVisible();

@@ -64,7 +64,9 @@ public class LoginPage extends BasePage {
         otpSubmitButton().click();
     }
 
-    /** Convenience for tests/fixtures that only care about ending up logged in. */
+    /**
+     * Convenience for tests/fixtures that only care about ending up logged in.
+     */
     public HomePage loginOrRegisterWithPhone(String phone, String otp) {
         enterPhoneNumber(phone);
         submitPhoneNumber();
