@@ -40,11 +40,11 @@ public class LoginPage extends BasePage {
     }
 
     public void enterPhoneNumber(String phone) {
-        type(phoneInput(), phone);
+        phoneInput().fill(phone);
     }
 
     public void submitPhoneNumber() {
-        click(continueButton());
+        continueButton().click();
     }
 
     public boolean isContinueButtonEnabled() {
@@ -52,16 +52,16 @@ public class LoginPage extends BasePage {
     }
 
     public void enterOtp(String otp) {
-        type(otpInput(), otp);
+        otpInput().fill(otp);
     }
 
     public HomePage submitOtp() {
-        click(otpSubmitButton());
+        otpSubmitButton().click();
         return new HomePage(page);
     }
 
     public void submitOtpExpectingFailure() {
-        click(otpSubmitButton());
+        otpSubmitButton().click();
     }
 
     /** Convenience for tests/fixtures that only care about ending up logged in. */
@@ -73,10 +73,10 @@ public class LoginPage extends BasePage {
     }
 
     public boolean isErrorVisible() {
-        return isVisible(inlineError());
+        return inlineError().isVisible();
     }
 
     public String errorText() {
-        return textOf(inlineError());
+        return inlineError().innerText().trim();
     }
 }

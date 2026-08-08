@@ -5,3 +5,7 @@ test-output/
 *.iml
 .vscode/
 .DS_Store
+
+# Real test-account phone number / OTP live here locally only - copy from
+# config.properties.example and fill in your own values.
+src/test/resources/config.properties

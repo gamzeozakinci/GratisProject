@@ -71,30 +71,30 @@ public class HeaderComponent extends BasePage {
     // ---- Actions ----
 
     public void clickLogo() {
-        click(logo());
+        logo().click();
     }
 
     public void openLoginOrRegister() {
-        click(loginRegisterWidget());
+        loginRegisterWidget().click();
     }
 
     public boolean isUserLoggedIn(String expectedDisplayName) {
-        return isVisible(page.getByText(expectedDisplayName));
+        return page.getByText(expectedDisplayName).isVisible();
     }
 
     public void goToWishlist() {
-        click(accountMenu());
-        click(wishlistLink());
+        accountMenu().click();
+        wishlistLink().click();
     }
 
     public void goToMyOrders() {
-        click(accountMenu());
-        click(myOrdersLink());
+        accountMenu().click();
+        myOrdersLink().click();
     }
 
     public void search(String term) {
         Locator input = searchInput();
-        click(input);
+        input.click();
         input.pressSequentially(term, new Locator.PressSequentiallyOptions().setDelay(120));
     }
 
@@ -103,23 +103,23 @@ public class HeaderComponent extends BasePage {
     }
 
     public boolean isSuggestionPanelVisible() {
-        return isVisible(searchSuggestionPanel());
+        return searchSuggestionPanel().isVisible();
     }
 
     public String cartBadgeCount() {
-        return isVisible(cartBadge()) ? textOf(cartBadge()) : "0";
+        return cartBadge().isVisible() ? cartBadge().innerText().trim() : "0";
     }
 
     public void openCart() {
-        click(cartIcon());
+        cartIcon().click();
     }
 
     public void openHamburgerMenu() {
-        click(hamburgerIcon());
+        hamburgerIcon().click();
     }
 
     public boolean isMobileMenuOpen() {
-        return isVisible(mobileMenuPanel());
+        return mobileMenuPanel().isVisible();
     }
 
     public void hoverMegaMenuCategory(String categoryName) {
@@ -127,10 +127,10 @@ public class HeaderComponent extends BasePage {
     }
 
     public void clickMegaMenuLink(String linkText) {
-        click(page.getByText(linkText, new Page.GetByTextOptions().setExact(true)));
+        page.getByText(linkText, new Page.GetByTextOptions().setExact(true)).click();
     }
 
     public void tapMobileMenuItem(String label) {
-        click(mobileMenuPanel().getByText(label));
+        mobileMenuPanel().getByText(label).click();
     }
 }
