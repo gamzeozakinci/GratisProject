@@ -26,7 +26,4 @@ public abstract class BasePage {
      * (a different package) can't call it directly on a Page Object - this just
      * exposes it.
      */
-    public String currentUrl() {
-        return page.url();
-    }
 }
