@@ -43,17 +43,20 @@ src/test/java/com/gratis/tests/
 ├── CheckoutTests.java       TC_026–TC_029
 └── OrderTests.java          TC_030
 
-testng.xml          Full suite, grouped by module, parallel="tests"
-testng-smoke.xml     Smoke-only subset (TC_001–005)
+src/XML_files/testng.xml          Full suite, grouped by module, sequential (no parallel="...")
+src/XML_files/testng-smoke.xml    Smoke-only subset (TC_001–005)
 ```
 
 ## Running
 
 ```bash
-mvn test                                     # full suite (testng.xml)
-mvn test -DsuiteXmlFile=testng-smoke.xml     # smoke subset only
-mvn test -Dgroups=cart                       # any single module by TestNG group
+mvn test                                                          # full suite
+mvn test -DsuiteXmlFile=src/XML_files/testng-smoke.xml            # smoke subset only
 ```
+There's no `-Dgroups=...` filtering anymore - `@Test` group tags were dropped along with
+`Constants.java` when the framework was simplified. Run a single module by pointing
+`mvn test` at a one-off suite XML listing just that module's class(es), or run a class
+directly from your IDE.
 Report: open `test-output/index.html` after a run. Failure screenshots land in
 `test-output/screenshots/`.
 

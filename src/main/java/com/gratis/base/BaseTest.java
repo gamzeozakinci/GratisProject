@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -20,15 +18,10 @@ public abstract class BaseTest {
     protected Page page;
 
     @BeforeMethod(alwaysRun = true)
-    @Parameters("viewport")
-    public void setUp(@Optional("desktop") String viewport, ITestResult result) {
-        page = "mobile".equalsIgnoreCase(viewport)
-                ? PlaywrightFactory.initMobilePage()
-                : PlaywrightFactory.initDesktopPage();
-
+    public void setUp() {
+        page = PlaywrightFactory.initPage();
         page.navigate(ConfigReader.baseUrl());
-        log.info("Navigated to {} for test [{}] (viewport={})",
-                ConfigReader.baseUrl(), result.getMethod().getMethodName(), viewport);
+        log.info("Navigated to {}", ConfigReader.baseUrl());
     }
 
     @AfterMethod(alwaysRun = true)
