@@ -14,14 +14,6 @@ import org.testng.annotations.Parameters;
 import java.io.File;
 import java.nio.file.Path;
 
-/**
- * Every test class extends this. A fresh browser context + page is created per
- * @Test method (mirrors the "clean session per scenario" precondition most of the
- * gratis.com test cases call out, e.g. TC_001 "guest status, session cookies cleared").
- *
- * viewport="mobile" as a TestNG @Parameter lets TC_007 (mobile hamburger menu) reuse
- * the same base class while running at the mobile breakpoint - see testng.xml.
- */
 public abstract class BaseTest {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
