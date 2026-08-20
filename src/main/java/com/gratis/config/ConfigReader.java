@@ -7,10 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * Loads config.properties once and exposes typed getters.
- * Kept as a simple static holder (no Singleton ceremony needed for a read-only config).
- */
 public final class ConfigReader {
 
     private static final Logger log = LoggerFactory.getLogger(ConfigReader.class);
