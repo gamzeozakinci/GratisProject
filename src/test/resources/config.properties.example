@@ -2,17 +2,13 @@
 base.url=https://www.gratis.com/
 api.base.url=https://www.gratis.com/api
 
-# Browser: chromium | firefox | webkit
-browser=chromium
 headless=true
-slow.mo=0
 default.timeout=15000
 
-# Viewport widths used by TC_006 (desktop) / TC_007 (mobile) to switch layouts
+# Desktop viewport size (mobile support was dropped when BaseTest/PlaywrightFactory
+# were simplified - see git history if you want it back)
 desktop.viewport.width=1440
 desktop.viewport.height=900
-mobile.viewport.width=390
-mobile.viewport.height=844
 
 # Screenshots on failure
 screenshot.on.failure=true

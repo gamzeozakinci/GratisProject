@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Gratis.com Suite" verbose="1" parallel="tests" thread-count="3">
+<!-- No parallel="..." here on purpose: PlaywrightFactory uses plain static fields, not
+     ThreadLocal, so running <test> blocks in parallel would have multiple threads
+     fighting over the same browser/page. Keep this suite sequential unless
+     PlaywrightFactory goes back to ThreadLocal. -->
+<suite name="Gratis.com Suite" verbose="1">
 
     <!-- Module 1: Auth (Registration + Login) -->
     <test name="Auth">
@@ -10,28 +14,10 @@
         </classes>
     </test>
 
-    <!-- Module 2: Navigation & Header (desktop viewport) -->
-    <test name="DesktopNavigation">
-        <parameter name="viewport" value="desktop"/>
+    <!-- Module 2: Navigation & Header -->
+    <test name="Navigation">
         <classes>
-            <class name="com.gratis.tests.NavigationTests">
-                <methods>
-                    <exclude name="mobileHamburgerMenuDrilldown"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <!-- TC_007 needs the mobile breakpoint (<=768px) - isolated into its own <test>
-         so it gets viewport=mobile while every other Navigation case stays desktop -->
-    <test name="MobileNavigation">
-        <parameter name="viewport" value="mobile"/>
-        <classes>
-            <class name="com.gratis.tests.NavigationTests">
-                <methods>
-                    <include name="mobileHamburgerMenuDrilldown"/>
-                </methods>
-            </class>
+            <class name="com.gratis.tests.NavigationTests"/>
         </classes>
     </test>
 
@@ -57,8 +43,8 @@
         </classes>
     </test>
 
-    <!-- Module 6: Checkout & Payment (run serially - these mutate a real cart/order state) -->
-    <test name="Checkout" parallel="false">
+    <!-- Module 6: Checkout & Payment -->
+    <test name="Checkout">
         <classes>
             <class name="com.gratis.tests.CheckoutTests"/>
             <class name="com.gratis.tests.OrderTests"/>

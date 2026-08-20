@@ -25,6 +25,9 @@
         <log4j.version>2.23.1</log4j.version>
         <jackson.version>2.17.2</jackson.version>
         <surefire.version>3.3.1</surefire.version>
+
+        <!-- Overridable: mvn test -DsuiteXmlFile=src/XML_files/testng-smoke.xml -->
+        <suiteXmlFile>src/XML_files/testng.xml</suiteXmlFile>
     </properties>
 
     <dependencies>
@@ -76,7 +79,7 @@
                 <version>3.13.0</version>
             </plugin>
 
-            <!-- Runs testng.xml at the project root; TestNG's own HTML/XML report
+            <!-- Runs src/XML_files/testng.xml; TestNG's own HTML/XML report
                  is generated under test-output/ after every run -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -84,7 +87,7 @@
                 <version>${surefire.version}</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
