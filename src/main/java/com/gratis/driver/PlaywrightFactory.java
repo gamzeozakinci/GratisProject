@@ -10,13 +10,6 @@ import com.microsoft.playwright.options.ViewportSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Owns the single Playwright / Browser / BrowserContext / Page used by whichever test
- * is currently running. Plain static fields, not ThreadLocal - simple, but only safe
- * for tests running one at a time (no parallel="..." in testng.xml). If you ever want
- * parallel execution, each thread would need its own browser instead of sharing these
- * fields, which is what ThreadLocal is for.
- */
 public final class PlaywrightFactory {
 
     private static final Logger log = LoggerFactory.getLogger(PlaywrightFactory.class);
