@@ -1,6 +1,5 @@
 package com.gratis.pages;
 
-import com.gratis.base.BasePage;
 import com.microsoft.playwright.Page;
 
 // TODO: Cart page
@@ -11,9 +10,11 @@ import com.microsoft.playwright.Page;
 //  - subtotal / shipping / grand total text
 //  - apply a promo code, and check success/error state + the discount line
 //  - proceed to checkout -> CheckoutPage
-public class CartPage extends BasePage {
+public class CartPage {
+
+    private final Page page;
 
     public CartPage(Page page) {
-        super(page);
+        this.page = page;
     }
 }

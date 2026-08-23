@@ -1,6 +1,5 @@
 package com.gratis.pages;
 
-import com.gratis.base.BasePage;
 import com.microsoft.playwright.Page;
 
 // TODO: Checkout - shipping step, then payment step
@@ -14,9 +13,11 @@ import com.microsoft.playwright.Page;
 //  - complete 3D Secure with an OTP
 //  - order success visible + order id text
 //  - payment failure banner visible + its text, confirm still on the payment page
-public class CheckoutPage extends BasePage {
+public class CheckoutPage {
+
+    private final Page page;
 
     public CheckoutPage(Page page) {
-        super(page);
+        this.page = page;
     }
 }

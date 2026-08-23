@@ -1,6 +1,5 @@
 package com.gratis.pages;
 
-import com.gratis.base.BasePage;
 import com.microsoft.playwright.Page;
 
 // TODO: Product Listing Page - shared by category pages, search results, filtered/sorted views
@@ -11,9 +10,11 @@ import com.microsoft.playwright.Page;
 //  - change the sort dropdown
 //  - open a product card (by index, or by matching title) -> PDP
 //  - add-to-cart button directly from a product card
-public class PLPPage extends BasePage {
+public class PLPPage {
+
+    private final Page page;
 
     public PLPPage(Page page) {
-        super(page);
+        this.page = page;
     }
 }

@@ -1,6 +1,5 @@
 package com.gratis.pages;
 
-import com.gratis.base.BasePage;
 import com.microsoft.playwright.Page;
 
 // TODO: Product Detail Page
@@ -11,9 +10,11 @@ import com.microsoft.playwright.Page;
 //  - wishlist heart: toggle it, tell if it's filled, tell if a success toast showed
 //  - guest wishlist click -> login prompt visible + its message text
 //  - accordion tabs (description / usage / ingredients) - open one by label
-public class PDPPage extends BasePage {
+public class PDPPage {
+
+    private final Page page;
 
     public PDPPage(Page page) {
-        super(page);
+        this.page = page;
     }
 }

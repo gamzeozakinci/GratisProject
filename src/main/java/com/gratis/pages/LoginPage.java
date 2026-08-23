@@ -1,6 +1,5 @@
 package com.gratis.pages;
 
-import com.gratis.base.BasePage;
 import com.microsoft.playwright.Page;
 
 /**
@@ -15,9 +14,11 @@ import com.microsoft.playwright.Page;
  *  - OTP input + submit, and a way to submit expecting failure (wrong OTP)
  *  - inline error visibility + text (wrong OTP / invalid phone)
  */
-public class LoginPage extends BasePage {
+public class LoginPage {
+
+    private final Page page;
 
     public LoginPage(Page page) {
-        super(page);
+        this.page = page;
     }
 }
