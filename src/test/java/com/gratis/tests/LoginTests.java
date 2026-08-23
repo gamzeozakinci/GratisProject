@@ -7,6 +7,8 @@ public class LoginTests extends BaseTest {
 
     @Test(description = "TC_003 - Login with a valid phone number and valid OTP authenticates the user")
     public void validPhoneAndOtpLogsIn() {
+
+
         // TODO: implement
     }
 
