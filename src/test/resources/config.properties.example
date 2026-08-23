@@ -5,11 +5,6 @@ api.base.url=https://www.gratis.com/api
 headless=true
 default.timeout=15000
 
-# Desktop viewport size (mobile support was dropped when BaseTest/PlaywrightFactory
-# were simplified - see git history if you want it back)
-desktop.viewport.width=1440
-desktop.viewport.height=900
-
 # Screenshots on failure
 screenshot.on.failure=true
 screenshot.dir=test-output/screenshots

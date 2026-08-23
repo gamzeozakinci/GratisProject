@@ -1,13 +1,19 @@
 package com.gratis.tests;
 
 import com.gratis.base.BaseTest;
+import com.gratis.pages.HeaderComponent;
 import org.testng.annotations.Test;
 
 public class RegistrationTests extends BaseTest {
 
     @Test(description = "TC_001 - Registering with a brand-new phone number completes the OTP flow and logs the user in")
-    public void newPhoneNumberCompletesRegistration() {
-        page.getByText("Üye olun").click();
+    public void newPhoneNumberCompletesRegistration() throws InterruptedException {
+        HeaderComponent header = new HeaderComponent(page);
+
+        header.openLoginOrRegister();
+
+
+
 
 
     }
