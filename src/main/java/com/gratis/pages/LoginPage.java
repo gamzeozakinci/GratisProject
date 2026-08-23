@@ -1,5 +1,6 @@
 package com.gratis.pages;
 
+import com.gratis.config.ConfigReader;
 import com.microsoft.playwright.Page;
 
 /**
@@ -20,5 +21,9 @@ public class LoginPage {
 
     public LoginPage(Page page) {
         this.page = page;
+    }
+
+    public void enterPhoneNumber(){
+        page.locator("input[name='phoneNumber']").fill(ConfigReader.get("registered.phone.number"));
     }
 }
