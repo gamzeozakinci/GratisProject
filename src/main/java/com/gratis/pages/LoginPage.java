@@ -2,6 +2,7 @@ package com.gratis.pages;
 
 import com.gratis.config.ConfigReader;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 
 /**
  * gratis.com has no email/password form and no separate registration page: "Üye olun
@@ -26,4 +27,10 @@ public class LoginPage {
     public void enterPhoneNumber(){
         page.locator("input[name='phoneNumber']").fill(ConfigReader.get("registered.phone.number"));
     }
+
+    public void clickDevamEt(){
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).click();
+    }
+
+
 }

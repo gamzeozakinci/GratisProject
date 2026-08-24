@@ -13,8 +13,9 @@ public class RegistrationTests extends BaseTest {
         LoginPage loginPage = new LoginPage(page);
 
         header.openLoginOrRegister();
-
         loginPage.enterPhoneNumber();
+        loginPage.clickDevamEt();
+
 
         Thread.sleep(3000);
 
