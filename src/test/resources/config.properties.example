@@ -15,6 +15,9 @@ screenshot.dir=test-output/screenshots
 # already receive/accept the mock OTP below.
 registered.phone.number=5XXXXXXXXX
 
+# Header text shown once logged in, replacing "Üye olun ya da Giriş Yapın"
+registered.account.name=YourNameHere
+
 # Promo codes
 valid.promo.code=YAZ20
 invalid.promo.code=INVALIDCODE

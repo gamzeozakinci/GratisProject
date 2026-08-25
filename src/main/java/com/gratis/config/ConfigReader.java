@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 public final class ConfigReader {
@@ -18,7 +20,7 @@ public final class ConfigReader {
                 throw new RuntimeException("config.properties not found on classpath. " +
                         "Check that src/test/resources is not excluded from the build output.");
             }
-            PROPS.load(is);
+            PROPS.load(new InputStreamReader(is, StandardCharsets.UTF_8));
             log.info("Loaded config.properties with {} keys", PROPS.size());
         } catch (IOException e) {
             throw new RuntimeException("Failed to load config.properties", e);

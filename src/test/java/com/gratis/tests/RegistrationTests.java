@@ -1,11 +1,12 @@
 package com.gratis.tests;
 
 import com.gratis.base.BaseTest;
+import com.gratis.config.ConfigReader;
 import com.gratis.pages.HeaderComponent;
 import com.gratis.pages.LoginPage;
 import org.testng.annotations.Test;
 
-import java.util.Scanner;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class RegistrationTests extends BaseTest {
 
@@ -25,7 +26,7 @@ public class RegistrationTests extends BaseTest {
     }
 
     @Test(description = "TC_002 - An already-registered phone number routes through the same OTP login, not a duplicate signup")
-    public void existingPhoneNumberRoutesToLogin() throws InterruptedException {
+    public void existingPhoneNumberRoutesToLogin() {
         HeaderComponent header = new HeaderComponent(page);
         LoginPage loginPage = new LoginPage(page);
 
@@ -34,12 +35,10 @@ public class RegistrationTests extends BaseTest {
         loginPage.enterPhoneNumber();
         loginPage.clickDevamEt();
 
-        System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector window.");
+        System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
         page.pause();
 
-
-        Thread.sleep(3000);
-
-
+        assertThat(page).hasURL("https://www.gratis.com/");
+        assertThat(page.getByText(ConfigReader.get("registered.account.name"))).isVisible();
     }
 }
