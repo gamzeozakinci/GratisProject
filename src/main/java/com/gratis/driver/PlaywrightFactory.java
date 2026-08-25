@@ -6,6 +6,7 @@ import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.options.ViewportSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,32 @@ public final class PlaywrightFactory {
 
         page = context.newPage();
         log.info("Browser launched");
+        return page;
+    }
+
+    /**
+     * For tests that need a real mobile-sized page (e.g. TC_006's hamburger menu),
+     * not the maximized desktop one initPage() gives every other test. Callers must
+     * tearDown() the desktop page BaseTest already opened before calling this, then
+     * reassign BaseTest.page to what this returns - see NavigationTests for the pattern.
+     */
+    public static Page initMobilePage() {
+        playwright = Playwright.create();
+
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
+                .setHeadless(ConfigReader.getBoolean("headless")));
+
+        context = browser.newContext(new Browser.NewContextOptions()
+                .setViewportSize(new ViewportSize(390, 844)) // iPhone 12-ish size
+                .setIsMobile(true)
+                .setHasTouch(true)
+                .setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) " +
+                        "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1")
+                .setLocale("tr-TR"));
+        context.setDefaultTimeout(ConfigReader.getInt("default.timeout"));
+
+        page = context.newPage();
+        log.info("Mobile browser launched");
         return page;
     }
 
