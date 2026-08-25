@@ -1,7 +1,7 @@
 # Gratis.com – Playwright + TestNG Automation Framework
 
 UI test automation framework for **gratis.com** (cosmetics e-commerce), built from a
-30-case test suite spanning Auth, Navigation, Search/Filtering, Catalog, Cart and
+29-case test suite spanning Auth, Navigation, Search/Filtering, Catalog, Cart and
 Checkout. Java + Playwright + TestNG, Page Object Model, no external reporting layer —
 TestNG's own HTML/XML report is generated under `test-output/` after every run.
 
@@ -34,17 +34,17 @@ src/main/java/com/gratis/
 
 src/test/java/com/gratis/tests/
 ├── RegistrationTests.java   TC_001, TC_002
-├── LoginTests.java          TC_003, TC_004, TC_005
-├── NavigationTests.java     TC_006, TC_007, TC_008, TC_009
-├── SearchTests.java         TC_010, TC_011, TC_012
-├── FilterSortTests.java     TC_013, TC_014
-├── CatalogTests.java        TC_015, TC_016, TC_017, TC_018, TC_019
-├── CartTests.java           TC_020–TC_025
-├── CheckoutTests.java       TC_026–TC_029
-└── OrderTests.java          TC_030
+├── LoginTests.java          TC_003, TC_004
+├── NavigationTests.java     TC_005, TC_006, TC_007, TC_008
+├── SearchTests.java         TC_009, TC_010, TC_011
+├── FilterSortTests.java     TC_012, TC_013
+├── CatalogTests.java        TC_014, TC_015, TC_016, TC_017, TC_018
+├── CartTests.java           TC_019–TC_024
+├── CheckoutTests.java       TC_025–TC_028
+└── OrderTests.java          TC_029
 
 src/XML_files/testng.xml          Full suite, grouped by module, sequential (no parallel="...")
-src/XML_files/testng-smoke.xml    Smoke-only subset (TC_001–005)
+src/XML_files/testng-smoke.xml    Smoke-only subset (TC_001–004)
 ```
 
 ## Running
@@ -87,12 +87,12 @@ transparently creates the account on first use or logs an existing number straig
 
 This was confirmed by opening the live flow in a browser, not inferred from a spec, so
 `LoginPage` (phone + OTP), `HomePage.goToAuth()`, `RegistrationTests` (TC_001, TC_002)
-and `LoginTests` (TC_003-TC_005) are built directly against it. Two deliberate scope
+and `LoginTests` (TC_003-TC_004) are built directly against it. Two deliberate scope
 changes from a typical email/password suite:
 
 - **No `RegisterPage`** - registration and login are the same form/flow, so both test
   classes share `LoginPage`.
-- **No `ForgotPasswordPage`** - there's no password to forget. TC_005 was repurposed
+- **No `ForgotPasswordPage`** - there's no password to forget. TC_004 was repurposed
   from "forgot password" to "an invalid phone number format blocks 'DEVAM ET'
   before an OTP is ever sent," which is the closest equivalent negative case this
   auth mechanism actually has.
@@ -134,18 +134,18 @@ placeholder values/slugs with your test environment's real seeded data or a
 
 ## Out of Scope / Future Work
 
-- **Real OTP/SMS delivery** (TC_001-TC_005 login/registration, TC_028 3D Secure) and
-  **email verification** (TC_030 order confirmation) need a real SMS provider API and
+- **Real OTP/SMS delivery** (TC_001-TC_004 login/registration, TC_027 3D Secure) and
+  **email verification** (TC_029 order confirmation) need a real SMS provider API and
   a mailbox API (e.g. Mailinator's REST API) respectively — not implemented here;
   `mock.otp` in `config.properties` stands in for a sandboxed/predictable OTP.
 - **DB/API assertions** (e.g. TC_001 checking `/api/auth/register` returns a JWT,
-  TC_028 checking order status = `PAID` in the database) need either Playwright's
+  TC_027 checking order status = `PAID` in the database) need either Playwright's
   `page.waitForResponse()` for the network layer, or a DB connector for backend
   checks — hooks are noted as comments where relevant.
-- **Visual/hover interactions** (TC_006 mega menu fade timing, TC_017 image zoom lens,
+- **Visual/hover interactions** (TC_005 mega menu fade timing, TC_016 image zoom lens,
   mobile pinch-to-zoom) would benefit from Playwright's screenshot-diffing rather than
   DOM assertions alone.
-- **Session persistence** (TC_025) is approximated with `page.reload()`; a fuller
+- **Session persistence** (TC_024) is approximated with `page.reload()`; a fuller
   implementation would use `context.storageState()` to snapshot/restore cookies across
   a genuinely new browser context, closer to "close all tabs, reopen the browser."
 - **CI**: intentionally kept out of this version. A GitHub Actions workflow (checkout →

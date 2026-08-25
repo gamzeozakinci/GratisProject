@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<!-- Quick subset: just the Auth cases (TC_001-005) for a fast sanity check.
+<!-- Quick subset: just the Auth cases (TC_001-004) for a fast sanity check.
      Run with: mvn test -DsuiteXmlFile=src/XML_files/testng-smoke.xml -->
 <suite name="Gratis.com Smoke Suite" verbose="1">
     <test name="Smoke">
