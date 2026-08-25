@@ -20,8 +20,9 @@ public class RegistrationTests extends BaseTest {
         loginPage.enterPhoneNumber();
         loginPage.clickDevamEt();
 
+        System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
+        page.pause();
 
-        Thread.sleep(3000);
 
     }
 
@@ -32,7 +33,7 @@ public class RegistrationTests extends BaseTest {
 
         header.openLoginOrRegister();
 
-        loginPage.enterPhoneNumber();
+        loginPage.enterRegisteredPhoneNumber();
         loginPage.clickDevamEt();
 
         System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
@@ -41,4 +42,6 @@ public class RegistrationTests extends BaseTest {
         assertThat(page).hasURL("https://www.gratis.com/");
         assertThat(page.getByText(ConfigReader.get("registered.account.name"))).isVisible();
     }
+
+    //registered user wrong otp can be checked later
 }
