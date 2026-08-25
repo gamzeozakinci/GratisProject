@@ -6,11 +6,10 @@
      PlaywrightFactory goes back to ThreadLocal. -->
 <suite name="Gratis.com Suite" verbose="1">
 
-    <!-- Module 1: Auth (Registration + Login) -->
+    <!-- Module 1: Auth - single phone+OTP flow covers both login and registration -->
     <test name="Auth">
         <classes>
-            <class name="com.gratis.tests.RegistrationTests"/>
-            <class name="com.gratis.tests.LoginTests"/>
+            <class name="com.gratis.tests.AuthTests"/>
         </classes>
     </test>
 

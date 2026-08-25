@@ -33,8 +33,7 @@ src/main/java/com/gratis/
 └── utils/       Constants (payloads, group names), TestDataGenerator (unique phone numbers)
 
 src/test/java/com/gratis/tests/
-├── RegistrationTests.java   TC_001, TC_002
-├── LoginTests.java          TC_003, TC_004
+├── AuthTests.java           TC_001–TC_004 (login and registration are one flow on this site)
 ├── NavigationTests.java     TC_005, TC_006, TC_007, TC_008
 ├── SearchTests.java         TC_009, TC_010, TC_011
 ├── FilterSortTests.java     TC_012, TC_013
@@ -86,12 +85,13 @@ yeni bir hesap oluşturabilirsiniz") that takes a phone number, then an OTP code
 transparently creates the account on first use or logs an existing number straight in.
 
 This was confirmed by opening the live flow in a browser, not inferred from a spec, so
-`LoginPage` (phone + OTP), `HomePage.goToAuth()`, `RegistrationTests` (TC_001, TC_002)
-and `LoginTests` (TC_003-TC_004) are built directly against it. Two deliberate scope
-changes from a typical email/password suite:
+`LoginPage` (phone + OTP), `HomePage.goToAuth()`, and `AuthTests` (TC_001-TC_004) are
+built directly against it. Two deliberate scope changes from a typical email/password
+suite:
 
-- **No `RegisterPage`** - registration and login are the same form/flow, so both test
-  classes share `LoginPage`.
+- **No `RegisterPage`, and no separate `RegistrationTests`/`LoginTests` classes** -
+  registration and login are the exact same form/flow on gratis.com, so both live in
+  one `AuthTests` class instead of two, and both share `LoginPage`.
 - **No `ForgotPasswordPage`** - there's no password to forget. TC_004 was repurposed
   from "forgot password" to "an invalid phone number format blocks 'DEVAM ET'
   before an OTP is ever sent," which is the closest equivalent negative case this

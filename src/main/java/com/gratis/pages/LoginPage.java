@@ -24,4 +24,8 @@ public class LoginPage {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).click();
     }
 
+    public void invalidPhoneNumber() {
+        page.locator("input[name='phoneNumber']").fill("000000000");
+    }
+
 }
