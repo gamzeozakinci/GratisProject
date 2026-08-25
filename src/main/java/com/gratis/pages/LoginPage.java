@@ -4,12 +4,9 @@ import com.gratis.config.ConfigReader;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 
-/**
- * gratis.com has no email/password form and no separate registration page: "Üye olun
- * ya da Giriş Yapın" opens a single phone-number + OTP flow that creates the account
- * on first use and logs an existing number straight in - confirmed on the live site.
- * There's no forgot-password flow either, since there's no password.
- *
+import java.util.Scanner;
+
+/*
  * TODO:
  *  - phone number input + submit ("DEVAM ET")
  *  - is the continue button enabled/disabled for an invalid phone format
@@ -24,13 +21,12 @@ public class LoginPage {
         this.page = page;
     }
 
-    public void enterPhoneNumber(){
+    public void enterPhoneNumber() {
         page.locator("input[name='phoneNumber']").fill(ConfigReader.get("registered.phone.number"));
     }
 
-    public void clickDevamEt(){
+    public void clickDevamEt() {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).click();
     }
-
 
 }
