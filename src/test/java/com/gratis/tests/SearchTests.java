@@ -6,12 +6,12 @@ import org.testng.annotations.Test;
 
 public class SearchTests extends BaseTest {
 
-    @Test(description = "TC_010 - Product Search using Autocomplete Suggestions")
+    @Test(description = "TC_009 - Product Search using Autocomplete Suggestions")
     public void autocompleteSuggestionsAppearWhileTyping() {
         // TODO: implement
     }
 
-    @Test(description = "TC_011 - Product Search with Valid Keyword")
+    @Test(description = "TC_010 - Product Search with Valid Keyword")
     public void searchWithValidKeywordShowsResults() {
         // TODO: implement
     }
@@ -25,7 +25,7 @@ public class SearchTests extends BaseTest {
         };
     }
 
-    @Test(description = "TC_012 - Product Search with Special Characters (SQLi / XSS Check)",
+    @Test(description = "TC_011 - Product Search with Special Characters (SQLi / XSS Check)",
             dataProvider = "injectionPayloads")
     public void searchHandlesMaliciousPayloadsSafely(String payload) {
         // TODO: implement
