@@ -4,15 +4,6 @@ import com.gratis.config.ConfigReader;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 
-import java.util.Scanner;
-
-/*
- * TODO:
- *  - phone number input + submit ("DEVAM ET")
- *  - is the continue button enabled/disabled for an invalid phone format
- *  - OTP input + submit, and a way to submit expecting failure (wrong OTP)
- *  - inline error visibility + text (wrong OTP / invalid phone)
- */
 public class LoginPage {
 
     private final Page page;
@@ -21,8 +12,12 @@ public class LoginPage {
         this.page = page;
     }
 
-    public void enterPhoneNumber() {
+    public void enterRegisteredPhoneNumber() {
         page.locator("input[name='phoneNumber']").fill(ConfigReader.get("registered.phone.number"));
+    }
+
+    public void enterPhoneNumber() {
+        page.locator("input[name='phoneNumber']").fill(ConfigReader.get("phone.number"));
     }
 
     public void clickDevamEt() {
