@@ -1,6 +1,7 @@
 package com.gratis.pages;
 
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 
 // TODO: Product Listing Page - shared by category pages, search results, filtered/sorted views
 //  - page header text + breadcrumb text
@@ -17,4 +18,27 @@ public class PLPPage {
     public PLPPage(Page page) {
         this.page = page;
     }
+
+
+    public void add1stItem(){
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).first().click();
+    }
+
+    public String check1stItem(){
+      return page.locator("//span[text()=\"1\"]").first().innerText();
+    }
+
+    public void add2ndItem(){
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).nth(1).click();
+    }
+
+    public String check2ndItem(){
+        return page.locator("//span[text()=\"2\"]").first().innerText();
+    }
+
+    public void logo(){
+        page.locator("//a[@href=\"/\"]").click();
+
+    }
+
 }
