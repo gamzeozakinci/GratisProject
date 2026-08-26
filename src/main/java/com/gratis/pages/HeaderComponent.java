@@ -37,20 +37,27 @@ public class HeaderComponent {
     }
 
     public void mobileHeader() {
+
         page.locator("//img[@alt=\"mobile-header-icon\"]").click();
     }
 
 
     public void mobileHeaderCiltbakim() {
+
         page.locator("//span[text()=\"Cilt Bakım\"]").first().click();
     }
 
     public void mobileHeaderYuzbakim() {
+
         page.locator("//span[text()=\"Yüz Bakım\"]").click();
     }
 
     public void mobileHeaderTonikler() {
         page.locator("//span[text()=\"Tonikler\"]").first().click();
+    }
+
+    public void headerSacbakim(){
+        page.locator("//a[text()=\"Saç Bakım\"]").first().click();
     }
 
 }

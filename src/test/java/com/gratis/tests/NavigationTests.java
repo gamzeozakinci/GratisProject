@@ -4,7 +4,11 @@ import com.gratis.base.BaseTest;
 import com.gratis.config.ConfigReader;
 import com.gratis.driver.PlaywrightFactory;
 import com.gratis.pages.HeaderComponent;
+import com.gratis.pages.PLPPage;
+import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.net.URL;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
@@ -45,11 +49,31 @@ public class NavigationTests extends BaseTest {
 
     @Test(description = "TC_007 - Header Basket Icon Counter Synchronization")
     public void basketCounterSyncsDynamically() {
-        // TODO: implement
+        //giriş gerekiyor
+        HeaderComponent header = new HeaderComponent(page);
+        PLPPage plp = new PLPPage(page);
+
+        header.headerSacbakim();
+
+        plp.add1stItem();
+        Assert.assertEquals(plp.check1stItem(), "1");
+
+        plp.add2ndItem();
+
+        Assert.assertEquals(plp.check2ndItem(), "2");
+
+
     }
 
     @Test(description = "TC_008 - Header Logo Redirection from Subpages")
     public void logoRedirectsHomeFromSubpage() {
-        // TODO: implement
+        HeaderComponent header = new HeaderComponent(page);
+        PLPPage plp = new PLPPage(page);
+
+        header.headerSacbakim();
+        plp.logo();
+
+        assertThat(page).hasURL("https://www.gratis.com/");
+
     }
 }
