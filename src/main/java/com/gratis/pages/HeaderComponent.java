@@ -1,5 +1,6 @@
 package com.gratis.pages;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 
@@ -25,7 +26,6 @@ public class HeaderComponent {
 
     public void headerMakyaj() {
         page.locator("//a[text()=\"Makyaj\"]").first().hover();
-
     }
 
     public void hoverTORuj() {
@@ -37,18 +37,14 @@ public class HeaderComponent {
     }
 
     public void mobileHeader() {
-
         page.locator("//img[@alt=\"mobile-header-icon\"]").click();
     }
 
-
     public void mobileHeaderCiltbakim() {
-
         page.locator("//span[text()=\"Cilt Bakım\"]").first().click();
     }
 
     public void mobileHeaderYuzbakim() {
-
         page.locator("//span[text()=\"Yüz Bakım\"]").click();
     }
 
@@ -59,5 +55,18 @@ public class HeaderComponent {
     public void headerSacbakim(){
         page.locator("//a[text()=\"Saç Bakım\"]").first().click();
     }
+
+    public void search(){
+        page.getByPlaceholder("Ürün, kategori ya da marka adı ile arayın").fill("göz");
+    }
+
+    public Locator searchSuggestions(){
+        Locator items = page.locator("//ul[@class=\"-mx-5 flex flex-col divide-y divide-gray-100 border-b border-gray-100 " +
+                "lg:mx-0 lg:divide-y-0 lg:border-b-0\"]//li");
+
+        return items;
+    }
+
+
 
 }
