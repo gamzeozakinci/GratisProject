@@ -62,7 +62,6 @@ public class NavigationTests extends BaseTest {
 
         Assert.assertEquals(plp.check2ndItem(), "2");
 
-
     }
 
     @Test(description = "TC_008 - Header Logo Redirection from Subpages")
