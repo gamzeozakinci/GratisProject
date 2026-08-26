@@ -1,7 +1,7 @@
 # Gratis.com – Playwright + TestNG Automation Framework
 
 UI test automation framework for **gratis.com** (cosmetics e-commerce), built from a
-29-case test suite spanning Auth, Navigation, Search/Filtering, Catalog, Cart and
+28-case test suite spanning Auth, Navigation, Search/Filtering, Catalog, Cart and
 Checkout. Java + Playwright + TestNG, Page Object Model, no external reporting layer —
 TestNG's own HTML/XML report is generated under `test-output/` after every run.
 
@@ -39,8 +39,8 @@ src/test/java/com/gratis/tests/
 ├── FilterSortTests.java     TC_012, TC_013
 ├── CatalogTests.java        TC_014, TC_015, TC_016, TC_017, TC_018
 ├── CartTests.java           TC_019–TC_024
-├── CheckoutTests.java       TC_025–TC_028
-└── OrderTests.java          TC_029
+├── CheckoutTests.java       TC_025–TC_027 (payment intentionally stops at URL check)
+└── OrderTests.java          TC_028
 
 src/XML_files/testng.xml          Full suite, grouped by module, sequential (no parallel="...")
 src/XML_files/testng-smoke.xml    Smoke-only subset (TC_001–004)
@@ -98,9 +98,10 @@ suite:
   auth mechanism actually has.
 
 The exact input/button selectors in `LoginPage` are still best-effort (see the section
-below) - only the *flow itself* (phone → OTP → logged in) is DOM-verified. `mock.otp` in
-`config.properties` assumes a test/sandbox environment where OTP codes are predictable;
-a real SMS round-trip needs a provider API (Twilio, etc.) wired into the fixture instead.
+below) - only the *flow itself* (phone → OTP → logged in) is DOM-verified. There's no
+mock/sandbox OTP bypass on the live site, so `AuthTests` pauses execution
+(`page.pause()`) for a human to read the real SMS and type the code in manually -
+see `AuthTests` and the "Real OTP/SMS delivery" note below.
 
 ## ⚠️ Important: Locators Need Verification Against the Live DOM
 
@@ -134,14 +135,19 @@ placeholder values/slugs with your test environment's real seeded data or a
 
 ## Out of Scope / Future Work
 
-- **Real OTP/SMS delivery** (TC_001-TC_004 login/registration, TC_027 3D Secure) and
-  **email verification** (TC_029 order confirmation) need a real SMS provider API and
-  a mailbox API (e.g. Mailinator's REST API) respectively — not implemented here;
-  `mock.otp` in `config.properties` stands in for a sandboxed/predictable OTP.
-- **DB/API assertions** (e.g. TC_001 checking `/api/auth/register` returns a JWT,
-  TC_027 checking order status = `PAID` in the database) need either Playwright's
-  `page.waitForResponse()` for the network layer, or a DB connector for backend
-  checks — hooks are noted as comments where relevant.
+- **Real OTP/SMS delivery** (TC_001-TC_004 login/registration) needs a real SMS
+  provider API (Twilio, etc.) to automate fully — not implemented here; `AuthTests`
+  pauses (`page.pause()`) for a human to enter the real code instead.
+- **Payment (TC_027 in an earlier draft) was deliberately removed**, not just left
+  as a TODO — this is a personal project against the live production site with no
+  test card credentials, and actually completing a real payment isn't something to
+  automate here. TC_027 now only checks that the checkout flow reaches the correct
+  payment URL; nothing past that point is exercised.
+- **Email verification** (TC_028 order confirmation) needs a mailbox API (e.g.
+  Mailinator's REST API) — not implemented here.
+- **DB/API assertions** (e.g. TC_001 checking `/api/auth/register` returns a JWT)
+  need either Playwright's `page.waitForResponse()` for the network layer, or a DB
+  connector for backend checks — hooks are noted as comments where relevant.
 - **Visual/hover interactions** (TC_005 mega menu fade timing, TC_016 image zoom lens,
   mobile pinch-to-zoom) would benefit from Playwright's screenshot-diffing rather than
   DOM assertions alone.

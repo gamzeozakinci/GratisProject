@@ -1,6 +1,6 @@
 # Gratis.com Test Cases
 
-29 test cases covering gratis.com's Auth, Navigation, Search, Filter/Sort, Catalog, Cart, Checkout, and Order flows. Each one maps 1:1 to a `@Test(description = "TC_XXX - ...")` annotation in `src/test/java/com/gratis/tests/`.
+28 test cases covering gratis.com's Auth, Navigation, Search, Filter/Sort, Catalog, Cart, Checkout, and Order flows. Each one maps 1:1 to a `@Test(description = "TC_XXX - ...")` annotation in `src/test/java/com/gratis/tests/`.
 
 **Status legend:** ✅ Implemented · 🔶 In progress · ⬜ Not started (`// TODO: implement`)
 
@@ -68,15 +68,16 @@ gratis.com has no email/password form and no separate registration page — a si
 |----|---|---|---|
 | TC_025 | Store Pickup Delivery (Gel-Al) Selection Flow | `storePickupSelectionFlow` | ⬜ |
 | TC_026 | Address Creation and Home Delivery Selection | `addressCreationAndHomeDelivery` | ⬜ |
-| TC_027 | Complete Payment using Valid Credit Card via 3D Secure (E2E) | `completePaymentWithValidCardVia3DSecure` | ⬜ Same real-OTP constraint as Auth — 3D Secure also needs a human to enter a code |
-| TC_028 | Fail Payment using Card with Insufficient Funds (Negative) | `paymentFailsWithInsufficientFundsCard` | ⬜ |
+| TC_027 | Reaching the payment step lands on the correct payment URL | `paymentStepReachesPaymentUrl` | 🔶 Assertion written; the cart→shipping→payment navigation to get there is still `// TODO` |
+
+**Deliberately reduced scope:** the two original payment cases (complete payment via 3D Secure, fail payment on insufficient funds) were removed, not just left as TODOs. This is a personal project against the live production site with no test card credentials, and actually submitting a real payment isn't something to automate here. TC_027 now only confirms the checkout flow reaches the payment URL — nothing past that point is exercised.
 
 ## Order — `OrderTests.java`
 
 | TC | Description | Method | Status |
 |----|---|---|---|
-| TC_029 | Post-Order Validation (Order Summary Screen & Email Verification) | `orderAppearsInHistoryWithMatchingDetails` | ⬜ Depends on a real order already existing |
+| TC_028 | Post-Order Validation (Order Summary Screen & Email Verification) | `orderAppearsInHistoryWithMatchingDetails` | ⬜ Depends on a real order already existing |
 
 ---
 
-**Progress: 3 / 29 in progress, 0 fully complete, 26 not started.**
+**Progress: 4 / 28 in progress, 0 fully complete, 24 not started.**

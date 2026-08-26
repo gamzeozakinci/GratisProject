@@ -11,8 +11,8 @@ screenshot.dir=test-output/screenshots
 
 # Known-state test account (see README "Test Data & Environment Assumptions").
 # gratis.com auth is phone number + OTP only (no email/password, no forgot-password
-# flow) - replace with a real number provisioned in your test environment that can
-# already receive/accept the mock OTP below.
+# flow) - replace with a real number you can receive a real OTP on (entered manually
+# via page.pause() - see AuthTests).
 registered.phone.number=5XXXXXXXXX
 
 # Header text shown once logged in, replacing "Üye olun ya da Giriş Yapın"
@@ -23,5 +23,3 @@ valid.promo.code=YAZ20
 invalid.promo.code=INVALIDCODE
 expired.promo.code=WINTER50
 
-# Mock OTP used across TC_001 and TC_027
-mock.otp=123456
