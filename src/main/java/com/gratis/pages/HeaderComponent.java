@@ -52,21 +52,20 @@ public class HeaderComponent {
         page.locator("//span[text()=\"Tonikler\"]").first().click();
     }
 
-    public void headerSacbakim(){
+    public void headerSacbakim() {
         page.locator("//a[text()=\"Saç Bakım\"]").first().click();
     }
 
-    public void search(){
-        page.getByPlaceholder("Ürün, kategori ya da marka adı ile arayın").fill("göz");
+    public void search() {
+            page.locator("#search-bar input:visible").fill("göz");
     }
 
-    public Locator searchSuggestions(){
+    public Locator searchSuggestions() {
         Locator items = page.locator("//ul[@class=\"-mx-5 flex flex-col divide-y divide-gray-100 border-b border-gray-100 " +
                 "lg:mx-0 lg:divide-y-0 lg:border-b-0\"]//li");
 
         return items;
     }
-
 
 
 }
