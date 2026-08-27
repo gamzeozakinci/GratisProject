@@ -17,4 +17,10 @@ public class PDPPage {
     public PDPPage(Page page) {
         this.page = page;
     }
+
+    public void hasWord() {
+        page.locator("div.overflow-x-auto.no-scrollbar");
+    }
+
+
 }

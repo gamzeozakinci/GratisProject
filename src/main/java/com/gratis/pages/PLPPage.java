@@ -20,25 +20,43 @@ public class PLPPage {
     }
 
 
-    public void add1stItem(){
+    public void add1stItem() {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).first().click();
     }
 
-    public String check1stItem(){
-      return page.locator("//span[text()=\"1\"]").first().innerText();
+    public String check1stItem() {
+        return page.locator("//span[text()=\"1\"]").first().innerText();
     }
 
-    public void add2ndItem(){
+    public void add2ndItem() {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).nth(1).click();
     }
 
-    public String check2ndItem(){
+    public String check2ndItem() {
         return page.locator("//span[text()=\"2\"]").first().innerText();
     }
 
-    public void logo(){
+    public void logo() {
         page.locator("//a[@href=\"/\"]").click();
 
     }
+
+    public void checkSearchWord() {
+        page.locator("//h1[text()=\"“göz“\"]");
+
+    }
+
+    public void clickFirstItem() {
+        page.locator("a[href*='-p-']").first().click();
+
+    }
+
+    public void verifyCategory() {
+        page.locator("a[href*='-p-']").first().click();
+
+    }
+
+
+
 
 }
