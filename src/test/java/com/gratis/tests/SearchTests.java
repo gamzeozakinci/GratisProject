@@ -2,9 +2,13 @@ package com.gratis.tests;
 
 import com.gratis.base.BaseTest;
 import com.gratis.pages.HeaderComponent;
+import com.gratis.pages.PDPPage;
+import com.gratis.pages.PLPPage;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class SearchTests extends BaseTest {
 
@@ -25,20 +29,23 @@ public class SearchTests extends BaseTest {
     @Test(description = "TC_010 - Product Search with Valid Keyword")
     public void searchWithValidKeywordShowsResults() {
 
+        HeaderComponent header = new HeaderComponent(page);
+
+        header.search();
+        page.keyboard().press("Enter");
+
+        PLPPage plp = new PLPPage(page);
+
+        plp.checkSearchWord();
+
+        assertThat(page.locator("//h1[text()=\"“göz“\"]")).hasText("göz");
+
+        plp.clickFirstItem();
+
+        PDPPage pdp = new PDPPage(page);
+
+        assertThat(page.locator("div.overflow-x-auto.no-scrollbar")).hasText("göz");
+
     }
 
-    @DataProvider(name = "injectionPayloads")
-    public Object[][] injectionPayloads() {
-        return new Object[][]{
-                {"' OR 1=1 --"},
-                {"<script>alert('xss')</script>"},
-                {"% & $ # @ ( ) _ + = ?"}
-        };
-    }
-
-    @Test(description = "TC_011 - Product Search with Special Characters (SQLi / XSS Check)",
-            dataProvider = "injectionPayloads")
-    public void searchHandlesMaliciousPayloadsSafely(String payload) {
-        // TODO: implement
-    }
 }
