@@ -1,5 +1,6 @@
 package com.gratis.pages;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 
@@ -51,12 +52,34 @@ public class PLPPage {
 
     }
 
-    public void verifyCategory() {
-        page.locator("a[href*='-p-']").first().click();
+    public void filtrele() {
+        page.locator("page.locator(\"#submit-button\")").click();
 
     }
 
+    public void filterCokSatan() {
+        page.locator("//*[text()=\"Çok Satanlar\"]").click();
+    }
 
+    public void filterFiyatArtan() {
+        page.locator("//*[text()=\"Fiyat Artan\"]").click();
+    }
+
+    public void filterMarka() {
+        page.getByText("MARKA").click();
+    }
+
+    public void selectMarka() {
+        page.locator("div.flex.items-start.gap-1")
+                .filter(new Locator.FilterOptions().setHasText("Wella"))
+                .locator("div.cursor-pointer")
+                .click();
+    }
+
+    public void submitButton() {
+        page.locator("#submit-button").click();
+        ;
+    }
 
 
 }
