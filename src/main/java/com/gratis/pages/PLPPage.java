@@ -37,7 +37,7 @@ public class PLPPage {
     }
 
     public void logo() {
-        page.locator("//a[@href=\"/\"]").click();
+        page.locator("//a[@href=\"/\"]").first().click();
 
     }
 
