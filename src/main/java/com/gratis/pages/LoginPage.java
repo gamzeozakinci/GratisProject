@@ -25,7 +25,8 @@ public class LoginPage {
     }
 
     public void invalidPhoneNumber() {
-        page.locator("input[name='phoneNumber']").fill("000000000");
+        page.locator("input[name='phoneNumber']").pressSequentially("000000000");
     }
+
 
 }

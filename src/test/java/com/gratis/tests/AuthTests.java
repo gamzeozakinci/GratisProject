@@ -15,6 +15,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
  * for the same reason: the site itself doesn't separate them, so the tests shouldn't
  * pretend to either. See README "Auth Flow".
  */
+
 public class AuthTests extends BaseTest {
 
     @Test(description = "TC_001 - Registering with a brand-new phone number completes the OTP flow and logs the user in")
@@ -29,6 +30,8 @@ public class AuthTests extends BaseTest {
 
         System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
         page.pause();
+
+        //Personel info will be entered check later
     }
 
     @Test(description = "TC_002 - An already-registered phone number routes through the same OTP login, not a duplicate signup")
@@ -58,9 +61,10 @@ public class AuthTests extends BaseTest {
         loginPage.enterRegisteredPhoneNumber();
         loginPage.clickDevamEt();
 
-        //sonra bak buna
-        // page durdurma
+        System.out.println("Enter an invalid OTP number, then click Resume (▶) in the Playwright Inspector.");
+        page.pause();
 
+        assertThat(page.getByText("Girdiğiniz kod hatalıdır, lütfen yeniden deneyiniz.")).isVisible();
 
     }
 
@@ -74,6 +78,6 @@ public class AuthTests extends BaseTest {
         loginPage.invalidPhoneNumber();
         loginPage.clickDevamEt();
 
-        assertThat(page.getByText(ConfigReader.get("Son 7 hane aynı olamaz."))).isVisible();
+        assertThat(page.getByText("Son 7 hane aynı olamaz.")).isVisible();
     }
 }
