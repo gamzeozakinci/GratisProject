@@ -2,7 +2,6 @@ package com.gratis.tests;
 
 import com.gratis.base.BaseTest;
 import com.gratis.pages.HeaderComponent;
-import com.gratis.pages.PDPPage;
 import com.gratis.pages.PLPPage;
 import com.microsoft.playwright.Locator;
 import org.testng.Assert;
@@ -15,7 +14,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 public class SearchTests extends BaseTest {
 
     @Test(description = "TC_009 - Product Search using Autocomplete Suggestions")
-    public void autocompleteSuggestionsAppearWhileTyping() throws InterruptedException {
+    public void autocompleteSuggestionsAppearWhileTyping() {
         HeaderComponent header = new HeaderComponent(page);
 
         header.search();
@@ -51,5 +50,4 @@ public class SearchTests extends BaseTest {
                 .hasText(Pattern.compile(".*göz.*", Pattern.CASE_INSENSITIVE));
 
     }
-
 }

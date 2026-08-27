@@ -50,6 +50,7 @@ public class NavigationTests extends BaseTest {
     @Test(description = "TC_007 - Header Basket Icon Counter Synchronization")
     public void basketCounterSyncsDynamically() {
         //giriş gerekiyor
+
         HeaderComponent header = new HeaderComponent(page);
         PLPPage plp = new PLPPage(page);
 
@@ -67,9 +68,10 @@ public class NavigationTests extends BaseTest {
     @Test(description = "TC_008 - Header Logo Redirection from Subpages")
     public void logoRedirectsHomeFromSubpage() {
         HeaderComponent header = new HeaderComponent(page);
-        PLPPage plp = new PLPPage(page);
 
         header.headerSacbakim();
+
+        PLPPage plp = new PLPPage(page);
         plp.logo();
 
         assertThat(page).hasURL("https://www.gratis.com/");
