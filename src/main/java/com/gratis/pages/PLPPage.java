@@ -53,8 +53,7 @@ public class PLPPage {
     }
 
     public void filtrele() {
-        page.locator("page.locator(\"#submit-button\")").click();
-
+        page.locator("[aria-label='sort-select']").click();
     }
 
     public void filterCokSatan() {
@@ -66,19 +65,18 @@ public class PLPPage {
     }
 
     public void filterMarka() {
-        page.getByText("MARKA").click();
+        page.getByText("MARKA", new Page.GetByTextOptions().setExact(true)).click();
     }
 
     public void selectMarka() {
         page.locator("div.flex.items-start.gap-1")
                 .filter(new Locator.FilterOptions().setHasText("Wella"))
-                .locator("div.cursor-pointer")
+                .locator("div.cursor-pointer").first()
                 .click();
     }
 
     public void submitButton() {
-        page.locator("#submit-button").click();
-        ;
+        page.getByText("UYGULA", new Page.GetByTextOptions().setExact(true)).click();
     }
 
 

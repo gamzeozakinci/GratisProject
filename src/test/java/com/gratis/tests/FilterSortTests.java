@@ -3,8 +3,11 @@ package com.gratis.tests;
 import com.gratis.base.BaseTest;
 import com.gratis.pages.HeaderComponent;
 import com.gratis.pages.PLPPage;
+import com.microsoft.playwright.Locator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
@@ -13,12 +16,23 @@ public class FilterSortTests extends BaseTest {
     @Test(description = "TC_012 - Product Filtering by Brand and Price Range on PLP")
     public void filterByBrandAndPriceRange() {
         HeaderComponent header = new HeaderComponent(page);
-
         header.headerSacbakim();
 
+        PLPPage plp = new PLPPage(page);
+        plp.filterMarka();
+        plp.selectMarka();
 
+        assertThat(page).hasURL(Pattern.compile(".*brand=.*"));
 
+        Locator items = page.locator("a[href*='-p-']");
+        assertThat(items.first()).isVisible();
+
+        for (int i = 0; i < 5; i++) {
+            String text = items.nth(i).innerText();
+            Assert.assertTrue(text.toLowerCase().contains("wella"), "Item " + i + " did not contain 'wella': " + text);
+        }
     }
+
 
     @Test(description = "TC_013 - Product Sorting by Price and Sales Volume")
     public void sortByPriceLowToHighAndHighToLow() {
@@ -35,7 +49,6 @@ public class FilterSortTests extends BaseTest {
         plp.filterFiyatArtan();
 
         assertThat(page).hasURL("discountedPrice_asc");
-
 
     }
 }
