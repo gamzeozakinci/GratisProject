@@ -79,11 +79,6 @@ public class PLPPage {
         page.getByText("UYGULA", new Page.GetByTextOptions().setExact(true)).click();
     }
 
-    public String clickFirstItemName() {
-        return page.locator("a[href*='-p-']").first().toString();
-
-    }
-
     public void listingWishlist() {
         page.locator("span.hover\\:scale-110").first().click();
 

@@ -1,6 +1,6 @@
 # Gratis.com Test Cases
 
-28 test cases covering gratis.com's Auth, Navigation, Search, Filter/Sort, Catalog, Cart, Checkout, and Order flows. Each one maps 1:1 to a `@Test(description = "TC_XXX - ...")` annotation in `src/test/java/com/gratis/tests/`.
+27 test cases covering gratis.com's Auth, Navigation, Search, Filter/Sort, Catalog, Cart, Checkout, and Order flows. Each one maps 1:1 to a `@Test(description = "TC_XXX - ...")` annotation in `src/test/java/com/gratis/tests/`.
 
 **Status legend:** ✅ Implemented · 🔶 In progress · ⬜ Not started (`// TODO: implement`)
 
@@ -10,46 +10,47 @@ gratis.com has no email/password form and no separate registration page — a si
 
 | TC | Description | Method | Status |
 |----|---|---|---|
-| TC_001 | Registering with a brand-new phone number completes the OTP flow and logs the user in | `newPhoneNumberCompletesRegistration` | 🔶 Phone entry + DEVAM ET done; OTP entered manually via `page.pause()`; no assertion yet |
+| TC_001 | Registering with a brand-new phone number completes the OTP flow and logs the user in | `newPhoneNumberCompletesRegistration` | 🔶 Phone entry + DEVAM ET + manual OTP entry via `page.pause()`; no post-login assertion yet |
 | TC_002 | An already-registered phone number routes through the same OTP login, not a duplicate signup | `existingPhoneNumberRoutesToLogin` | 🔶 Full flow + assertions (URL, logged-in name in header); OTP still entered manually |
-| TC_003 | An incorrect OTP is rejected with a validation error and does not authenticate | `invalidOtpShowsError` | ⬜ |
-| TC_004 | An invalid phone number format is blocked before an OTP is ever sent | `invalidPhoneFormatBlocksContinue` | ⬜ Repurposed from a "forgot password" case — no such feature exists on this site |
+| TC_003 | An incorrect OTP is rejected with a validation error and does not authenticate | `invalidOtpShowsError` | 🔶 Manual invalid-OTP entry via `page.pause()`; asserts the real error text ("Girdiğiniz kod hatalıdır...") |
+| TC_004 | An invalid phone number format is blocked before an OTP is ever sent | `invalidPhoneFormatBlocksContinue` | ✅ Fully automated — `LoginPage.invalidPhoneNumber()` uses `pressSequentially()` (this masked phone field breaks with `.fill()`), asserts "Son 7 hane aynı olamaz." |
 
-**Known limitation:** OTP delivery is real SMS to a real phone, with no sandbox/mock bypass available on the live site. TC_001/TC_002 pause execution (`page.pause()`) so a human can read the code off their phone and type it into the browser directly — this makes those two tests semi-automated, not fully automated. TC_003 will need the same treatment once implemented.
+**Known limitation:** OTP delivery is real SMS to a real phone, with no sandbox/mock bypass available on the live site. TC_001–TC_003 pause execution (`page.pause()`) so a human can read the code off their phone and type it into the browser directly — semi-automated, not fully automated.
 
 ## Navigation — `NavigationTests.java`
 
 | TC | Description | Method | Status |
 |----|---|---|---|
-| TC_005 | Mega Menu Category Hover and Redirection (Desktop) | `megaMenuHoverAndRedirect` | 🔶 Flow + assertion written, but the "Makyaj" locator is unresolved — 5 elements share that text on the homepage and none of them was confirmed to be the real header link via automated checks; needs manual DevTools inspection |
-| TC_006 | Mobile Hamburger Menu Navigation & Accordion Drilldown | `mobileHamburgerMenuDrilldown` | ⬜ Mobile viewport now available (`PlaywrightFactory.initMobilePage()`) — test body itself (hamburger icon, drilldown, assertions) still needs to be written |
-| TC_007 | Header Basket Icon Counter Synchronization | `basketCounterSyncsDynamically` | ⬜ |
-| TC_008 | Header Logo Redirection from Subpages | `logoRedirectsHomeFromSubpage` | ⬜ |
+| TC_005 | Mega Menu Category Hover and Redirection (Desktop) | `megaMenuHoverAndRedirect` | 🔶 Flow + assertion written, but the "Makyaj" locator is unresolved — 5 elements share that text on the homepage and none was confirmed as the real header link via automated checks; needs manual DevTools inspection |
+| TC_006 | Mobile Hamburger Menu Navigation & Accordion Drilldown | `mobileHamburgerMenuDrilldown` | 🔶 Full flow written; `HeaderComponent.mobileHeaderYuzbakim()` is missing the `.first()` disambiguation its sibling methods have, so it may hit the same multi-match issue `mobileHeaderCiltbakim()` had before being fixed |
+| TC_007 | Header Basket Icon Counter Synchronization | `basketCounterSyncsDynamically` | 🔶 Flow + assertions written (add two items, check counter reads "1" then "2"); leading `//giriş gerekiyor` comment suggests an unresolved question about guest vs. logged-in cart behavior |
+| TC_008 | Header Logo Redirection from Subpages | `logoRedirectsHomeFromSubpage` | ✅ `PLPPage.logo()` uses `.first()` to disambiguate the 5 `<a href="/">` matches on a subpage |
 
 ## Search — `SearchTests.java`
 
 | TC | Description | Method | Status |
 |----|---|---|---|
-| TC_009 | Product Search using Autocomplete Suggestions | `autocompleteSuggestionsAppearWhileTyping` | ⬜ |
-| TC_010 | Product Search with Valid Keyword | `searchWithValidKeywordShowsResults` | ⬜ |
-| TC_011 | Product Search with Special Characters (SQLi / XSS Check) | `searchHandlesMaliciousPayloadsSafely` | ⬜ Data-driven — 3 payloads (SQLi, XSS, special symbols) via `@DataProvider` |
+| TC_009 | Product Search using Autocomplete Suggestions | `autocompleteSuggestionsAppearWhileTyping` | ✅ Waits on `suggestions.first()` before reading `.count()`, since `.count()`/`.innerText()` don't auto-wait like actions do |
+| TC_010 | Product Search with Valid Keyword | `searchWithValidKeywordShowsResults` | 🔶 `PLPPage.checkSearchWord()` and the `hasText("“göz“")` assertion still use smart/curly quotes, which likely don't match the real rendered heading text — worth verifying against the live DOM |
+
+**TC_011 removed:** the SQLi/XSS/special-character search payload test (previously TC_011, data-driven via `@DataProvider`) has been deleted from `SearchTests.java` entirely — no method, no data provider. Numbering below still reflects the original TC_012+ scheme rather than closing the gap.
 
 ## Filter & Sort — `FilterSortTests.java`
 
 | TC | Description | Method | Status |
 |----|---|---|---|
-| TC_012 | Product Filtering by Brand and Price Range on PLP | `filterByBrandAndPriceRange` | ⬜ |
-| TC_013 | Product Sorting by Price and Sales Volume | `sortByPriceLowToHighAndHighToLow` | ⬜ |
+| TC_012 | Product Filtering by Brand and Price Range on PLP | `filterByBrandAndPriceRange` | ✅ Expands MARKA (exact text match), checks the Wella checkbox, waits for `brand=` in the URL (checkbox filters apply instantly — no UYGULA needed), verifies the first 5 results all mention "wella" |
+| TC_013 | Product Sorting by Price and Sales Volume | `sortByPriceLowToHighAndHighToLow` | ✅ Sorts by Çok Satanlar then Fiyat Artan, asserting the `sort=` URL param each time; relies on `HeaderComponent.headerSacbakim()`'s `mouse().move(0,0)` fix so the mega menu opened on the way in doesn't linger and block the sort control |
 
 ## Catalog (PLP/PDP) — `CatalogTests.java`
 
 | TC | Description | Method | Status |
 |----|---|---|---|
-| TC_014 | Verify Product Detail Page Information Layout | `pdpLayoutShowsAllRequiredElements` | ⬜ |
-| TC_015 | Verify Product Stock Status (In-Stock vs Out-of-Stock) | `stockStatusReflectsAvailability` | ⬜ Needs known in-stock/out-of-stock product slugs |
-| TC_016 | Multi-Image Carousel Zoom and Navigation on PDP | `thumbnailCarouselUpdatesMainImage` | ⬜ |
-| TC_017 | Add/Remove Product to Wishlist (Logged-In User) | `addAndRemoveProductFromWishlistWhenLoggedIn` | ⬜ Needs a logged-in session |
-| TC_018 | Wishlist Access and Redirection for Guest User | `guestWishlistClickPromptsLogin` | ⬜ |
+| TC_014 | Verify Product Detail Page Information Layout | `pdpLayoutShowsAllRequiredElements` | ✅ Fixed — `PLPPage.clickFirstItemName()` (which returned `Locator.toString()`) was removed; now asserts the PDP's real `<h1>` product title is visible |
+| TC_015 | Verify Product Stock Status (In-Stock vs Out-of-Stock) | `stockStatusReflectsAvailability` | ⬜ Empty body, just a `//giriş gerekiyor` comment |
+| TC_016 | Product Page Checks *(renamed from "Multi-Image Carousel Zoom and Navigation on PDP")* | `thumbnailCarouselUpdatesMainImage` | ✅ Fixed both weak assertions — the lightbox close now checks the overlay (`.fixed.inset-0.bg-white/90`) is no longer visible instead of an unrelated generic button, and "Tüm Yorumları Görüntüle" is confirmed (via live DOM check) to switch tabs rather than scroll, so it now asserts the "DEĞERLENDİR" review button is visible instead of the unconfirmed `#comments-list` / `isInViewport()`. Still broader than its original single-purpose scope, and method name (`thumbnailCarouselUpdatesMainImage`) doesn't match the description — cosmetic, not a correctness issue. |
+| TC_017 | Add/Remove Product to Wishlist (Logged-In User) | `addAndRemoveProductFromWishlistWhenLoggedIn` | ⬜ Empty body, just a `//giriş gerekiyor` comment |
+| TC_018 | Wishlist Access and Redirection for Guest User | `guestWishlistClickPromptsLogin` | ✅ Checks all three guest entry points (header link, PLP card heart, PDP heart) all redirect to `/login` |
 
 ## Cart — `CartTests.java`
 
@@ -80,4 +81,4 @@ gratis.com has no email/password form and no separate registration page — a si
 
 ---
 
-**Progress: 4 / 28 in progress, 0 fully complete, 24 not started.**
+**Progress: 8 / 27 implemented, 8 in progress, 11 not started.**
