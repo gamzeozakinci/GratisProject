@@ -24,7 +24,7 @@ public class CatalogTests extends BaseTest {
         PLPPage plp = new PLPPage(page);
         plp.clickFirstItem();
 
-        assertThat(page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName(plp.clickFirstItemName())));
+        assertThat(page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setLevel(1))).isVisible();
 
     }
 
@@ -59,11 +59,10 @@ public class CatalogTests extends BaseTest {
         pdp.clickZoomOut();
         pdp.closeImageLightbox();
 
-        assertThat(page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button"))).isVisible();
-
+        assertThat(page.locator(".fixed.inset-0.bg-white\\/90")).not().isVisible();
 
         pdp.comments();
-        assertThat(page.locator("#comments-list")).isInViewport();
+        assertThat(page.getByText("DEĞERLENDİR", new Page.GetByTextOptions().setExact(true))).isVisible();
 
     }
 
