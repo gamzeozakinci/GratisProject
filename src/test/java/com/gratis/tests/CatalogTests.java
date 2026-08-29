@@ -10,6 +10,8 @@ import com.microsoft.playwright.options.AriaRole;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.regex.Pattern;
+
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class CatalogTests extends BaseTest {
@@ -67,11 +69,31 @@ public class CatalogTests extends BaseTest {
 
     @Test(description = "TC_017 - Add/Remove Product to Wishlist (Logged-In User)")
     public void addAndRemoveProductFromWishlistWhenLoggedIn() {
-        // TODO: implement
+        //giriş gerekiyor
     }
 
     @Test(description = "TC_018 - Wishlist Access and Redirection for Guest User")
     public void guestWishlistClickPromptsLogin() {
-        // TODO: implement
+        HeaderComponent header = new HeaderComponent(page);
+
+        header.headerWishist();
+        assertThat(page).hasURL(Pattern.compile(".*/login"));
+
+        page.navigate("https://www.gratis.com/");
+
+        header.headerSacbakim();
+        PLPPage plp = new PLPPage(page);
+        plp.listingWishlist();
+        assertThat(page).hasURL(Pattern.compile(".*/login"));
+
+        page.navigate("https://www.gratis.com/");
+        header.headerSacbakim();
+        plp.clickFirstItem();
+
+        PDPPage pdp = new PDPPage(page);
+        pdp.productWishlist();
+
+        assertThat(page).hasURL(Pattern.compile(".*/login"));
+
     }
 }

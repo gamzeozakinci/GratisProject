@@ -43,12 +43,9 @@ public class PDPPage {
         page.locator("//div[text()=\"Tüm Yorumları Görüntüle\"]").click();
     }
 
+    public void productWishlist() {
+        page.locator("div.absolute.right-3.top-3 div.mr-2").click();
 
-
-
-
-
-
-
+    }
 
 }
