@@ -30,8 +30,18 @@ public class CatalogTests extends BaseTest {
 
     @Test(description = "TC_015 - Verify Product Stock Status (In-Stock vs Out-of-Stock)")
     public void stockStatusReflectsAvailability() {
-
         //giriş gerekiyor
+        HeaderComponent header = new HeaderComponent(page);
+        header.headerSacbakim();
+
+        PLPPage plp = new PLPPage(page);
+        plp.clickFirstItem();
+
+        PDPPage pdp = new PDPPage(page);
+        pdp.addToCart();
+
+        /// /burada kaldoın
+
 
     }
 
@@ -69,6 +79,15 @@ public class CatalogTests extends BaseTest {
     @Test(description = "TC_017 - Add/Remove Product to Wishlist (Logged-In User)")
     public void addAndRemoveProductFromWishlistWhenLoggedIn() {
         //giriş gerekiyor
+
+        HeaderComponent header = new HeaderComponent(page);
+        header.headerSacbakim();
+
+        PLPPage plp = new PLPPage(page);
+        plp.listingWishlist();
+
+        assertThat(page.locator("//*[text()=\"Favori listesine başarılı bir şekilde eklendi.\"]")).isVisible();
+
     }
 
     @Test(description = "TC_018 - Wishlist Access and Redirection for Guest User")
