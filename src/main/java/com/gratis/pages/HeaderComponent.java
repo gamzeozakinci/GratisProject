@@ -4,6 +4,10 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 
+import java.util.regex.Pattern;
+
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
 // TODO: header/nav is used by almost every test class, so build this one early.
 //  - logo click -> back to homepage
 //  - isUserLoggedIn(name) - some way to tell a logged-in header apart from a guest one
@@ -58,7 +62,7 @@ public class HeaderComponent {
     }
 
     public void search() {
-            page.locator("#search-bar input:visible").fill("göz");
+        page.locator("#search-bar input:visible").fill("göz");
     }
 
     public Locator searchSuggestions() {
@@ -67,6 +71,12 @@ public class HeaderComponent {
 
         return items;
     }
+
+    public void headerWishist() {
+        page.locator("//a[@href=\"/my-account/wishlist\"]").first().click();
+
+    }
+
 
 
 }

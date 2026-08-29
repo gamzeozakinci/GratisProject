@@ -84,5 +84,10 @@ public class PLPPage {
 
     }
 
+    public void listingWishlist() {
+        page.locator("span.hover\\:scale-110").first().click();
+
+    }
+
 
 }
