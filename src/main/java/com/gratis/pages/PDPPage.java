@@ -1,6 +1,7 @@
 package com.gratis.pages;
 
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 
 // TODO: Product Detail Page
 //  - title text
@@ -18,9 +19,36 @@ public class PDPPage {
         this.page = page;
     }
 
-    public void hasWord() {
-        page.locator("div.overflow-x-auto.no-scrollbar");
+    public void clickNextImage() {
+        page.locator("div.h-9.w-9:has(svg[style*='rotate(0deg)'])").click();
     }
+
+    public void openImageLightbox() {
+        page.locator("div.cursor-zoom-in").click();
+    }
+
+    public void clickZoomIn() {
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("zoom-in")).click();
+    }
+
+    public void clickZoomOut() {
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("zoom-out")).click();
+    }
+
+    public void closeImageLightbox() {
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("close-modal")).click();
+    }
+
+    public void comments() {
+        page.locator("//div[text()=\"Tüm Yorumları Görüntüle\"]").click();
+    }
+
+
+
+
+
+
+
 
 
 }
