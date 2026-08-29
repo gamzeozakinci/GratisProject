@@ -54,6 +54,7 @@ public class HeaderComponent {
 
     public void headerSacbakim() {
         page.locator("//a[text()=\"Saç Bakım\"]").first().click();
+        page.mouse().move(0, 0); // release hover so the mega menu opened by the click doesn't linger on the destination page
     }
 
     public void search() {

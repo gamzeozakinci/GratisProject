@@ -35,20 +35,21 @@ public class FilterSortTests extends BaseTest {
 
 
     @Test(description = "TC_013 - Product Sorting by Price and Sales Volume")
-    public void sortByPriceLowToHighAndHighToLow() {
+    public void sortByPriceLowToHighAndHighToLow() throws InterruptedException {
         HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
 
+        Thread.sleep(2000);
+
         PLPPage plp = new PLPPage(page);
+        assertThat(page.locator("a[href*='-p-']").first()).isVisible(); // let the page settle first
+
         plp.filtrele();
         plp.filterCokSatan();
-
-        assertThat(page).hasURL("salesCount_desc");
+        assertThat(page).hasURL(Pattern.compile(".*salesCount_desc.*"));
 
         plp.filtrele();
         plp.filterFiyatArtan();
-
-        assertThat(page).hasURL("discountedPrice_asc");
-
+        assertThat(page).hasURL(Pattern.compile(".*discountedPrice_asc.*"));
     }
 }
