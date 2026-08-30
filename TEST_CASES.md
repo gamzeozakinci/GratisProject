@@ -1,6 +1,6 @@
 # Gratis.com Test Cases
 
-27 test cases covering gratis.com's Auth, Navigation, Search, Filter/Sort, Catalog, Cart, Checkout, and Order flows. Each one maps 1:1 to a `@Test(description = "TC_XXX - ...")` annotation in `src/test/java/com/gratis/tests/`.
+26 test cases covering gratis.com's Auth, Navigation, Search, Filter/Sort, Catalog, Cart, Checkout, and Order flows. Each one maps 1:1 to a `@Test(description = "TC_XXX - ...")` annotation in `src/test/java/com/gratis/tests/`.
 
 **Status legend:** ✅ Implemented · 🔶 In progress · ⬜ Not started (`// TODO: implement`)
 
@@ -54,14 +54,19 @@ gratis.com has no email/password form and no separate registration page — a si
 
 ## Cart — `CartTests.java`
 
+All Cart tests assume a logged-in session (confirmed live: every cart entry point — PLP add-to-cart, PDP SEPETE EKLE, and navigating to `/cart` directly — redirects a guest to `/login`). The class's own leading comment (`//giriş yapıldıktan sonra hepsi sırayla calısacak ve birbirine baglı olacak.`) confirms these are meant to run in sequence, sharing the `firstItem` instance field set by TC_019 — TestNG's default execution order matches declaration order, but this isn't a strict guarantee, so it's worth keeping an eye on.
+
+**Blocking bug affecting TC_019, TC_020, TC_021, and TC_023 alike:** `CartPage.cartButton()` uses `getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("\"/cart\""))` — the literal string `"/cart"` (quote characters included) is never going to be any link's accessible name. Worse, the real cart `<a>` link has no accessible name at all (it only wraps an `<img alt="basket-icon">`, with nothing on the `<a>` itself), so `getByRole` + `setName` can't work here regardless of what string is passed. A plain `page.locator("a[href='/cart']")` (as used elsewhere in this project) is what's needed instead.
+
 | TC | Description | Method | Status |
 |----|---|---|---|
-| TC_019 | Add Product to Cart from PLP and PDP | `addProductsFromPlpAndPdp` | ⬜ |
-| TC_020 | Update Product Quantity in Cart (Boundary & Limit Checks) | `quantityBoundaryChecksInCart` | ⬜ |
-| TC_021 | Remove Product from Shopping Cart | `removeProductFromCart` | ⬜ |
-| TC_022 | Apply Valid Discount Promo Code to Order | `applyValidPromoCode` | ⬜ |
-| TC_023 | Apply Invalid or Expired Promo Code | `invalidAndExpiredPromoCodesAreRejected` | ⬜ |
-| TC_024 | Shopping Cart Session Persistence | `cartPersistsAcrossReloadAndReLogin` | ⬜ |
+| TC_019 | Add Product to Cart from PLP and PDP | `addProductsFromPlpAndPdp` | 🔶 Blocked by `cartButton()` above; also `firstItem = page.locator("a[href*='-p-']").first().toString()` returns a `Locator` debug string (not the real product name), same class of bug as the earlier `clickFirstItemName()` issue — the `assertEquals` against real cart text will fail even once `cartButton()` is fixed |
+| TC_020 | Update Product Quantity in Cart (Boundary & Limit Checks) | `quantityBoundaryChecksInCart` | 🔶 Blocked by `cartButton()`; `CartPage.increaseQuantity()`/`decreaseQuantity()` pick their `+`/`-` buttons by raw `.nth()` index with a comment admitting uncertainty about which index is which — worth confirming against the live DOM |
+| TC_021 | Remove Product from Shopping Cart | `removeProductFromCart` | 🔶 Blocked by `cartButton()`; also depends on the `firstItem` field from TC_019 (same `.toString()` bug) and its assertion checks the item is still `isVisible()` after one `decreaseQuantity()` call — that doesn't actually verify removal, which is what the test name promises |
+| TC_023 | Apply Invalid or Expired Promo Code | `invalidAndExpiredPromoCodesAreRejected` | 🔶 Blocked by `cartButton()`; `CartPage.submitPromoCode()` uses `getByRole(BUTTON, setName("UYGULA"))`, but this UYGULA button has `aria-label="button"` overriding its accessible name — same trap as the filter sidebar's UYGULA button from TC_012, needs `getByText("UYGULA", exact)` instead |
+| TC_024 | Shopping Cart Session Persistence | `cartPersistsAcrossReloadAndReLogin` | ⬜ Just planning comments (log in → add item → reload → assert still present); no real code yet |
+
+**TC_022 removed:** the valid-promo-code test (previously TC_022) has been deleted from `CartTests.java` entirely, matching the earlier removal of TC_011. Numbering keeps the gap rather than closing it.
 
 ## Checkout — `CheckoutTests.java`
 
@@ -81,4 +86,4 @@ gratis.com has no email/password form and no separate registration page — a si
 
 ---
 
-**Progress: 8 / 27 implemented, 8 in progress, 11 not started.**
+**Progress: 8 / 26 implemented, 12 in progress, 6 not started.**
