@@ -15,14 +15,17 @@ public class PLPPage {
 
     public void add1stItem() {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).first().click();
+
     }
 
     public String check1stItem() {
         return page.locator("//span[text()=\"1\"]").first().innerText();
+
     }
 
     public void add2ndItem() {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).nth(1).click();
+
     }
 
     public String check2ndItem() {
@@ -46,18 +49,22 @@ public class PLPPage {
 
     public void filtrele() {
         page.locator("[aria-label='sort-select']").click();
+
     }
 
     public void filterCokSatan() {
         page.locator("//*[text()=\"Çok Satanlar\"]").click();
+
     }
 
     public void filterFiyatArtan() {
         page.locator("//*[text()=\"Fiyat Artan\"]").click();
+
     }
 
     public void filterMarka() {
         page.getByText("MARKA", new Page.GetByTextOptions().setExact(true)).click();
+
     }
 
     public void selectMarka() {
@@ -65,16 +72,20 @@ public class PLPPage {
                 .filter(new Locator.FilterOptions().setHasText("Wella"))
                 .locator("div.cursor-pointer").first()
                 .click();
+
     }
 
     public void submitButton() {
         page.getByText("UYGULA", new Page.GetByTextOptions().setExact(true)).click();
+
     }
 
     public void listingWishlist() {
         page.locator("span.hover\\:scale-110").first().click();
 
     }
+
+
 
 
 }

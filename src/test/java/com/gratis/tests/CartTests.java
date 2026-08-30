@@ -5,11 +5,14 @@ import com.gratis.pages.CartPage;
 import com.gratis.pages.HeaderComponent;
 import com.gratis.pages.PDPPage;
 import com.gratis.pages.PLPPage;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class CartTests extends BaseTest {
+
+    //giriş yapıldıktan sonra hepsi sırayla calısacak ve birbirine baglı olacak.
 
     @Test(description = "TC_019 - Add Product to Cart from PLP and PDP")
     public void addProductsFromPlpAndPdp() {
@@ -23,7 +26,7 @@ public class CartTests extends BaseTest {
         CartPage cart = new CartPage(page);
         cart.cartButton();
 
-        assertThat(page.locator(".flex.flex-1.flex-col").getByText(firstItem).first()).isVisible();
+        Assert.assertEquals(page.locator(".flex.flex-1.flex-col").first().innerText(), firstItem);
 
         cart.clearCart();
         cart.tamam();
@@ -35,19 +38,40 @@ public class CartTests extends BaseTest {
         PDPPage pdp = new PDPPage(page);
         pdp.addToCart();
         cart.cartButton();
-        assertThat(page.locator(".flex.flex-1.flex-col").getByText(firstItem).first()).isVisible();
+        Assert.assertEquals(page.locator(".flex.flex-1.flex-col").first().innerText(), firstItem);
 
 
     }
 
     @Test(description = "TC_020 - Update Product Quantity in Cart (Boundary & Limit Checks)")
     public void quantityBoundaryChecksInCart() {
-        // TODO: implement
+
+        CartPage cart = new CartPage(page);
+        cart.cartButton();
+        String currQ = page.locator(".font-semibold.text-black").first().innerText();
+
+        cart.increaseQuantity();
+
+        String newQ = page.locator(".font-semibold.text-black").first().innerText();
+
+        Assert.assertNotEquals(newQ, currQ, "Quantity of product did not change");
+
+        cart.decreaseQuantity();
+        newQ = page.locator(".font-semibold.text-black").first().innerText();
+
+        Assert.assertEquals(newQ, currQ, "Quantity of product did not change");
+
+
     }
 
     @Test(description = "TC_021 - Remove Product from Shopping Cart")
     public void removeProductFromCart() {
-        // TODO: implement
+        CartPage cart = new CartPage(page);
+        cart.cartButton();
+
+        cart.decreaseQuantity();
+
+
     }
 
 
