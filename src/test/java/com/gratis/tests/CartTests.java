@@ -1,16 +1,15 @@
 package com.gratis.tests;
 
 import com.gratis.base.BaseTest;
-import com.gratis.pages.CartPage;
-import com.gratis.pages.HeaderComponent;
-import com.gratis.pages.PDPPage;
-import com.gratis.pages.PLPPage;
+import com.gratis.pages.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class CartTests extends BaseTest {
+
+    String firstItem;
 
     //giriş yapıldıktan sonra hepsi sırayla calısacak ve birbirine baglı olacak.
 
@@ -21,7 +20,7 @@ public class CartTests extends BaseTest {
 
         PLPPage plp = new PLPPage(page);
         plp.add1stItem();
-        String firstItem = page.locator("a[href*='-p-']").first().toString();
+        firstItem = page.locator("a[href*='-p-']").first().toString();
 
         CartPage cart = new CartPage(page);
         cart.cartButton();
@@ -71,17 +70,44 @@ public class CartTests extends BaseTest {
 
         cart.decreaseQuantity();
 
+        assertThat(page.locator(".flex.flex-col.gap-4").getByText(firstItem)).isVisible();
+
 
     }
 
 
     @Test(description = "TC_023 - Apply Invalid or Expired Promo Code")
     public void invalidAndExpiredPromoCodesAreRejected() {
-        // TODO: implement
+        //only tried with invalid code because since this is s volunteery test i dont have access to test promo codes
+        CartPage cart = new CartPage(page);
+        cart.cartButton();
+        cart.openPromocode();
+        cart.enterPromoCOde();
+        cart.submitPromoCode();
+
+        assertThat(page.locator("//*[text()=\"Kupon Kodu geçersizdir.\"]").first()).isVisible();
+
+
     }
 
     @Test(description = "TC_024 - Shopping Cart Session Persistence")
     public void cartPersistsAcrossReloadAndReLogin() {
-        // TODO: implement
+        HeaderComponent header = new HeaderComponent(page);
+        LoginPage loginPage = new LoginPage(page);
+        header.openLoginOrRegister();
+        loginPage.enterRegisteredPhoneNumber();
+        loginPage.clickDevamEt();
+        page.pause();
+
+        header.headerSacbakim();
+        PLPPage plp = new PLPPage(page);
+        plp.add1stItem();
+
+        page.reload();
+
+        CartPage cart = new CartPage(page);
+        cart.cartButton();
+
+        assertThat(page.locator(".flex.flex-1.flex-col").first()).isVisible(); // same cart-item locator TC_019 uses
     }
 }

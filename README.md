@@ -1,7 +1,7 @@
 # Gratis.com – Playwright + TestNG Automation Framework
 
 UI test automation framework for **gratis.com** (cosmetics e-commerce), built from a
-27-case test suite spanning Auth, Navigation, Search/Filtering, Catalog, Cart and
+26-case test suite spanning Auth, Navigation, Search/Filtering, Catalog, Cart and
 Checkout. Java + Playwright + TestNG, Page Object Model, no external reporting layer —
 TestNG's own HTML/XML report is generated under `test-output/` after every run.
 
@@ -38,7 +38,7 @@ src/test/java/com/gratis/tests/
 ├── SearchTests.java         TC_009, TC_010 (TC_011, the SQLi/XSS payload test, was removed)
 ├── FilterSortTests.java     TC_012, TC_013
 ├── CatalogTests.java        TC_014, TC_015, TC_016, TC_017, TC_018
-├── CartTests.java           TC_019–TC_024
+├── CartTests.java           TC_019–TC_021, TC_023, TC_024 (TC_022, the valid-promo test, was removed)
 ├── CheckoutTests.java       TC_025–TC_027 (payment intentionally stops at URL check)
 └── OrderTests.java          TC_028
 

@@ -47,5 +47,22 @@ public class CartPage {
 
     }
 
+    public void openPromocode() {
+        page.locator(".transform.transition-transform").first().click();
+
+    }
+
+    public void enterPromoCOde() {
+        page.getByPlaceholder("Kodunuzu giriniz").fill("Promocode!!");
+
+    }
+
+    public void submitPromoCode() {
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("UYGULA")).click();
+    }
+
+    public void continueToDelivery() {
+        page.getByText("TESLİMAT ADIMINA GEÇ").first().click();
+    }
 
 }
