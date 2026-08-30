@@ -29,8 +29,9 @@ public class CatalogTests extends BaseTest {
     }
 
     @Test(description = "TC_015 - Verify Product Stock Status (In-Stock vs Out-of-Stock)")
-    public void stockStatusReflectsAvailability() {
+    public void stockStatusReflectsAvailability() throws InterruptedException {
         //giriş gerekiyor
+
         HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
 
@@ -40,8 +41,7 @@ public class CatalogTests extends BaseTest {
         PDPPage pdp = new PDPPage(page);
         pdp.addToCart();
 
-        /// /burada kaldoın
-
+        assertThat(page.getByText("Ürün sepete başarılı bir şekilde eklendi.")).isVisible();
 
     }
 
