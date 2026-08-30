@@ -1,15 +1,8 @@
 package com.gratis.pages;
 
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 
-// TODO: Cart page
-//  - item count, reading a row's quantity
-//  - increase quantity (n times), set quantity directly by typing a value
-//  - stock-limit toast visible, delete-confirm popup visible
-//  - remove an item (with the confirm-delete step if one appears)
-//  - subtotal / shipping / grand total text
-//  - apply a promo code, and check success/error state + the discount line
-//  - proceed to checkout -> CheckoutPage
 public class CartPage {
 
     private final Page page;
@@ -17,4 +10,26 @@ public class CartPage {
     public CartPage(Page page) {
         this.page = page;
     }
+
+    public void cartButton() {
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("\"/cart\"")).click();
+
+    }
+
+    public void logoCart() {
+        page.locator("//a[@href=\"/\"]").first().click();
+
+    }
+
+    public void clearCart() {
+        page.getByText("TÜMÜNÜ SİL").click();
+
+    }
+
+    public void tamam() {
+        page.getByText("TAMAM").click();
+
+    }
+
+
 }
