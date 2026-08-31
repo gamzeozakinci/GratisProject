@@ -31,7 +31,7 @@ public class AuthTests extends BaseTest {
         System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
         page.pause();
 
-        //Personel info will be entered check later
+
     }
 
     @Test(description = "TC_002 - An already-registered phone number routes through the same OTP login, not a duplicate signup")
