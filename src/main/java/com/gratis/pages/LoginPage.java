@@ -28,5 +28,38 @@ public class LoginPage {
         page.locator("input[name='phoneNumber']").pressSequentially("000000000");
     }
 
+    public void registerName() {
+        page.getByPlaceholder("Adınızı giriniz").fill("Test");
+    }
+
+    public void registerSurName() {
+        page.getByPlaceholder("Soyadınızı giriniz").fill("User");
+    }
+
+    public void registerEposta() {
+        page.getByPlaceholder("E-Posta adresinizi giriniz").fill("test.user@example.com");
+    }
+
+    public void registerBirth() {
+        page.getByPlaceholder("GG.AA.YYYY").fill("01011990");
+    }
+
+    public void gratisKartCheck() {
+
+    }
+
+    public void agreementCheck() {
+
+    }
+
+
+    public void registerConfirm() {
+
+    }
+
+
+
+
+
 
 }
