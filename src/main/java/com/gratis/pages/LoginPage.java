@@ -1,6 +1,7 @@
 package com.gratis.pages;
 
 import com.gratis.config.ConfigReader;
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 
@@ -45,21 +46,24 @@ public class LoginPage {
     }
 
     public void gratisKartCheck() {
+        page.locator("div.flex.items-start.gap-1",
+                new Page.LocatorOptions().setHasText("Gratis Kart sahibi olmak istiyorum")
+        ).click();
 
     }
 
     public void agreementCheck() {
+        page.locator("div.flex.items-start.gap-1",
+                new Page.LocatorOptions().setHasText("Üyelik Sözleşmesi")
+        ).click();
 
     }
 
 
     public void registerConfirm() {
+        page.locator("#submit-button").click();
 
     }
-
-
-
-
 
 
 }
