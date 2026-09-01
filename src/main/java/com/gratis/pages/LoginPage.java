@@ -30,7 +30,7 @@ public class LoginPage {
     }
 
     public void registerName() {
-        page.getByPlaceholder("Adınızı giriniz").fill("Test");
+        page.getByPlaceholder("Adınızı giriniz").first().fill("Test");
     }
 
     public void registerSurName() {
@@ -59,14 +59,9 @@ public class LoginPage {
 
     }
 
-
     public void registerConfirm() {
         page.locator("#submit-button").click();
 
     }
-
-    //registerli olan son testleri bitir, config içine dosyaları eklenecek
-    // 
-
 
 }

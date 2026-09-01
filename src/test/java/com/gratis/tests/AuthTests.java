@@ -19,18 +19,29 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 public class AuthTests extends BaseTest {
 
     @Test(description = "TC_001 - Registering with a brand-new phone number completes the OTP flow and logs the user in")
-    public void newPhoneNumberCompletesRegistration() {
+    public void newPhoneNumberCompletesRegistration() throws InterruptedException {
         HeaderComponent header = new HeaderComponent(page);
-        LoginPage loginPage = new LoginPage(page);
+        LoginPage login = new LoginPage(page);
 
         header.openLoginOrRegister();
 
-        loginPage.enterPhoneNumber();
-        loginPage.clickDevamEt();
+        login.enterPhoneNumber();
+        login.clickDevamEt();
 
         System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
         page.pause();
 
+        login.registerName();
+        login.registerSurName();
+        login.registerEposta();
+
+        login.registerBirth();
+        login.gratisKartCheck();
+        login.agreementCheck();
+
+        login.registerConfirm();
+
+        assertThat(page).hasURL("https://www.gratis.com/");
 
     }
 
