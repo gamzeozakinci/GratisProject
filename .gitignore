@@ -9,3 +9,6 @@ test-output/
 # Real test-account phone number / OTP live here locally only - copy from
 # config.properties.example and fill in your own values.
 src/test/resources/config.properties
+
+# A real, valid login session for the real test account - see SessionCaptureTests.
+src/test/resources/auth-state.json

@@ -8,8 +8,6 @@ import com.gratis.pages.PLPPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.net.URL;
-
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class NavigationTests extends BaseTest {
@@ -49,7 +47,11 @@ public class NavigationTests extends BaseTest {
 
     @Test(description = "TC_007 - Header Basket Icon Counter Synchronization")
     public void basketCounterSyncsDynamically() {
-        //giriş gerekiyor
+        // needs to be logged in (cart requires it) - swap to a logged-in page,
+        // same pattern TC_006 uses to swap to a mobile one.
+        PlaywrightFactory.tearDown();
+        page = PlaywrightFactory.initLoggedInPage();
+        page.navigate(ConfigReader.baseUrl());
 
         HeaderComponent header = new HeaderComponent(page);
         PLPPage plp = new PLPPage(page);
