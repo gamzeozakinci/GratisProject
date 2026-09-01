@@ -8,18 +8,10 @@ import org.testng.annotations.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
-/**
- * gratis.com has no separate registration form or login form - "Giriş Yap / Üye Ol"
- * is a single phone-number + OTP flow that creates the account on first use and logs
- * an existing number straight in. Login and registration cases live in one class here
- * for the same reason: the site itself doesn't separate them, so the tests shouldn't
- * pretend to either. See README "Auth Flow".
- */
-
 public class AuthTests extends BaseTest {
 
     @Test(description = "TC_001 - Registering with a brand-new phone number completes the OTP flow and logs the user in")
-    public void newPhoneNumberCompletesRegistration() throws InterruptedException {
+    public void newPhoneNumberCompletesRegistration() {
         HeaderComponent header = new HeaderComponent(page);
         LoginPage login = new LoginPage(page);
 

@@ -10,6 +10,8 @@ import com.microsoft.playwright.options.ViewportSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -27,6 +29,11 @@ public final class PlaywrightFactory {
     private static Browser browser;
     private static BrowserContext context;
     private static Page page;
+
+    // Saved login session (cookies + localStorage) for tests that need to already
+    // be logged in - see SessionCaptureTests, which is what actually creates this
+    // file. Gitignored: it holds a real, valid session for a real account.
+    private static final Path AUTH_STATE_PATH = Path.of("src/test/resources/auth-state.json");
 
     private PlaywrightFactory() {
     }
@@ -76,6 +83,46 @@ public final class PlaywrightFactory {
         page = context.newPage();
         log.info("Mobile browser launched");
         return page;
+    }
+
+    /**
+     * Same as initPage(), but loads a previously saved login session (if one
+     * exists) so the returned page starts out already logged in - no phone
+     * number, no OTP. Run SessionCaptureTests once (or again whenever the
+     * saved session has expired) to create/refresh that file.
+     */
+    public static Page initLoggedInPage() {
+        playwright = Playwright.create();
+
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
+                .setHeadless(ConfigReader.getBoolean("headless"))
+                .setArgs(List.of("--start-maximized")));
+
+        Browser.NewContextOptions options = new Browser.NewContextOptions()
+                .setViewportSize(null)
+                .setLocale("tr-TR");
+
+        if (Files.exists(AUTH_STATE_PATH)) {
+            options.setStorageStatePath(AUTH_STATE_PATH);
+        } else {
+            log.warn("No saved login at {} - run SessionCaptureTests first", AUTH_STATE_PATH);
+        }
+
+        context = browser.newContext(options);
+        context.setDefaultTimeout(ConfigReader.getInt("default.timeout"));
+
+        page = context.newPage();
+        log.info("Browser launched (reusing saved login, if present)");
+        return page;
+    }
+
+    /**
+     * Saves the current context's cookies + localStorage to AUTH_STATE_PATH.
+     * Call this right after a real, manual login - see SessionCaptureTests.
+     */
+    public static void saveLoginState() {
+        context.storageState(new BrowserContext.StorageStateOptions().setPath(AUTH_STATE_PATH));
+        log.info("Saved login session to {}", AUTH_STATE_PATH);
     }
 
     public static void tearDown() {

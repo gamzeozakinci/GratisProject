@@ -1,17 +1,15 @@
 package com.gratis.tests;
 
-import com.gratis.base.BaseTest;
+import com.gratis.base.LoggedInBaseTest;
 import com.gratis.pages.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
-public class CartTests extends BaseTest {
+public class CartTests extends LoggedInBaseTest {
 
     String firstItem;
-
-    //giriş yapıldıktan sonra hepsi sırayla calısacak ve birbirine baglı olacak.
 
     @Test(description = "TC_019 - Add Product to Cart from PLP and PDP")
     public void addProductsFromPlpAndPdp() {
@@ -92,13 +90,8 @@ public class CartTests extends BaseTest {
 
     @Test(description = "TC_024 - Shopping Cart Session Persistence")
     public void cartPersistsAcrossReloadAndReLogin() {
+        // already logged in - see LoggedInBaseTest.setUp()
         HeaderComponent header = new HeaderComponent(page);
-        LoginPage loginPage = new LoginPage(page);
-        header.openLoginOrRegister();
-        loginPage.enterRegisteredPhoneNumber();
-        loginPage.clickDevamEt();
-        page.pause();
-
         header.headerSacbakim();
         PLPPage plp = new PLPPage(page);
         plp.add1stItem();

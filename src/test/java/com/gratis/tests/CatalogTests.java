@@ -1,6 +1,8 @@
 package com.gratis.tests;
 
 import com.gratis.base.BaseTest;
+import com.gratis.config.ConfigReader;
+import com.gratis.driver.PlaywrightFactory;
 import com.gratis.pages.HeaderComponent;
 import com.gratis.pages.PDPPage;
 import com.gratis.pages.PLPPage;
@@ -30,7 +32,10 @@ public class CatalogTests extends BaseTest {
 
     @Test(description = "TC_015 - Verify Product Stock Status (In-Stock vs Out-of-Stock)")
     public void stockStatusReflectsAvailability() throws InterruptedException {
-        //giriş gerekiyor
+        // needs to be logged in to actually add to cart - see LoggedInBaseTest
+        PlaywrightFactory.tearDown();
+        page = PlaywrightFactory.initLoggedInPage();
+        page.navigate(ConfigReader.baseUrl());
 
         HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
@@ -78,7 +83,9 @@ public class CatalogTests extends BaseTest {
 
     @Test(description = "TC_017 - Add/Remove Product to Wishlist (Logged-In User)")
     public void addAndRemoveProductFromWishlistWhenLoggedIn() {
-        //giriş gerekiyor
+        PlaywrightFactory.tearDown();
+        page = PlaywrightFactory.initLoggedInPage();
+        page.navigate(ConfigReader.baseUrl());
 
         HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
