@@ -12,7 +12,7 @@ public class CartPage {
     }
 
     public void cartButton() {
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("\"/cart\"")).click();
+        page.locator("a[href='/cart']").first().click();
 
     }
 
@@ -58,7 +58,7 @@ public class CartPage {
     }
 
     public void submitPromoCode() {
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("UYGULA")).click();
+        page.getByText("UYGULA", new Page.GetByTextOptions().setExact(true)).click();
     }
 
     public void continueToDelivery() {

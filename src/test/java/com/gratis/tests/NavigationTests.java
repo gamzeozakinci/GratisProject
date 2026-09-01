@@ -49,6 +49,7 @@ public class NavigationTests extends BaseTest {
     public void basketCounterSyncsDynamically() {
         // needs to be logged in (cart requires it) - swap to a logged-in page,
         // same pattern TC_006 uses to swap to a mobile one.
+
         PlaywrightFactory.tearDown();
         page = PlaywrightFactory.initLoggedInPage();
         page.navigate(ConfigReader.baseUrl());

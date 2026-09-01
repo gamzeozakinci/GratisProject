@@ -2,7 +2,6 @@ package com.gratis.pages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.options.AriaRole;
 
 public class PLPPage {
 
@@ -14,7 +13,10 @@ public class PLPPage {
 
 
     public void add1stItem() {
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).first().click();
+        page.locator("a[href*='-p-']").first()
+                .locator("xpath=ancestor::div[contains(@class,'relative')][1]")
+                .locator("button[aria-label='button']")
+                .click();
 
     }
 
@@ -24,7 +26,10 @@ public class PLPPage {
     }
 
     public void add2ndItem() {
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).nth(1).click();
+        page.locator("a[href*='-p-']").nth(1)
+                .locator("xpath=ancestor::div[contains(@class,'relative')][1]")
+                .locator("button[aria-label='button']")
+                .click();
 
     }
 
@@ -76,7 +81,7 @@ public class PLPPage {
     }
 
     public void submitButton() {
-        page.getByText("UYGULA", new Page.GetByTextOptions().setExact(true)).click();
+        page.getByText("Kaydet", new Page.GetByTextOptions().setExact(true)).click();
 
     }
 
