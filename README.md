@@ -9,6 +9,10 @@ This is the **Playwright + TestNG** entry in a 4-part QA automation portfolio
 (alongside a Selenium + Cucumber project, an Appium project, and a REST Assured +
 JMeter project).
 
+Every locator in this project was checked against gratis.com's real, live DOM —
+not guessed from a spec. See `TEST_CASES.md` for the current, code-accurate status
+of every test case, including known issues found along the way.
+
 ## Tech Stack
 
 | Layer | Tool |
@@ -23,26 +27,32 @@ JMeter project).
 
 ```
 src/main/java/com/gratis/
-├── base/        BasePage (just the shared Page + logger - Page Objects call
-│                Playwright's own Locator/Page methods directly), BaseTest (TestNG lifecycle)
-├── config/      ConfigReader (loads config.properties)
-├── driver/      PlaywrightFactory (ThreadLocal browser/context/page per test thread)
-├── pages/       Page Objects: HeaderComponent, HomePage, LoginPage (handles both
-│                login AND registration - see "Auth Flow" below), PLPPage, PDPPage,
-│                WishlistPage, CartPage, CheckoutPage, OrderPage
-└── utils/       Constants (payloads, group names), TestDataGenerator (unique phone numbers)
+├── base/        BaseTest (TestNG lifecycle - fresh guest page per test),
+│                LoggedInBaseTest (same, but starts every test already logged in
+│                via a saved session - see "Login & Sessions" below)
+├── config/      ConfigReader (loads config.properties, UTF-8 explicitly)
+├── driver/      PlaywrightFactory (plain static fields, not ThreadLocal - see its
+│                own class comment for why; initPage/initMobilePage/initLoggedInPage)
+├── pages/       Page Objects: HeaderComponent, LoginPage (handles both login AND
+│                registration - see "Auth Flow" below), PLPPage, PDPPage, CartPage,
+│                CheckoutPage (in progress), HomePage/WishlistPage/OrderPage (not
+│                built out yet - not needed by any test so far)
+└── utils/       TestDataGenerator (unique phone numbers - not wired into any test yet)
 
 src/test/java/com/gratis/tests/
 ├── AuthTests.java           TC_001–TC_004 (login and registration are one flow on this site)
-├── NavigationTests.java     TC_005, TC_006, TC_007, TC_008
+├── NavigationTests.java     TC_005–TC_008
 ├── SearchTests.java         TC_009, TC_010 (TC_011, the SQLi/XSS payload test, was removed)
 ├── FilterSortTests.java     TC_012, TC_013
-├── CatalogTests.java        TC_014, TC_015, TC_016, TC_017, TC_018
+├── CatalogTests.java        TC_014–TC_018
 ├── CartTests.java           TC_019–TC_021, TC_023, TC_024 (TC_022, the valid-promo test, was removed)
 ├── CheckoutTests.java       TC_025–TC_027 (payment intentionally stops at URL check)
-└── OrderTests.java          TC_028
+├── OrderTests.java          TC_028
+└── SessionCaptureTests.java Not part of the suite - run manually to (re)create a
+                             saved login session; see "Login & Sessions" below
 
-src/XML_files/testng.xml          Full suite, grouped by module, sequential (no parallel="...")
+src/XML_files/testng.xml          Full suite, one <test> block per module, sequential
+                                   (no parallel="..." - see PlaywrightFactory's comment)
 src/XML_files/testng-smoke.xml    Smoke-only subset (TC_001–004)
 ```
 
@@ -52,18 +62,16 @@ src/XML_files/testng-smoke.xml    Smoke-only subset (TC_001–004)
 mvn test                                                          # full suite
 mvn test -DsuiteXmlFile=src/XML_files/testng-smoke.xml            # smoke subset only
 ```
-There's no `-Dgroups=...` filtering anymore - `@Test` group tags were dropped along with
-`Constants.java` when the framework was simplified. Run a single module by pointing
-`mvn test` at a one-off suite XML listing just that module's class(es), or run a class
-directly from your IDE.
+Run a single module by pointing `mvn test` at a one-off suite XML listing just that
+module's class(es), or run a class/method directly from your IDE.
 Report: open `test-output/index.html` after a run. Failure screenshots land in
 `test-output/screenshots/`.
 
 ## Configuration
 
 All environment/test-data values live in `src/test/resources/config.properties`
-(base URL, browser, headless flag, viewport sizes, known test accounts, promo codes,
-mock OTP). Override any key at the CLI, e.g. `mvn test -Dbrowser=firefox -Dheadless=false`.
+(base URL, headless flag, timeouts, known test accounts, promo codes). Override any
+key at the CLI, e.g. `mvn test -Dheadless=false`.
 
 `config.properties` is gitignored because `registered.phone.number` ends up holding a
 real phone number once you're testing against your own account. First-time setup:
@@ -82,87 +90,90 @@ gratis.com does **not** have an email/password form, and there is no separate
 registration page or "forgot password" flow. Opening "Üye olun ya da Giriş Yapın"
 shows a single screen ("Giriş Yap / Üye Ol - Telefon numaranızla giriş yapabilir ya da
 yeni bir hesap oluşturabilirsiniz") that takes a phone number, then an OTP code, and
-transparently creates the account on first use or logs an existing number straight in.
+either creates a new account (asking for name/surname/email/birth date first) or logs
+an existing number straight in.
 
-This was confirmed by opening the live flow in a browser, not inferred from a spec, so
-`LoginPage` (phone + OTP), `HomePage.goToAuth()`, and `AuthTests` (TC_001-TC_004) are
-built directly against it. Two deliberate scope changes from a typical email/password
-suite:
+Two deliberate scope decisions that follow from this, both because the flow itself
+doesn't separate them:
 
-- **No `RegisterPage`, and no separate `RegistrationTests`/`LoginTests` classes** -
-  registration and login are the exact same form/flow on gratis.com, so both live in
-  one `AuthTests` class instead of two, and both share `LoginPage`.
-- **No `ForgotPasswordPage`** - there's no password to forget. TC_004 was repurposed
-  from "forgot password" to "an invalid phone number format blocks 'DEVAM ET'
-  before an OTP is ever sent," which is the closest equivalent negative case this
-  auth mechanism actually has.
+- **No separate `RegisterPage`, no separate `RegistrationTests`/`LoginTests` classes** —
+  registration and login are the same form on gratis.com, so both live in one
+  `AuthTests` class, sharing one `LoginPage`.
+- **No `ForgotPasswordPage`** — there's no password to forget. TC_004 covers the
+  closest equivalent negative case this auth mechanism actually has: an invalid phone
+  number format is blocked before DEVAM ET will even submit.
 
-The exact input/button selectors in `LoginPage` are still best-effort (see the section
-below) - only the *flow itself* (phone → OTP → logged in) is DOM-verified. There's no
-mock/sandbox OTP bypass on the live site, so `AuthTests` pauses execution
-(`page.pause()`) for a human to read the real SMS and type the code in manually -
-see `AuthTests` and the "Real OTP/SMS delivery" note below.
+There's no mock/sandbox OTP bypass on the live site, so `AuthTests` and
+`SessionCaptureTests` pause execution (`page.pause()`) for a human to read the real SMS
+and type the code in manually.
 
-## ⚠️ Important: Locators Need Verification Against the Live DOM
+## Login & Sessions
 
-This framework was built directly from a **written test case specification**
-(`gratis_test_cases.pdf`), not from inspecting gratis.com's actual rendered HTML.
-The selectors in each Page Object (`input[name='email']`, `.product-card`,
-`button.qty-increase`, etc.) are reasonable, spec-consistent guesses — they encode the
-right *structure and flow* of every test case, but several will not match the real
-site's markup until you:
+Several tests (`TC_007`, `TC_015`, `TC_017`, all of `CartTests`) need to already be
+logged in — this site has no guest cart or guest wishlist at all (confirmed live: every
+entry point redirects a guest straight to `/login`). Rather than a real phone+OTP flow
+on every single run, those tests load a previously saved session:
 
-1. Open the actual page in DevTools and note real attributes (ideally `data-testid`,
-   otherwise stable class/id names).
-2. Swap each locator in the relevant Page Object — the method signatures and test
-   logic stay untouched, only the locator body changes.
-3. Re-run `mvn test -Dgroups=smoke` first to validate Auth locators before moving on.
+```bash
+# Run this manually first (or whenever a login-dependent test starts getting
+# redirected to /login) - it needs a real OTP typed in by hand.
+SessionCaptureTests.captureLoggedInSession
+```
 
-Treat this as the framework's skeleton and flow logic being complete; the "last mile"
-of exact selectors is a deliberate follow-up step, and a good thing to mention as such
-if you're presenting this project to recruiters — it shows you understand the
-difference between framework architecture and environment-specific implementation
-detail.
+This uses Playwright's `BrowserContext.storageState()` to snapshot cookies +
+localStorage to `src/test/resources/auth-state.json` (gitignored — it holds a real,
+valid session for a real account), which `PlaywrightFactory.initLoggedInPage()` then
+loads into a fresh browser context for any test that needs to start out authenticated.
+
+**This session is short-lived — about 15 minutes.** gratis.com's backend (Retter.io)
+issues a JWT access token with a real `exp` claim that short; the site's own
+client-side SDK would normally refresh it silently during a real browsing session, but
+that refresh logic never runs here because the server-side redirect to `/login` happens
+before any client JS loads. In practice: run `SessionCaptureTests` shortly before you
+run anything that depends on it, not once at the start of a long session.
+
+`CartTests` extends `LoggedInBaseTest` (every test in the class needs login).
+`NavigationTests.TC_007` and `CatalogTests.TC_015`/`TC_017` instead swap to a
+logged-in page inline, mid-test — same pattern `TC_006` already uses to swap to a
+mobile-sized page — since those classes also contain guest-only tests that must *not*
+start out logged in (e.g. `TC_018` specifically tests the guest redirect itself).
 
 ## Assumptions & Fixture Data
 
-Several test cases assume backend state that a UI-only framework can't create on the
-fly (an existing account reachable at `registered.phone.number`, seeded in/out-of-stock
-products, an active promo code, a cart pre-loaded with 100 TL of goods). These are
-documented per-test as comments and centralized in `config.properties` — replace the
-placeholder values/slugs with your test environment's real seeded data or a
-`@BeforeMethod` API/DB setup call.
+A few test cases assume backend state a UI-only framework can't create on the fly: an
+existing account reachable at `registered.phone.number`, and (for `TC_028`) a real
+order already existing on that account. These live in `config.properties` /
+per-test comments rather than being seeded automatically.
 
 ## Out of Scope / Future Work
 
-- **Real OTP/SMS delivery** (TC_001-TC_004 login/registration) needs a real SMS
-  provider API (Twilio, etc.) to automate fully — not implemented here; `AuthTests`
-  pauses (`page.pause()`) for a human to enter the real code instead.
-- **Payment (TC_027 in an earlier draft) was deliberately removed**, not just left
-  as a TODO — this is a personal project against the live production site with no
-  test card credentials, and actually completing a real payment isn't something to
-  automate here. TC_027 now only checks that the checkout flow reaches the correct
-  payment URL; nothing past that point is exercised.
-- **Email verification** (TC_028 order confirmation) needs a mailbox API (e.g.
-  Mailinator's REST API) — not implemented here.
-- **DB/API assertions** (e.g. TC_001 checking `/api/auth/register` returns a JWT)
-  need either Playwright's `page.waitForResponse()` for the network layer, or a DB
-  connector for backend checks — hooks are noted as comments where relevant.
-- **Visual/hover interactions** (TC_005 mega menu fade timing, TC_016 image zoom lens,
-  mobile pinch-to-zoom) would benefit from Playwright's screenshot-diffing rather than
-  DOM assertions alone.
-- **Session persistence** (TC_024) is approximated with `page.reload()`; a fuller
-  implementation would use `context.storageState()` to snapshot/restore cookies across
-  a genuinely new browser context, closer to "close all tabs, reopen the browser."
+- **Real OTP/SMS delivery** needs a real SMS provider API (Twilio, etc.) to automate
+  fully — not implemented; tests pause (`page.pause()`) for a human to enter the code.
+- **Payment** was deliberately removed, not left as a TODO — this is a personal
+  project against the live production site with no test card credentials, and
+  completing a real payment isn't something to automate here. `TC_027` only checks
+  that checkout reaches the correct payment URL; nothing past that point is exercised.
+- **Email verification** (`TC_028` order confirmation) would need a mailbox API (e.g.
+  Mailinator's REST API) — not implemented.
+- **A refresh-token flow for the saved login session** would remove the ~15-minute
+  window described above, but would mean reverse-engineering Retter.io's own refresh
+  endpoint — more complexity than this project needs right now.
+- **`TC_001`'s phone number is static**, so a second run of the "brand-new number"
+  registration test hits "already registered" instead of a fresh signup.
+  `TestDataGenerator.uniquePhoneNumber()` already exists for this and just needs
+  wiring in.
 - **CI**: intentionally kept out of this version. A GitHub Actions workflow (checkout →
   Playwright browser install → `mvn test` → upload `test-output/`) is a natural next
-  step if you want this added later.
+  step, though the manual-OTP and short-lived-session pieces above would need solving
+  first for anything login-dependent to run unattended.
 
 ## Notes on AI-Assisted Development
 
-This framework's structure, Page Object boilerplate, and TestNG scaffolding were
-drafted with AI assistance from a written test case spec, then intentionally left with
-clear TODO-style comments where real DOM inspection or backend hooks are still needed
-— rather than presenting placeholder locators as if they were verified. If you're
-listing this project on a CV/GitHub, that's worth stating plainly (e.g. "scaffolded
-with AI assistance, locators and CI verified manually") rather than glossing over it.
+This framework was built with AI assistance across the whole project — locator
+strategy, debugging real failures against the live site, and Playwright concepts
+explained against prior Selenium experience. Every locator was verified against
+gratis.com's actual DOM rather than presented as an untested guess; `TEST_CASES.md`
+documents the current, honest state of each test, including bugs found and fixed (and
+a few still open) along the way. If you're listing this project on a CV/GitHub,
+that's worth stating plainly rather than glossing over — it shows real debugging work,
+not just AI-generated boilerplate.
