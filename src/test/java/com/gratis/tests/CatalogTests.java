@@ -92,6 +92,7 @@ public class CatalogTests extends BaseTest {
 
         PLPPage plp = new PLPPage(page);
         plp.listingWishlist();
+        plp.submitButton();
 
         assertThat(page.locator("//*[text()=\"Favori listesine başarılı bir şekilde eklendi.\"]")).isVisible();
 

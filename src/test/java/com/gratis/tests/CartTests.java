@@ -2,6 +2,7 @@ package com.gratis.tests;
 
 import com.gratis.base.LoggedInBaseTest;
 import com.gratis.pages.*;
+import com.microsoft.playwright.options.LoadState;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -18,16 +19,17 @@ public class CartTests extends LoggedInBaseTest {
 
         PLPPage plp = new PLPPage(page);
         plp.add1stItem();
-        firstItem = page.locator("a[href*='-p-']").first().toString();
+        firstItem = page.locator("a[href*='-p-']").first().locator("h5").innerText();
 
         CartPage cart = new CartPage(page);
         cart.cartButton();
 
-        Assert.assertEquals(page.locator(".flex.flex-1.flex-col").first().innerText(), firstItem);
+        Assert.assertTrue(page.locator("a[href*='-p-']").first().innerText().contains(firstItem));
 
         cart.clearCart();
         cart.tamam();
         cart.logoCart();
+        page.waitForLoadState(LoadState.NETWORKIDLE); // let the homepage's promo carousel settle first
 
         header.headerSacbakim();
         plp.clickFirstItem();
@@ -35,7 +37,8 @@ public class CartTests extends LoggedInBaseTest {
         PDPPage pdp = new PDPPage(page);
         pdp.addToCart();
         cart.cartButton();
-        Assert.assertEquals(page.locator(".flex.flex-1.flex-col").first().innerText(), firstItem);
+
+        Assert.assertTrue(page.locator("a[href*='-p-']").first().innerText().contains(firstItem));
 
 
     }
@@ -101,6 +104,6 @@ public class CartTests extends LoggedInBaseTest {
         CartPage cart = new CartPage(page);
         cart.cartButton();
 
-        assertThat(page.locator(".flex.flex-1.flex-col").first()).isVisible(); // same cart-item locator TC_019 uses
+        assertThat(page.locator("a[href*='-p-']").first()).isVisible(); // same cart-item locator TC_019 uses
     }
 }
