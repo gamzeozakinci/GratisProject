@@ -39,13 +39,15 @@ public class AuthTests extends BaseTest {
         login.gratisKartCheck();
         login.agreementCheck();
 
+        login.acceptCookies();
+
         login.registerConfirm();
 
         assertThat(page).hasURL("https://www.gratis.com/");
 
     }
 
-    @Test(description = "TC_002 - An already-registered phone number routes through the same OTP login, not a duplicate signup")
+    @Test(description = "TC_002 - An already-registered phone number routes through OTP login")
     public void existingPhoneNumberRoutesToLogin() {
         HeaderComponent header = new HeaderComponent(page);
         LoginPage loginPage = new LoginPage(page);
@@ -91,4 +93,5 @@ public class AuthTests extends BaseTest {
 
         assertThat(page.getByText("Son 7 hane aynı olamaz.")).isVisible();
     }
+
 }

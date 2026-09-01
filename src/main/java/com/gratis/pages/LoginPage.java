@@ -47,15 +47,20 @@ public class LoginPage {
 
     public void gratisKartCheck() {
         page.locator("div.flex.items-start.gap-1",
-                new Page.LocatorOptions().setHasText("Gratis Kart sahibi olmak istiyorum")
-        ).click();
-
+                        new Page.LocatorOptions().setHasText("Gratis Kart sahibi olmak istiyorum"))
+                .locator("div.cursor-pointer")
+                .click();
     }
 
     public void agreementCheck() {
         page.locator("div.flex.items-start.gap-1",
-                new Page.LocatorOptions().setHasText("Üyelik Sözleşmesi")
-        ).click();
+                        new Page.LocatorOptions().setHasText("Üyelik Sözleşmesi"))
+                .locator("div.cursor-pointer")
+                .click();
+    }
+
+    public void acceptCookies() {
+        page.locator("#banner-accept-button").click();
 
     }
 
@@ -63,5 +68,6 @@ public class LoginPage {
         page.locator("#submit-button").click();
 
     }
+
 
 }
