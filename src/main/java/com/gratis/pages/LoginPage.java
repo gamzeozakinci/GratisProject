@@ -65,5 +65,8 @@ public class LoginPage {
 
     }
 
+    //registerli olan son testleri bitir, config içine dosyaları ekleencek
+    // 
+
 
 }
