@@ -43,7 +43,8 @@ public class CartTests extends LoggedInBaseTest {
 
     }
 
-    @Test(description = "TC_020 - Update Product Quantity in Cart (Boundary & Limit Checks)")
+    @Test(description = "TC_020 - Update Product Quantity in Cart (Boundary & Limit Checks)",
+            dependsOnMethods = "addProductsFromPlpAndPdp")
     public void quantityBoundaryChecksInCart() {
 
         CartPage cart = new CartPage(page);
@@ -64,7 +65,8 @@ public class CartTests extends LoggedInBaseTest {
 
     }
 
-    @Test(description = "TC_021 - Remove Product from Shopping Cart")
+    @Test(description = "TC_021 - Remove Product from Shopping Cart",
+            dependsOnMethods = "addProductsFromPlpAndPdp")
     public void removeProductFromCart() {
         CartPage cart = new CartPage(page);
         cart.cartButton();

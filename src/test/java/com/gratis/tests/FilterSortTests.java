@@ -35,11 +35,9 @@ public class FilterSortTests extends BaseTest {
 
 
     @Test(description = "TC_013 - Product Sorting by Price and Sales Volume")
-    public void sortByPriceLowToHighAndHighToLow() throws InterruptedException {
+    public void sortByPriceLowToHighAndHighToLow() {
         HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
-
-        Thread.sleep(2000);
 
         PLPPage plp = new PLPPage(page);
         assertThat(page.locator("a[href*='-p-']").first()).isVisible(); // let the page settle first
