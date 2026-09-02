@@ -26,6 +26,7 @@ public class CheckoutTests extends BaseTest {
 
 
         assertThat(page).hasURL(Pattern.compile(".*checkout/payment.*"));
+
     }
 
     @Test(description = "TC_026 - Address Creation and Home Delivery Selection " +
@@ -34,9 +35,20 @@ public class CheckoutTests extends BaseTest {
     public void addressCreationAndHomeDelivery() {
         CartPage cart = new CartPage(page);
         cart.cartButton();
+        cart.continueToDelivery();
+        cart.chooseOnline();
+        cart.addAddress();
 
+        cart.addName();
+        cart.addSurname();
+        cart.addressName();
+        cart.adresIL();
+        cart.adresILCE();
+        cart.adresStreet();
+        cart.addressDetail();
+        cart.saveAddress();
 
         assertThat(page).hasURL(Pattern.compile(".*checkout/payment.*"));
-    }
 
+    }
 }
