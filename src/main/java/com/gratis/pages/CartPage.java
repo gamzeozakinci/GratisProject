@@ -1,5 +1,6 @@
 package com.gratis.pages;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 
@@ -64,5 +65,32 @@ public class CartPage {
     public void continueToDelivery() {
         page.getByText("TESLİMAT ADIMINA GEÇ").first().click();
     }
+
+    public void chooseIl() {
+        page.locator("#checkout-city-select button").click();
+        page.getByText("ANTALYA", new Page.GetByTextOptions().setExact(true)).click();
+    }
+
+    public void chooseIlce() {
+        page.locator("#checkout-district-select button").click();
+        page.getByText("KONYAALTI", new Page.GetByTextOptions().setExact(true)).click();
+    }
+
+    public void chooseMagaza() {
+        page.locator("div.mt-3.flex.flex-col.gap-2 input[type=\"radio\"]").first().click();
+    }
+
+    public void accAgreement() {
+        page.locator("#checkout-consent div.cursor-pointer").first().click();
+    }
+
+
+    public void continueToPayment() {
+        page.locator("#checkout-consent div.cursor-pointer").first().click();
+    }
+
+
+
+
 
 }

@@ -104,6 +104,6 @@ public class CartTests extends LoggedInBaseTest {
         CartPage cart = new CartPage(page);
         cart.cartButton();
 
-        assertThat(page.locator("a[href*='-p-']").first()).isVisible(); // same cart-item locator TC_019 uses
+        assertThat(page.locator("a[href*='-p-']").first()).isVisible();
     }
 }
