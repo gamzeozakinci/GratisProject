@@ -166,14 +166,3 @@ per-test comments rather than being seeded automatically.
   Playwright browser install → `mvn test` → upload `test-output/`) is a natural next
   step, though the manual-OTP and short-lived-session pieces above would need solving
   first for anything login-dependent to run unattended.
-
-## Notes on AI-Assisted Development
-
-This framework was built with AI assistance across the whole project — locator
-strategy, debugging real failures against the live site, and Playwright concepts
-explained against prior Selenium experience. Every locator was verified against
-gratis.com's actual DOM rather than presented as an untested guess; `TEST_CASES.md`
-documents the current, honest state of each test, including bugs found and fixed (and
-a few still open) along the way. If you're listing this project on a CV/GitHub,
-that's worth stating plainly rather than glossing over — it shows real debugging work,
-not just AI-generated boilerplate.
