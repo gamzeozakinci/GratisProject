@@ -84,13 +84,58 @@ public class CartPage {
         page.locator("#checkout-consent div.cursor-pointer").first().click();
     }
 
-
     public void continueToPayment() {
         page.locator("#checkout-consent div.cursor-pointer").first().click();
     }
 
+    public void chooseOnline() {
+        page.locator("input[type='radio'][value='ONLINE']");
+    }
 
+    public void addAddress() {
+        page.getByText("ADRES EKLEYİN").click();
+    }
 
+    public void addName() {
+        page.getByPlaceholder("Adınız").fill("Test");
+    }
 
+    public void addSurname() {
+        page.getByPlaceholder("Soyadınız").fill("User");
+    }
+
+    public void addressName() {
+        page.getByPlaceholder("Adres İsmi *").fill("Ev adresi");
+    }
+
+    public void adresIL() {
+        page.locator("//label[text()='İl *']/following-sibling::button").click();
+        page.getByPlaceholder("Arama yap...").fill("antalya");
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().
+                setName("ANTALYA")).click();
+
+    }
+
+    public void adresILCE() {
+        page.locator("//label[text()='İlçe *']/following-sibling::button").click();
+        page.getByPlaceholder("Arama yap...").fill("konyaaltı");
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().
+                setName("KONYAALTI")).click();
+    }
+
+    public void adresStreet() {
+        page.locator("//label[text()='Mahalle *']/following-sibling::button").click();
+        page.getByPlaceholder("Arama yap...").fill("siteler");
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().
+                setName("SİTELER")).click();
+    }
+
+    public void addressDetail() {
+        page.getByText("ADRESİMİ KAYDET").click();
+    }
+
+    public void saveAddress() {
+        page.getByPlaceholder("Açık adresinizi ekleyiniz").fill("Test Sokak No:1 Daire:1");
+    }
 
 }

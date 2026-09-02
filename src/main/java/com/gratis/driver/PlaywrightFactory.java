@@ -14,13 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-/**
- * Owns the single Playwright / Browser / BrowserContext / Page used by whichever test
- * is currently running. Plain static fields, not ThreadLocal - simple, but only safe
- * for tests running one at a time (no parallel="..." in testng.xml). If you ever want
- * parallel execution, each thread would need its own browser instead of sharing these
- * fields, which is what ThreadLocal is for.
- */
 public final class PlaywrightFactory {
 
     private static final Logger log = LoggerFactory.getLogger(PlaywrightFactory.class);
@@ -46,10 +39,6 @@ public final class PlaywrightFactory {
                 .setArgs(List.of("--start-maximized")));
 
         context = browser.newContext(new Browser.NewContextOptions()
-                // null viewport = "use whatever size the actual window ends up at"
-                // instead of a fixed size Playwright would otherwise resize the
-                // (maximized) window back down to. Only affects headed mode - headless
-                // has no real window, so it falls back to Playwright's default viewport.
                 .setViewportSize(null)
                 .setLocale("tr-TR"));
         context.setDefaultTimeout(ConfigReader.getInt("default.timeout"));
@@ -59,12 +48,6 @@ public final class PlaywrightFactory {
         return page;
     }
 
-    /**
-     * For tests that need a real mobile-sized page (e.g. TC_006's hamburger menu),
-     * not the maximized desktop one initPage() gives every other test. Callers must
-     * tearDown() the desktop page BaseTest already opened before calling this, then
-     * reassign BaseTest.page to what this returns - see NavigationTests for the pattern.
-     */
     public static Page initMobilePage() {
         playwright = Playwright.create();
 
@@ -85,12 +68,6 @@ public final class PlaywrightFactory {
         return page;
     }
 
-    /**
-     * Same as initPage(), but loads a previously saved login session (if one
-     * exists) so the returned page starts out already logged in - no phone
-     * number, no OTP. Run SessionCaptureTests once (or again whenever the
-     * saved session has expired) to create/refresh that file.
-     */
     public static Page initLoggedInPage() {
         playwright = Playwright.create();
 
@@ -116,10 +93,6 @@ public final class PlaywrightFactory {
         return page;
     }
 
-    /**
-     * Saves the current context's cookies + localStorage to AUTH_STATE_PATH.
-     * Call this right after a real, manual login - see SessionCaptureTests.
-     */
     public static void saveLoginState() {
         context.storageState(new BrowserContext.StorageStateOptions().setPath(AUTH_STATE_PATH));
         log.info("Saved login session to {}", AUTH_STATE_PATH);
