@@ -31,6 +31,7 @@ public class PLPPage {
                 .locator("button[aria-label='button']")
                 .click();
 
+
     }
 
     public String check2ndItem() {
@@ -89,8 +90,6 @@ public class PLPPage {
         page.locator("span.hover\\:scale-110").first().click();
 
     }
-
-
 
 
 }
