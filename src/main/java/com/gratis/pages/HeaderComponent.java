@@ -58,7 +58,24 @@ public class HeaderComponent {
 
     public void headerSacbakim() {
         page.locator("//a[text()=\"Saç Bakım\"]").first().click();
-        page.mouse().move(0, 0); // release hover so the mega menu opened by the click doesn't linger on the destination page
+        page.mouse().move(0, 0);
+    }
+
+    /**
+     * Same click, but forced - for callers right after a fresh homepage
+     * navigation while logged in. Confirmed (real run, 30s timeout, 61 retries)
+     * that something in the logged-in homepage's header area persistently
+     * intercepts this click the whole time - not a transient load delay that
+     * settles if you wait longer, an actual stable overlap. Guest sessions
+     * don't show this at all, so it's most likely logged-in-only content
+     * (a welcome banner, Gratis Kart widget, etc.) sitting in the same region.
+     * force() skips the "is anything covering this" check, since waiting it
+     * out doesn't work here.
+     */
+    public void headerSacbakimForced() {
+        page.locator("//a[text()=\"Saç Bakım\"]").first()
+                .click(new Locator.ClickOptions().setForce(true));
+        page.mouse().move(0, 0);
     }
 
     public void search() {
@@ -76,7 +93,5 @@ public class HeaderComponent {
         page.locator("//a[@href=\"/my-account/wishlist\"]").first().click();
 
     }
-
-
 
 }

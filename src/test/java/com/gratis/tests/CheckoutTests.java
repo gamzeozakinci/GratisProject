@@ -1,6 +1,6 @@
 package com.gratis.tests;
 
-import com.gratis.base.BaseTest;
+import com.gratis.base.LoggedInBaseTest;
 import com.gratis.pages.CartPage;
 import org.testng.annotations.Test;
 
@@ -8,12 +8,14 @@ import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
-public class CheckoutTests extends BaseTest {
+public class CheckoutTests extends LoggedInBaseTest {
 
     @Test(description = "TC_025 - Store Pickup Delivery (Gel-Al) Selection Flow, " +
             "Reaching the payment step lands on the correct payment URL " +
             "(personal project, no test card credentials - no real payment is attempted)")
     public void storePickupSelectionFlow() {
+
+        //adres ekleme zorundu dependency ekle once
         CartPage cart = new CartPage(page);
         cart.cartButton();
         cart.continueToDelivery();
@@ -23,7 +25,6 @@ public class CheckoutTests extends BaseTest {
         cart.chooseMagaza();
         cart.accAgreement();
         cart.continueToPayment();
-
 
         assertThat(page).hasURL(Pattern.compile(".*checkout/payment.*"));
 
