@@ -37,6 +37,8 @@ public class SessionCaptureTests extends BaseTest {
         System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
         page.pause();
 
+        page.waitForURL("https://www.gratis.com/");
+
         PlaywrightFactory.saveLoginState();
     }
 }

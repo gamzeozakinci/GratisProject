@@ -81,11 +81,11 @@ public class CartPage {
     }
 
     public void accAgreement() {
-        page.locator("#checkout-consent div.cursor-pointer").first().click();
+        page.locator("#checkout-consent div.cursor-pointer").click();
     }
 
     public void continueToPayment() {
-        page.locator("#checkout-consent div.cursor-pointer").first().click();
+        page.getByText("ÖDEME ADIMINA GEÇ").click();
     }
 
     public void chooseOnline() {
@@ -97,7 +97,7 @@ public class CartPage {
     }
 
     public void addName() {
-        page.getByPlaceholder("Adınız").fill("Test");
+        page.getByPlaceholder("Adınız").first().fill("Test");
     }
 
     public void addSurname() {
@@ -109,7 +109,7 @@ public class CartPage {
     }
 
     public void adresIL() {
-        page.locator("//label[text()='İl *']/following-sibling::button").click();
+        page.locator("//label[text()='İl *']/following::button[1]").nth(2).click();
         page.getByPlaceholder("Arama yap...").fill("antalya");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().
                 setName("ANTALYA")).click();
@@ -117,14 +117,14 @@ public class CartPage {
     }
 
     public void adresILCE() {
-        page.locator("//label[text()='İlçe *']/following-sibling::button").click();
+        page.locator("//label[text()='İlçe *']/following::button[1]").click();
         page.getByPlaceholder("Arama yap...").fill("konyaaltı");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().
                 setName("KONYAALTI")).click();
     }
 
     public void adresStreet() {
-        page.locator("//label[text()='Mahalle *']/following-sibling::button").click();
+        page.locator("//label[text()='Mahalle *']/following::button[1]").click();
         page.getByPlaceholder("Arama yap...").fill("siteler");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().
                 setName("SİTELER")).click();

@@ -2,7 +2,6 @@ package com.gratis.tests;
 
 import com.gratis.base.LoggedInBaseTest;
 import com.gratis.pages.*;
-import com.microsoft.playwright.options.LoadState;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,7 +28,6 @@ public class CartTests extends LoggedInBaseTest {
         cart.clearCart();
         cart.tamam();
         cart.logoCart();
-        page.waitForLoadState(LoadState.NETWORKIDLE); // let the homepage's promo carousel settle first
 
         header.headerSacbakim();
         plp.clickFirstItem();

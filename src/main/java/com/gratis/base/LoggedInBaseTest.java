@@ -18,5 +18,13 @@ public abstract class LoggedInBaseTest extends BaseTest {
         page = PlaywrightFactory.initLoggedInPage();
         page.navigate(ConfigReader.baseUrl());
         log.info("Navigated to {} (logged in)", ConfigReader.baseUrl());
+
+        // A fresh context from initLoggedInPage() never had this banner dismissed -
+        // click it only if it's actually showing, so this doesn't fail on runs
+        // where consent was already accepted some other way.
+        var cookieBanner = page.locator("#banner-accept-button");
+        if (cookieBanner.isVisible()) {
+            cookieBanner.click();
+        }
     }
 }
