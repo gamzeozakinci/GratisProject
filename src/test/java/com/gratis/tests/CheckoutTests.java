@@ -2,6 +2,7 @@ package com.gratis.tests;
 
 import com.gratis.base.LoggedInBaseTest;
 import com.gratis.pages.CartPage;
+import com.gratis.pages.CheckoutPage;
 import org.testng.annotations.Test;
 
 import java.util.regex.Pattern;
@@ -17,14 +18,15 @@ public class CheckoutTests extends LoggedInBaseTest {
 
         //adres ekleme zorundu dependency ekle once
         CartPage cart = new CartPage(page);
+        CheckoutPage checkout = new CheckoutPage(page);
         cart.cartButton();
         cart.continueToDelivery();
 
-        cart.chooseIl();
-        cart.chooseIlce();
-        cart.chooseMagaza();
-        cart.accAgreement();
-        cart.continueToPayment();
+        checkout.chooseIl();
+        checkout.chooseIlce();
+        checkout.chooseMagaza();
+        checkout.accAgreement();
+        checkout.continueToPayment();
 
         assertThat(page).hasURL(Pattern.compile(".*checkout/payment.*"));
 
@@ -35,20 +37,21 @@ public class CheckoutTests extends LoggedInBaseTest {
             "(personal project, no test card credentials - no real payment is attempted)")
     public void addressCreationAndHomeDelivery() {
         CartPage cart = new CartPage(page);
+        CheckoutPage checkout = new CheckoutPage(page);
         cart.cartButton();
         cart.continueToDelivery();
-        cart.chooseOnline();
-        cart.addAddress();
+        checkout.chooseOnline();
+        checkout.addAddress();
 
-        cart.addName();
-        cart.addSurname();
-        cart.addressName();
-        cart.adresIL();
-        cart.adresILCE();
-        cart.adresStreet();
-        cart.addressDetail();
+        checkout.addName();
+        checkout.addSurname();
+        checkout.addressName();
+        checkout.adresIL();
+        checkout.adresILCE();
+        checkout.adresStreet();
+        checkout.addressDetail();
         acceptCookiesIfPresent();
-        cart.saveAddress();
+        checkout.saveAddress();
 
         page.waitForURL(Pattern.compile(".*checkout/payment.*"));
         assertThat(page).hasURL(Pattern.compile(".*checkout/payment.*"));
