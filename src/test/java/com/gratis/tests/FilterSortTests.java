@@ -13,7 +13,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class FilterSortTests extends BaseTest {
 
-    @Test(description = "TC_012 - Product Filtering by Brand and Price Range on PLP")
+    @Test(description = "TC_013 - Product Filtering by Brand and Price Range on PLP")
     public void filterByBrandAndPriceRange() {
         HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
@@ -34,7 +34,7 @@ public class FilterSortTests extends BaseTest {
     }
 
 
-    @Test(description = "TC_013 - Product Sorting by Price and Sales Volume")
+    @Test(description = "TC_014 - Product Sorting by Price and Sales Volume")
     public void sortByPriceLowToHighAndHighToLow() {
         HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
@@ -49,5 +49,10 @@ public class FilterSortTests extends BaseTest {
         plp.filtrele();
         plp.filterFiyatArtan();
         assertThat(page).hasURL(Pattern.compile(".*discountedPrice_asc.*"));
+    }
+
+    @Test(description = "TC_015 - Clearing an applied filter resets the product list")
+    public void clearingFiltersResetsProductList() {
+        // TODO: implement
     }
 }

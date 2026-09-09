@@ -1,7 +1,7 @@
 # Gratis.com – Playwright + TestNG Automation Framework
 
 UI test automation framework for **gratis.com** (cosmetics e-commerce), built from a
-26-case test suite spanning Auth, Navigation, Search/Filtering, Catalog, Cart and
+30-case test suite spanning Auth, Navigation, Search/Filtering, Catalog, Cart and
 Checkout. Java + Playwright + TestNG, Page Object Model, no external reporting layer —
 TestNG's own HTML/XML report is generated under `test-output/` after every run.
 
@@ -33,27 +33,24 @@ src/main/java/com/gratis/
 ├── config/      ConfigReader (loads config.properties, UTF-8 explicitly)
 ├── driver/      PlaywrightFactory (plain static fields, not ThreadLocal - see its
 │                own class comment for why; initPage/initMobilePage/initLoggedInPage)
-├── pages/       Page Objects: HeaderComponent, LoginPage (handles both login AND
-│                registration - see "Auth Flow" below), PLPPage, PDPPage, CartPage,
-│                CheckoutPage (in progress), HomePage/WishlistPage/OrderPage (not
-│                built out yet - not needed by any test so far)
-└── utils/       TestDataGenerator (unique phone numbers - not wired into any test yet)
+└── pages/       Page Objects: HeaderComponent, LoginPage (handles both login AND
+                 registration - see "Auth Flow" below), PLPPage, PDPPage, CartPage,
+                 CheckoutPage (in progress)
 
 src/test/java/com/gratis/tests/
-├── AuthTests.java           TC_001–TC_004 (login and registration are one flow on this site)
-├── NavigationTests.java     TC_005–TC_008
-├── SearchTests.java         TC_009, TC_010 (TC_011, the SQLi/XSS payload test, was removed)
-├── FilterSortTests.java     TC_012, TC_013
-├── CatalogTests.java        TC_014–TC_018
-├── CartTests.java           TC_019–TC_021, TC_023, TC_024 (TC_022, the valid-promo test, was removed)
-├── CheckoutTests.java       TC_025–TC_027 (payment intentionally stops at URL check)
-├── OrderTests.java          TC_028
+├── AuthTests.java           TC_001–TC_005 (login and registration are one flow on this site)
+├── NavigationTests.java     TC_006–TC_009
+├── SearchTests.java         TC_010–TC_012
+├── FilterSortTests.java     TC_013–TC_015
+├── CatalogTests.java        TC_016–TC_021
+├── CartTests.java           TC_022–TC_027
+├── CheckoutTests.java       TC_028–TC_030 (payment intentionally stops at URL check)
 └── SessionCaptureTests.java Not part of the suite - run manually to (re)create a
                              saved login session; see "Login & Sessions" below
 
 src/XML_files/testng.xml          Full suite, one <test> block per module, sequential
                                    (no parallel="..." - see PlaywrightFactory's comment)
-src/XML_files/testng-smoke.xml    Smoke-only subset (TC_001–004)
+src/XML_files/testng-smoke.xml    Smoke-only subset (TC_001–005)
 ```
 
 ## Running
@@ -109,7 +106,7 @@ and type the code in manually.
 
 ## Login & Sessions
 
-Several tests (`TC_007`, `TC_015`, `TC_017`, all of `CartTests`) need to already be
+Several tests (`TC_008`, `TC_017`, `TC_019`, all of `CartTests`) need to already be
 logged in — this site has no guest cart or guest wishlist at all (confirmed live: every
 entry point redirects a guest straight to `/login`). Rather than a real phone+OTP flow
 on every single run, those tests load a previously saved session:
@@ -133,17 +130,16 @@ before any client JS loads. In practice: run `SessionCaptureTests` shortly befor
 run anything that depends on it, not once at the start of a long session.
 
 `CartTests` extends `LoggedInBaseTest` (every test in the class needs login).
-`NavigationTests.TC_007` and `CatalogTests.TC_015`/`TC_017` instead swap to a
-logged-in page inline, mid-test — same pattern `TC_006` already uses to swap to a
+`NavigationTests.TC_008` and `CatalogTests.TC_017`/`TC_019` instead swap to a
+logged-in page inline, mid-test — same pattern `TC_007` already uses to swap to a
 mobile-sized page — since those classes also contain guest-only tests that must *not*
-start out logged in (e.g. `TC_018` specifically tests the guest redirect itself).
+start out logged in (e.g. `TC_020` specifically tests the guest redirect itself).
 
 ## Assumptions & Fixture Data
 
 A few test cases assume backend state a UI-only framework can't create on the fly: an
-existing account reachable at `registered.phone.number`, and (for `TC_028`) a real
-order already existing on that account. These live in `config.properties` /
-per-test comments rather than being seeded automatically.
+existing account reachable at `registered.phone.number`. This lives in
+`config.properties` rather than being seeded automatically.
 
 ## Out of Scope / Future Work
 
@@ -151,17 +147,21 @@ per-test comments rather than being seeded automatically.
   fully — not implemented; tests pause (`page.pause()`) for a human to enter the code.
 - **Payment** was deliberately removed, not left as a TODO — this is a personal
   project against the live production site with no test card credentials, and
-  completing a real payment isn't something to automate here. `TC_027` only checks
-  that checkout reaches the correct payment URL; nothing past that point is exercised.
-- **Email verification** (`TC_028` order confirmation) would need a mailbox API (e.g.
-  Mailinator's REST API) — not implemented.
+  completing a real payment isn't something to automate here. `TC_028`/`TC_029` only
+  check that checkout reaches the correct payment URL; nothing past that point is
+  exercised.
+- **Order confirmation / post-order validation** (a former `OrderTests` class) would
+  need a real order to actually go through, which isn't attempted here for the same
+  no-real-payment reason above — not implemented.
 - **A refresh-token flow for the saved login session** would remove the ~15-minute
   window described above, but would mean reverse-engineering Retter.io's own refresh
   endpoint — more complexity than this project needs right now.
 - **`TC_001`'s phone number is static**, so a second run of the "brand-new number"
-  registration test hits "already registered" instead of a fresh signup.
-  `TestDataGenerator.uniquePhoneNumber()` already exists for this and just needs
-  wiring in.
+  registration test hits "already registered" instead of a fresh signup. A
+  unique-phone-number generator would fix this and isn't wired in yet.
+- **TC_005, TC_012, TC_015, TC_021, TC_027, TC_030** (logout, no-results search, clear
+  filters, wishlist removal, actual cart-item deletion, empty-cart checkout guard) are
+  stubbed with `@Test` + `// TODO: implement` but have no body yet — see `TEST_CASES.md`.
 - **CI**: intentionally kept out of this version. A GitHub Actions workflow (checkout →
   Playwright browser install → `mvn test` → upload `test-output/`) is a natural next
   step, though the manual-OTP and short-lived-session pieces above would need solving

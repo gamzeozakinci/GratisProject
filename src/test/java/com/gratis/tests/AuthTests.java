@@ -86,4 +86,9 @@ public class AuthTests extends BaseTest {
         assertThat(page.getByText("Son 7 hane aynı olamaz.")).isVisible();
     }
 
+    @Test(description = "TC_005 - Logging out returns the user to a guest state")
+    public void logoutReturnsToGuestState() {
+        // TODO: implement
+    }
+
 }

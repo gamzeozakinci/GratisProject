@@ -12,7 +12,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class NavigationTests extends BaseTest {
 
-    @Test(description = "TC_005 - Mega Menu Category Hover and Redirection (Desktop)")
+    @Test(description = "TC_006 - Mega Menu Category Hover and Redirection (Desktop)")
     public void megaMenuHoverAndRedirect() {
 
         HeaderComponent header = new HeaderComponent(page);
@@ -24,7 +24,7 @@ public class NavigationTests extends BaseTest {
 
     }
 
-    @Test(description = "TC_006 - Mobile Hamburger Menu Navigation & Accordion Drilldown")
+    @Test(description = "TC_007 - Mobile Hamburger Menu Navigation & Accordion Drilldown")
     public void mobileHamburgerMenuDrilldown() {
         // BaseTest.setUp() already opened a desktop page - close it and swap in a
         // mobile-sized one instead, just for this test.
@@ -45,10 +45,10 @@ public class NavigationTests extends BaseTest {
 
     }
 
-    @Test(description = "TC_007 - Header Basket Icon Counter Synchronization")
+    @Test(description = "TC_008 - Header Basket Icon Counter Synchronization")
     public void basketCounterSyncsDynamically() {
         // needs to be logged in (cart requires it) - swap to a logged-in page,
-        // same pattern TC_006 uses to swap to a mobile one.
+        // same pattern TC_007 uses to swap to a mobile one.
 
         PlaywrightFactory.tearDown();
         page = PlaywrightFactory.initLoggedInPage();
@@ -68,7 +68,7 @@ public class NavigationTests extends BaseTest {
 
     }
 
-    @Test(description = "TC_008 - Header Logo Redirection from Subpages")
+    @Test(description = "TC_009 - Header Logo Redirection from Subpages")
     public void logoRedirectsHomeFromSubpage() {
         HeaderComponent header = new HeaderComponent(page);
 

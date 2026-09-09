@@ -13,7 +13,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class SearchTests extends BaseTest {
 
-    @Test(description = "TC_009 - Product Search using Autocomplete Suggestions")
+    @Test(description = "TC_010 - Product Search using Autocomplete Suggestions")
     public void autocompleteSuggestionsAppearWhileTyping() {
         HeaderComponent header = new HeaderComponent(page);
 
@@ -30,7 +30,7 @@ public class SearchTests extends BaseTest {
         }
     }
 
-    @Test(description = "TC_010 - Product Search with Valid Keyword")
+    @Test(description = "TC_011 - Product Search with Valid Keyword")
     public void searchWithValidKeywordShowsResults() {
 
         HeaderComponent header = new HeaderComponent(page);
@@ -49,5 +49,10 @@ public class SearchTests extends BaseTest {
         assertThat(page.locator("div.overflow-x-auto.no-scrollbar"))
                 .hasText(Pattern.compile(".*göz.*", Pattern.CASE_INSENSITIVE));
 
+    }
+
+    @Test(description = "TC_012 - Searching a nonsense keyword shows the empty-results state")
+    public void searchWithNoResultsShowsEmptyState() {
+        // TODO: implement
     }
 }
