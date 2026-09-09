@@ -18,7 +18,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class CatalogTests extends BaseTest {
 
-    @Test(description = "TC_014 - Verify Product Detail Page Information Layout")
+    @Test(description = "TC_016 - Verify Product Detail Page Information Layout")
     public void pdpLayoutShowsAllRequiredElements() {
         HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
@@ -30,7 +30,7 @@ public class CatalogTests extends BaseTest {
 
     }
 
-    @Test(description = "TC_015 - Verify Product Stock Status (In-Stock vs Out-of-Stock)")
+    @Test(description = "TC_017 - Verify Product Stock Status (In-Stock vs Out-of-Stock)")
     public void stockStatusReflectsAvailability() throws InterruptedException {
         // needs to be logged in to actually add to cart - see LoggedInBaseTest
         PlaywrightFactory.tearDown();
@@ -50,7 +50,7 @@ public class CatalogTests extends BaseTest {
 
     }
 
-    @Test(description = "TC_016 - Product Page Checks")
+    @Test(description = "TC_018 - Product Page Checks")
     public void thumbnailCarouselUpdatesMainImage() {
         HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
@@ -81,7 +81,7 @@ public class CatalogTests extends BaseTest {
 
     }
 
-    @Test(description = "TC_017 - Add/Remove Product to Wishlist (Logged-In User)")
+    @Test(description = "TC_019 - Add/Remove Product to Wishlist (Logged-In User)")
     public void addAndRemoveProductFromWishlistWhenLoggedIn() {
         PlaywrightFactory.tearDown();
         page = PlaywrightFactory.initLoggedInPage();
@@ -98,7 +98,7 @@ public class CatalogTests extends BaseTest {
 
     }
 
-    @Test(description = "TC_018 - Wishlist Access and Redirection for Guest User")
+    @Test(description = "TC_020 - Wishlist Access and Redirection for Guest User")
     public void guestWishlistClickPromptsLogin() {
         HeaderComponent header = new HeaderComponent(page);
 
@@ -121,5 +121,10 @@ public class CatalogTests extends BaseTest {
 
         assertThat(page).hasURL(Pattern.compile(".*/login"));
 
+    }
+
+    @Test(description = "TC_021 - Remove Product from Wishlist (Logged-In User)")
+    public void removeProductFromWishlistWhenLoggedIn() {
+        // TODO: implement
     }
 }

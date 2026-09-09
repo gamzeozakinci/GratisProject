@@ -89,7 +89,7 @@ public class CartPage {
     }
 
     public void chooseOnline() {
-        page.locator("input[type='radio'][value='ONLINE']");
+        page.locator("input[type='radio'][value='ONLINE']").click();
     }
 
     public void addAddress() {
@@ -109,33 +109,26 @@ public class CartPage {
     }
 
     public void adresIL() {
-        page.locator("//label[text()='İl *']/following::button[1]").nth(2).click();
-        page.getByPlaceholder("Arama yap...").fill("antalya");
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().
-                setName("ANTALYA")).click();
+        page.locator("//label[text()='İl *']/following::button[1]").click();
+        page.getByText("ANTALYA", new Page.GetByTextOptions().setExact(true)).click();
 
     }
 
     public void adresILCE() {
         page.locator("//label[text()='İlçe *']/following::button[1]").click();
-        page.getByPlaceholder("Arama yap...").fill("konyaaltı");
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().
-                setName("KONYAALTI")).click();
+        page.getByText("KONYAALTI", new Page.GetByTextOptions().setExact(true)).click();
     }
 
     public void adresStreet() {
         page.locator("//label[text()='Mahalle *']/following::button[1]").click();
-        page.getByPlaceholder("Arama yap...").fill("siteler");
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().
-                setName("SİTELER")).click();
+        page.getByText("SİTELER", new Page.GetByTextOptions().setExact(true)).click();
     }
 
     public void addressDetail() {
-        page.getByText("ADRESİMİ KAYDET").click();
-    }
-
-    public void saveAddress() {
         page.getByPlaceholder("Açık adresinizi ekleyiniz").fill("Test Sokak No:1 Daire:1");
     }
 
+    public void saveAddress() {
+        page.getByText("ADRESİMİ KAYDET").click();
+    }
 }

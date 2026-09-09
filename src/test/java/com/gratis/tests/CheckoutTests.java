@@ -10,7 +10,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class CheckoutTests extends LoggedInBaseTest {
 
-    @Test(description = "TC_025 - Store Pickup Delivery (Gel-Al) Selection Flow, " +
+    @Test(description = "TC_028 - Store Pickup Delivery (Gel-Al) Selection Flow, " +
             "Reaching the payment step lands on the correct payment URL " +
             "(personal project, no test card credentials - no real payment is attempted)")
     public void storePickupSelectionFlow() {
@@ -30,7 +30,7 @@ public class CheckoutTests extends LoggedInBaseTest {
 
     }
 
-    @Test(description = "TC_026 - Address Creation and Home Delivery Selection " +
+    @Test(description = "TC_029 - Address Creation and Home Delivery Selection " +
             "Reaching the payment step lands on the correct payment URL " +
             "(personal project, no test card credentials - no real payment is attempted)")
     public void addressCreationAndHomeDelivery() {
@@ -47,9 +47,16 @@ public class CheckoutTests extends LoggedInBaseTest {
         cart.adresILCE();
         cart.adresStreet();
         cart.addressDetail();
+        acceptCookiesIfPresent();
         cart.saveAddress();
 
+        page.waitForURL(Pattern.compile(".*checkout/payment.*"));
         assertThat(page).hasURL(Pattern.compile(".*checkout/payment.*"));
 
+    }
+
+    @Test(description = "TC_030 - Navigating directly to checkout with an empty cart blocks access")
+    public void emptyCartBlocksCheckoutAccess() {
+        // TODO: implement
     }
 }

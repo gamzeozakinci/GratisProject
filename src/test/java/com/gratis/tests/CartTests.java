@@ -11,7 +11,7 @@ public class CartTests extends LoggedInBaseTest {
 
     String firstItem;
 
-    @Test(description = "TC_019 - Add Product to Cart from PLP and PDP")
+    @Test(description = "TC_022 - Add Product to Cart from PLP and PDP")
     public void addProductsFromPlpAndPdp() {
         HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
@@ -41,7 +41,7 @@ public class CartTests extends LoggedInBaseTest {
 
     }
 
-    @Test(description = "TC_020 - Update Product Quantity in Cart (Boundary & Limit Checks)",
+    @Test(description = "TC_023 - Update Product Quantity in Cart (Boundary & Limit Checks)",
             dependsOnMethods = "addProductsFromPlpAndPdp")
     public void quantityBoundaryChecksInCart() {
 
@@ -63,7 +63,7 @@ public class CartTests extends LoggedInBaseTest {
 
     }
 
-    @Test(description = "TC_021 - Remove Product from Shopping Cart",
+    @Test(description = "TC_024 - Remove Product from Shopping Cart",
             dependsOnMethods = "addProductsFromPlpAndPdp")
     public void removeProductFromCart() {
         CartPage cart = new CartPage(page);
@@ -77,7 +77,7 @@ public class CartTests extends LoggedInBaseTest {
     }
 
 
-    @Test(description = "TC_023 - Apply Invalid or Expired Promo Code")
+    @Test(description = "TC_025 - Apply Invalid or Expired Promo Code")
     public void invalidAndExpiredPromoCodesAreRejected() {
         //only tried with invalid code because since this is s volunteery test i dont have access to test promo codes
         CartPage cart = new CartPage(page);
@@ -91,7 +91,7 @@ public class CartTests extends LoggedInBaseTest {
 
     }
 
-    @Test(description = "TC_024 - Shopping Cart Session Persistence")
+    @Test(description = "TC_026 - Shopping Cart Session Persistence")
     public void cartPersistsAcrossReloadAndReLogin() {
         // already logged in - see LoggedInBaseTest.setUp()
         HeaderComponent header = new HeaderComponent(page);
@@ -105,5 +105,10 @@ public class CartTests extends LoggedInBaseTest {
         cart.cartButton();
 
         assertThat(page.locator("a[href*='-p-']").first()).isVisible();
+    }
+
+    @Test(description = "TC_027 - Actually deleting an item from the cart (not just decreasing quantity)")
+    public void deleteItemFromCart() {
+        // TODO: implement
     }
 }
