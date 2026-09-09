@@ -75,7 +75,7 @@ Extends `LoggedInBaseTest` — every test in this class starts already logged in
 
 ## Checkout — `CheckoutTests.java`
 
-Extends `LoggedInBaseTest` (both tests need a real session for cart/checkout, same as everywhere else on this site).
+Extends `LoggedInBaseTest` (both tests need a real session for cart/checkout, same as everywhere else on this site). Most checkout-flow steps (city/district/store, address form, payment step) live in `CheckoutPage.java`. `continueToDelivery()` stays on `CartPage` instead, since that "TESLİMAT ADIMINA GEÇ" button is still on the cart page itself, before you've actually moved into checkout.
 
 | TC | Description | Method | Status |
 |----|---|---|---|
@@ -87,7 +87,7 @@ Extends `LoggedInBaseTest` (both tests need a real session for cart/checkout, sa
 
 ## Dead code removed along the way
 
-`HomePage.java`, `WishlistPage.java`, `OrderPage.java`, and `TestDataGenerator.java` (all unused empty skeletons or never-wired-in utilities) have been deleted from the project. `CheckoutPage.java` still exists with a few unused methods (`fromStore()`, `toAddress()`, `toCheckout()`) that were never wired into any test — kept for now since its `toCheckout()` naming pattern is what informed the `continueToPayment()` fix in `CartPage`.
+`HomePage.java`, `WishlistPage.java`, `OrderPage.java`, and `TestDataGenerator.java` (all unused empty skeletons or never-wired-in utilities) have been deleted from the project. `CheckoutPage.java`'s three original unused methods (`fromStore()`, `toAddress()`, `toCheckout()`) have also been removed — they were never wired into any test and duplicated functionality the moved-in methods already cover.
 
 ---
 
