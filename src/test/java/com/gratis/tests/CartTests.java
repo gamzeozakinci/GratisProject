@@ -109,6 +109,6 @@ public class CartTests extends LoggedInBaseTest {
 
     @Test(description = "TC_027 - Actually deleting an item from the cart (not just decreasing quantity)")
     public void deleteItemFromCart() {
-        // TODO: implement
+
     }
 }
