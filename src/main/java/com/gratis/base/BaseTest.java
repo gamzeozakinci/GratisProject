@@ -2,6 +2,7 @@ package com.gratis.base;
 
 import com.gratis.config.ConfigReader;
 import com.gratis.driver.PlaywrightFactory;
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,16 @@ public abstract class BaseTest {
             takeScreenshot(result.getMethod().getMethodName());
         }
         PlaywrightFactory.tearDown();
+    }
+
+    // Call this anywhere a test hits the cookie-consent banner (guest or
+    // logged-in) - it only clicks if the banner is actually showing, so it's
+    // always safe to call.
+    protected void acceptCookiesIfPresent() {
+        Locator cookieBanner = page.locator("#banner-accept-button");
+        if (cookieBanner.isVisible()) {
+            cookieBanner.click();
+        }
     }
 
     private void takeScreenshot(String testName) {

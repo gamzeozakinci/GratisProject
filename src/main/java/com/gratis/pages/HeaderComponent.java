@@ -2,20 +2,7 @@ package com.gratis.pages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.options.AriaRole;
 
-import java.util.regex.Pattern;
-
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-
-// TODO: header/nav is used by almost every test class, so build this one early.
-//  - logo click -> back to homepage
-//  - isUserLoggedIn(name) - some way to tell a logged-in header apart from a guest one
-//  - wishlist / my-orders nav entries
-//  - search input + submit + "is the suggestion dropdown showing" check
-//  - cart icon click + reading the cart badge count
-//  - mobile: hamburger icon click + "is the mobile menu open"
-//  - mega menu: hover a top-level category, click a link inside it
 public class HeaderComponent {
 
     private final Page page;
@@ -65,6 +52,10 @@ public class HeaderComponent {
         page.locator("#search-bar input:visible").fill("göz");
     }
 
+    public void invalidSearch() {
+        page.locator("#search-bar input:visible").fill("asdfghjl");
+    }
+
     public Locator searchSuggestions() {
         Locator items = page.locator("//ul[@class=\"-mx-5 flex flex-col divide-y divide-gray-100 border-b border-gray-100 " +
                 "lg:mx-0 lg:divide-y-0 lg:border-b-0\"]//li");
@@ -86,6 +77,5 @@ public class HeaderComponent {
         page.locator("Çıkış Yap").click();
 
     }
-
 
 }

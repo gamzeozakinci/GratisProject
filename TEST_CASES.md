@@ -10,6 +10,8 @@
 
 **Login for tests that need it:** several tests require being logged in (this site has no guest cart or wishlist — confirmed live). Rather than a real phone+OTP flow every run, those tests load a saved session via `PlaywrightFactory.initLoggedInPage()` / `LoggedInBaseTest`, captured once by running `SessionCaptureTests` manually. That saved session is short-lived (~10–15 minutes — it's a real JWT issued by the site's backend), so it needs recapturing shortly before running any of these. See `SessionCaptureTests.java`'s class comment.
 
+**Cookie-banner handling lives in `BaseTest`:** `acceptCookiesIfPresent()` moved from `LoggedInBaseTest` up to `BaseTest`, so every test class — guest or logged-in — can call it, since the consent banner isn't login-specific.
+
 ## Auth — `AuthTests.java`
 
 gratis.com has no email/password form and no separate registration page — a single phone-number + OTP flow ("Giriş Yap / Üye Ol") handles both login and signup. There's no forgot-password flow either, since there's no password. See `LoginPage.java` for details.
@@ -20,7 +22,7 @@ gratis.com has no email/password form and no separate registration page — a si
 | TC_002 | An already-registered phone number routes through OTP login | `existingPhoneNumberRoutesToLogin` | 🔶 Full flow + assertions (URL, logged-in name in header); OTP still entered manually |
 | TC_003 | An incorrect OTP is rejected with a validation error and does not authenticate | `invalidOtpShowsError` | 🔶 Manual invalid-OTP entry via `page.pause()`; asserts the real error text |
 | TC_004 | An invalid phone number format is blocked before an OTP is ever sent | `invalidPhoneFormatBlocksContinue` | ✅ Fully automated — no manual step needed |
-| TC_005 | Logging out returns the user to a guest state | `logoutReturnsToGuestState` | ⬜ Not started (`// TODO: implement`) |
+| TC_005 | Logging out returns the user to a guest state | `logoutReturnsToGuestState` | 🔶 Has a body now, but two real bugs: `HeaderComponent.hesabimLogOut()` calls `page.locator("Çıkış Yap")` — passing that Turkish text straight to `.locator()` treats it as a CSS selector, not text to find, so it won't match the real logout element (should be `getByText("Çıkış Yap")`, same as `openLoginOrRegister()` does). The test also has no assertion at all — even if the click worked, nothing verifies the guest state was actually reached. |
 
 **Known limitation:** OTP delivery is real SMS to a real phone, with no sandbox/mock bypass. TC_001–TC_003 pause execution (`page.pause()`) for a human to read the code and type it in — semi-automated, not fully automated.
 
@@ -39,7 +41,7 @@ gratis.com has no email/password form and no separate registration page — a si
 |----|---|---|---|
 | TC_010 | Product Search using Autocomplete Suggestions | `autocompleteSuggestionsAppearWhileTyping` | ✅ |
 | TC_011 | Product Search with Valid Keyword | `searchWithValidKeywordShowsResults` | 🔶 `PLPPage.checkSearchWord()` builds a locator (`//h1[text()="“göz“"]"`, smart/curly quotes) but never asserts or clicks anything with it — calling it currently does nothing useful. The real assertion right after it in the test uses the same curly-quote text and has never been verified against the live DOM. |
-| TC_012 | Searching a nonsense keyword shows the empty-results state | `searchWithNoResultsShowsEmptyState` | ⬜ Not started (`// TODO: implement`) |
+| TC_012 | Searching a nonsense keyword shows the empty-results state | `searchWithNoResultsShowsEmptyState` | 🔶 Now fully written (`HeaderComponent.invalidSearch()` fills a gibberish keyword, asserts the "Sonuç Bulunamadı" empty-state text is visible) — looks correct, just not yet confirmed by an actual run |
 
 ## Filter & Sort — `FilterSortTests.java`
 
@@ -47,7 +49,7 @@ gratis.com has no email/password form and no separate registration page — a si
 |----|---|---|---|
 | TC_013 | Product Filtering by Brand and Price Range on PLP | `filterByBrandAndPriceRange` | ✅ |
 | TC_014 | Product Sorting by Price and Sales Volume | `sortByPriceLowToHighAndHighToLow` | ✅ The redundant `Thread.sleep(2000)` has been removed — now settles purely on `assertThat(...).isVisible()` |
-| TC_015 | Clearing an applied filter resets the product list | `clearingFiltersResetsProductList` | ⬜ Not started (`// TODO: implement`) |
+| TC_015 | Clearing an applied filter resets the product list | `clearingFiltersResetsProductList` | 🔶 Rewritten after real, live-verified bugs: the plain `a[href*='-p-']` locator could match a promotional banner instead of an actual product card (confirmed live — it grabbed "Astra Sadece Gratis'te"), fixed by scoping to `a[href*='-p-']:has(h5)` (every real product card has an `<h5>` name, decoys don't — verified live: 24/24 had one, 0 without). Also switched from reading `.innerText()` into a `String` immediately (no retry) to keeping the `Locator` alive and asserting `assertThat(firstProduct).not().hasText(product)`, which auto-retries until the text actually changes instead of racing a client-side re-render. Not yet confirmed passing by a full run since this rewrite. |
 
 ## Catalog (PLP/PDP) — `CatalogTests.java`
 
@@ -58,7 +60,7 @@ gratis.com has no email/password form and no separate registration page — a si
 | TC_018 | Product Page Checks *(renamed from "Multi-Image Carousel Zoom and Navigation on PDP")* | `thumbnailCarouselUpdatesMainImage` | ✅ Covers image navigation, the zoom lightbox, and the comments tab-switch. Method name still doesn't match the description — cosmetic |
 | TC_019 | Add/Remove Product to Wishlist (Logged-In User) | `addAndRemoveProductFromWishlistWhenLoggedIn` | ✅ Only the "Add" half is covered — no "Remove" step (see TC_021, which is meant to cover that separately) |
 | TC_020 | Wishlist Access and Redirection for Guest User | `guestWishlistClickPromptsLogin` | ✅ |
-| TC_021 | Remove Product from Wishlist (Logged-In User) | `removeProductFromWishlistWhenLoggedIn` | ⬜ Not started (`// TODO: implement`) |
+| TC_021 | Remove Product from Wishlist (Logged-In User) | `removeProductFromWishlistWhenLoggedIn` | 🔶 Has a body now, but it's the wrong flow entirely: it calls `CartPage.cartButton()` + `CartPage.deleteFromCart()` — that's a cart action on the cart page, not a wishlist action. As written this doesn't touch the wishlist at all, so it doesn't test what the description says. Needs rewriting against an actual wishlist page/remove control. |
 
 ## Cart — `CartTests.java`
 
@@ -71,7 +73,7 @@ Extends `LoggedInBaseTest` — every test in this class starts already logged in
 | TC_024 | Remove Product from Shopping Cart | `removeProductFromCart` | 🔶 Despite the name, this only calls `cart.decreaseQuantity()` once — it doesn't actually remove the item from the cart (`CartPage.deleteFromCart()` exists for that but is unused, and still uses a risky unscoped `getByRole(BUTTON, "button")`). Its `.flex.flex-col.gap-4` locator hasn't been checked against the live DOM either. See TC_027, which is meant to cover real deletion separately. |
 | TC_025 | Apply Invalid or Expired Promo Code | `invalidAndExpiredPromoCodesAreRejected` | 🔶 `CartPage.submitPromoCode()` fixed (was hitting the `aria-label="button"` override trap); not yet confirmed by a run |
 | TC_026 | Shopping Cart Session Persistence | `cartPersistsAcrossReloadAndReLogin` | 🔶 Relies on `LoggedInBaseTest` instead of its own manual login; not yet confirmed by a run |
-| TC_027 | Actually deleting an item from the cart (not just decreasing quantity) | `deleteItemFromCart` | ⬜ Not started (`// TODO: implement`). Distinct from TC_024 — this one is meant to exercise the real removal action (`CartPage.deleteFromCart()`), which also needs its risky unscoped `getByRole(BUTTON, "button")` locator fixed before this can be written. |
+| TC_027 | Actually deleting an item from the cart (not just decreasing quantity) | `deleteItemFromCart` | ⬜ Not started — empty method body. Distinct from TC_024 — this one is meant to exercise the real removal action (`CartPage.deleteFromCart()`), which also needs its risky unscoped `getByRole(BUTTON, "button")` locator fixed before this can be written. |
 
 ## Checkout — `CheckoutTests.java`
 
@@ -80,8 +82,8 @@ Extends `LoggedInBaseTest` (both tests need a real session for cart/checkout, sa
 | TC | Description | Method | Status |
 |----|---|---|---|
 | TC_028 | Store Pickup Delivery (Gel-Al) Selection Flow, including reaching and confirming the correct payment URL | `storePickupSelectionFlow` | 🔶 Full flow written (city/district/store selection, agreement, continue). `continueToPayment()` was fixed to click `"ÖDEME ADIMINA GEÇ"` instead of duplicating `accAgreement()`'s checkbox click, but that fix was applied without a live-verified run (session had ~114s left at the time) — still needs confirming. |
-| TC_029 | Address Creation and Home Delivery Selection, including reaching and confirming the correct payment URL | `addressCreationAndHomeDelivery` | 🔶 Several real bugs found and fixed via a live-verified session: `chooseOnline()` was missing `.click()` entirely; the İl/İlçe/Mahalle dropdowns were assumed to have a search input (confirmed live they don't — plain clickable lists) and used the wrong XPath axis (`following-sibling::` → fixed to `following::button[1]`); a second cookie-consent banner (`#cookiespool-banner`, distinct from the one `LoggedInBaseTest` already handles) was found intercepting the `saveAddress()` click, so `acceptCookiesIfPresent()` (see `LoggedInBaseTest`) is now called again right before that click. An explicit `page.waitForURL(...)` was also added before the final assertion. Still not confirmed green end-to-end by an actual run since the last fix. |
-| TC_030 | Navigating directly to checkout with an empty cart blocks access | `emptyCartBlocksCheckoutAccess` | ⬜ Not started (`// TODO: implement`) |
+| TC_029 | Address Creation and Home Delivery Selection, including reaching and confirming the correct payment URL | `addressCreationAndHomeDelivery` | 🔶 Several real bugs found and fixed via a live-verified session: `chooseOnline()` was missing `.click()` entirely; the İl/İlçe/Mahalle dropdowns were assumed to have a search input (confirmed live they don't — plain clickable lists) and used the wrong XPath axis (`following-sibling::` → fixed to `following::button[1]`); a second cookie-consent banner (`#cookiespool-banner`, distinct from the one `BaseTest` already handles) was found intercepting the `saveAddress()` click, so `acceptCookiesIfPresent()` is now called again right before that click. An explicit `page.waitForURL(...)` was also added before the final assertion. Still not confirmed green end-to-end by an actual run since the last fix. |
+| TC_030 | Navigating directly to checkout with an empty cart blocks access | `emptyCartBlocksCheckoutAccess` | 🔶 Has a body now, but several real problems: the `CartPage cart` variable is declared but never used — nothing in the test ever navigates to the cart, and nothing ensures the cart is actually empty first (e.g. never calls `clearCart()`), so the premise of the test ("empty cart blocks checkout") is never actually set up. Both assertions also pass raw Turkish text straight into `page.locator(...)` (`"Sepetinizde Ürün Bulunmuyor"`, `"TESLİMAT ADIMINA GEÇ"`) — that's treated as a CSS selector, not text to find, so neither will match the real elements (should be `getByText(...)`, same issue as TC_005). |
 
 **Payment scope unchanged:** still deliberately stops at reaching the payment URL — no real payment is attempted, no test card credentials exist for this personal project. Post-order validation (a former `OrderTests` class) was removed for the same no-real-payment reason and hasn't been replaced.
 
@@ -91,4 +93,4 @@ Extends `LoggedInBaseTest` (both tests need a real session for cart/checkout, sa
 
 ---
 
-**Progress: 12 / 30 implemented, 12 in progress, 6 not started.**
+**Progress: 12 / 30 implemented, 17 in progress, 1 not started.**

@@ -40,7 +40,7 @@ public class FilterSortTests extends BaseTest {
         header.headerSacbakim();
 
         PLPPage plp = new PLPPage(page);
-        assertThat(page.locator("a[href*='-p-']").first()).isVisible(); // let the page settle first
+        assertThat(page.locator("a[href*='-p-']").first()).isVisible();
 
         plp.filtrele();
         plp.filterCokSatan();
@@ -53,6 +53,23 @@ public class FilterSortTests extends BaseTest {
 
     @Test(description = "TC_015 - Clearing an applied filter resets the product list")
     public void clearingFiltersResetsProductList() {
-        // TODO: implement
+        HeaderComponent header = new HeaderComponent(page);
+        header.headerSacbakim();
+
+        acceptCookiesIfPresent();
+
+        // scoped to :has(h5) - a plain a[href*='-p-'] can match a promotional
+        // banner link instead of an actual product card (confirmed live: this
+        // grabbed "Astra Sadece Gratis'te" unscoped). Real product cards all
+        // have an <h5> name element; decoys don't.
+        Locator firstProduct = page.locator("a[href*='-p-']:has(h5)").first();
+        assertThat(firstProduct).isVisible(); // let the page settle first
+        String product = firstProduct.innerText();
+
+        PLPPage plp = new PLPPage(page);
+        plp.filterMarka();
+        plp.selectMarka();
+
+        assertThat(firstProduct).not().hasText(product);
     }
 }
