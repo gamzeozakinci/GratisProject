@@ -88,7 +88,10 @@ public class AuthTests extends BaseTest {
 
     @Test(description = "TC_005 - Logging out returns the user to a guest state")
     public void logoutReturnsToGuestState() {
-        // TODO: implement
+        HeaderComponent header = new HeaderComponent(page);
+        header.headerHesabim();
+        header.hesabimLogOut();
+
     }
 
 }
