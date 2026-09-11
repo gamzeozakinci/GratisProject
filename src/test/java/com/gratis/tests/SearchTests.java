@@ -53,6 +53,12 @@ public class SearchTests extends BaseTest {
 
     @Test(description = "TC_012 - Searching a nonsense keyword shows the empty-results state")
     public void searchWithNoResultsShowsEmptyState() {
-        // TODO: implement
+        HeaderComponent header = new HeaderComponent(page);
+
+        header.invalidSearch();
+        page.keyboard().press("Enter");
+
+        assertThat(page.getByText("Sonuç Bulunamadı")).isVisible();
+
     }
 }

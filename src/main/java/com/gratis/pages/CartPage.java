@@ -64,4 +64,9 @@ public class CartPage {
     public void continueToDelivery() {
         page.getByText("TESLİMAT ADIMINA GEÇ").first().click();
     }
+
+    public void cartEmpty() {
+        page.getByText("Sepetinizde Ürün Bulunmuyor").first().click();
+    }
+
 }

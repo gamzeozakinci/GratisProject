@@ -60,6 +60,10 @@ public class CheckoutTests extends LoggedInBaseTest {
 
     @Test(description = "TC_030 - Navigating directly to checkout with an empty cart blocks access")
     public void emptyCartBlocksCheckoutAccess() {
-        // TODO: implement
+        //ürün silmeye bagla silince checkout clickable olmasın ve sepette ürün bulunmuyor yazısı
+        CartPage cart = new CartPage(page);
+        assertThat(page.locator("Sepetinizde Ürün Bulunmuyor")).isVisible();
+        assertThat(page.locator("TESLİMAT ADIMINA GEÇ")).not().isVisible();
+
     }
 }

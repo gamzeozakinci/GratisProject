@@ -3,6 +3,7 @@ package com.gratis.tests;
 import com.gratis.base.BaseTest;
 import com.gratis.config.ConfigReader;
 import com.gratis.driver.PlaywrightFactory;
+import com.gratis.pages.CartPage;
 import com.gratis.pages.HeaderComponent;
 import com.gratis.pages.PDPPage;
 import com.gratis.pages.PLPPage;
@@ -125,6 +126,10 @@ public class CatalogTests extends BaseTest {
 
     @Test(description = "TC_021 - Remove Product from Wishlist (Logged-In User)")
     public void removeProductFromWishlistWhenLoggedIn() {
-        // TODO: implement
+        CartPage cartpage = new CartPage(page);
+        cartpage.cartButton();
+        cartpage.deleteFromCart();
+
+
     }
 }
