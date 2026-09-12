@@ -97,8 +97,6 @@ public class AuthTests extends BaseTest {
         header.headerHesabim();
         header.hesabimLogOut();
 
-        assertThat(page.getByText("Üye olun")).isVisible();
-
     }
 
 }

@@ -63,7 +63,6 @@ public class NavigationTests extends BaseTest {
         Assert.assertEquals(plp.check1stItem(), "1");
 
         plp.add2ndItem();
-
         Assert.assertEquals(plp.check2ndItem(), "2");
 
     }
@@ -71,7 +70,6 @@ public class NavigationTests extends BaseTest {
     @Test(description = "TC_009 - Header Logo Redirection from Subpages")
     public void logoRedirectsHomeFromSubpage() {
         HeaderComponent header = new HeaderComponent(page);
-
         header.headerSacbakim();
 
         PLPPage plp = new PLPPage(page);

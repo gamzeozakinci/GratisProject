@@ -42,8 +42,8 @@ public class CartPage {
 
     }
 
-    public void deleteFromCart() {
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("button")).click();
+    public void deleteAllFromCart() {
+        page.getByText("TÜMÜNÜ SİL").click();
 
     }
 
@@ -58,15 +58,15 @@ public class CartPage {
     }
 
     public void submitPromoCode() {
-        page.getByText("UYGULA", new Page.GetByTextOptions().setExact(true)).click();
+        page.getByText("UYGULA", new Page.GetByTextOptions().setExact(true)).first().click();
     }
 
     public void continueToDelivery() {
         page.getByText("TESLİMAT ADIMINA GEÇ").first().click();
     }
 
-    public void cartEmpty() {
-        page.getByText("Sepetinizde Ürün Bulunmuyor").first().click();
+    public void confrimEmpty() {
+        page.getByText("TAMAM").click();
     }
 
 }
