@@ -160,8 +160,9 @@ existing account reachable at `registered.phone.number`. This lives in
   registration test hits "already registered" instead of a fresh signup. A
   unique-phone-number generator would fix this and isn't wired in yet.
 - **TC_005, TC_012, TC_015, TC_021, TC_027, TC_030** (logout, no-results search, clear
-  filters, wishlist removal, actual cart-item deletion, empty-cart checkout guard) are
-  stubbed with `@Test` + `// TODO: implement` but have no body yet — see `TEST_CASES.md`.
+  filters, wishlist removal, actual cart-item deletion, empty-cart checkout guard) now
+  have real bodies, but several are still known-broken or unconfirmed — see
+  `TEST_CASES.md` for the current status of each.
 - **CI**: intentionally kept out of this version. A GitHub Actions workflow (checkout →
   Playwright browser install → `mvn test` → upload `test-output/`) is a natural next
   step, though the manual-OTP and short-lived-session pieces above would need solving
