@@ -74,8 +74,9 @@ public class HeaderComponent {
     }
 
     public void hesabimLogOut() {
-        page.locator("Çıkış Yap").click();
+        page.getByText("Çıkış Yap").first().click();
 
     }
+
 
 }

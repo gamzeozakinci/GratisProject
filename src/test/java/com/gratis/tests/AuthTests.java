@@ -2,6 +2,7 @@ package com.gratis.tests;
 
 import com.gratis.base.BaseTest;
 import com.gratis.config.ConfigReader;
+import com.gratis.driver.PlaywrightFactory;
 import com.gratis.pages.HeaderComponent;
 import com.gratis.pages.LoginPage;
 import org.testng.annotations.Test;
@@ -88,9 +89,15 @@ public class AuthTests extends BaseTest {
 
     @Test(description = "TC_005 - Logging out returns the user to a guest state")
     public void logoutReturnsToGuestState() {
+        PlaywrightFactory.tearDown();
+        page = PlaywrightFactory.initLoggedInPage();
+        page.navigate(ConfigReader.baseUrl());
+
         HeaderComponent header = new HeaderComponent(page);
         header.headerHesabim();
         header.hesabimLogOut();
+
+        assertThat(page.getByText("Üye olun")).isVisible();
 
     }
 
