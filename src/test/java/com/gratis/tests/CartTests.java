@@ -44,7 +44,7 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_023 - Update Product Quantity in Cart (Boundary & Limit Checks)",
             dependsOnMethods = "addProductsFromPlpAndPdp")
     public void quantityBoundaryChecksInCart() {
-
+        //bozuk bu sonra bak üsstekinden dolayı calısmıyo
         CartPage cart = new CartPage(page);
         cart.cartButton();
         String currQ = page.locator(".font-semibold.text-black").first().innerText();
@@ -66,6 +66,7 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_024 - Remove Product from Shopping Cart",
             dependsOnMethods = "addProductsFromPlpAndPdp")
     public void removeProductFromCart() {
+        //baska bir ürün de varken birini sil kalanları assertle
         CartPage cart = new CartPage(page);
         cart.cartButton();
 
@@ -88,12 +89,11 @@ public class CartTests extends LoggedInBaseTest {
 
         assertThat(page.locator("//*[text()=\"Kupon Kodu geçersizdir.\"]").first()).isVisible();
 
-
     }
 
     @Test(description = "TC_026 - Shopping Cart Session Persistence")
     public void cartPersistsAcrossReloadAndReLogin() {
-        // already logged in - see LoggedInBaseTest.setUp()
+        //yanlıs calısıyo bu tekrar bak
         HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
         PLPPage plp = new PLPPage(page);
@@ -109,6 +109,11 @@ public class CartTests extends LoggedInBaseTest {
 
     @Test(description = "TC_027 - Actually deleting an item from the cart (not just decreasing quantity)")
     public void deleteItemFromCart() {
+        //isimlendirmesine bak hepsini sildik burada
+        CartPage cartpage = new CartPage(page);
+        cartpage.cartButton();
+        cartpage.deleteAllFromCart();
 
+        assertThat(page.getByText("Sepetinizde Ürün Bulunmuyor")).isVisible();
     }
 }

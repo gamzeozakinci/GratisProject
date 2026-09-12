@@ -70,6 +70,8 @@ public class FilterSortTests extends BaseTest {
         plp.filterMarka();
         plp.selectMarka();
 
+        // this IS the check that the product changed, not just a wait - it
+        // fails with a clear timeout if the text never actually differs.
         assertThat(firstProduct).not().hasText(product);
     }
 }

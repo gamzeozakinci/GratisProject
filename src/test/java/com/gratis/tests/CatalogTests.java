@@ -126,9 +126,7 @@ public class CatalogTests extends BaseTest {
 
     @Test(description = "TC_021 - Remove Product from Wishlist (Logged-In User)")
     public void removeProductFromWishlistWhenLoggedIn() {
-        CartPage cartpage = new CartPage(page);
-        cartpage.cartButton();
-        cartpage.deleteFromCart();
+        //yanlıs bu tekrar bak
 
 
     }
