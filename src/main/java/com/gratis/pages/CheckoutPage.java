@@ -14,7 +14,8 @@ public class CheckoutPage {
     }
 
     public Locator addAddressModal() {
-        return page.locator("div").filter(new Locator.FilterOptions().setHasText("Yeni Adres Ekle")).nth(1);
+        return page.locator("div").filter(new Locator.FilterOptions().
+                setHasText("Yeni Adres Ekle")).nth(1);
     }
 
     public void openBillingAddressModal() {
@@ -39,20 +40,6 @@ public class CheckoutPage {
         page.locator("#checkout-consent div.cursor-pointer").click();
     }
 
-    // Clicking "ÖDEME ADIMINA GEÇ" opens an in-page "Ödeme" modal backed by
-    // a live third-party payment gateway (Masterpass) that is measurably
-    // slow and sometimes errors out outright ("Beklenmeyen bir hata
-    // oluştu"), so the click is retried - same pattern as
-    // HeaderComponent.headerSacbakimForced(). The modal itself is a real
-    // <h5>Ödeme</h5> in the main document (confirmed live) - its own
-    // "Pay with Card"/Masterpass content is rendered inside an iframe and
-    // is NOT visible to a plain page-level locator even though it's on
-    // screen, so that must not be used to detect success (confirmed live:
-    // document.body.innerText does not contain "Pay with Card" while the
-    // modal is fully open). The modal's backdrop (div.bg-white/90) covers
-    // the whole page while it's open and blocks clicks on the button
-    // underneath, so "Ödeme" is checked first each attempt to avoid
-    // re-clicking into the modal's own backdrop once it has opened.
     public void continueToPayment() {
         Locator button = page.getByText("ÖDEME ADIMINA GEÇ");
         Locator paymentModal = page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName("Ödeme"));
@@ -114,6 +101,5 @@ public class CheckoutPage {
     public void saveAddress() {
         page.getByText("ADRESİMİ KAYDET").click();
     }
-
 
 }

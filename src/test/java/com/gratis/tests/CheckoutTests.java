@@ -12,22 +12,16 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class CheckoutTests extends LoggedInBaseTest {
 
-    CartPage cart;
-    CheckoutPage checkout;
-
-    @BeforeMethod(alwaysRun = true)
-    public void initPageObjects() {
-        cart = new CartPage(page);
-        checkout = new CheckoutPage(page);
-    }
 
     @Test(description = "TC_028 - Store Pickup Delivery (Gel-Al) Selection Flow, " +
             "a billing address is required for store pickup and its creation " +
             "modal is shown - no address is entered, no payment is attempted")
     public void storePickupSelectionFlow() {
+        CartPage cart = new CartPage(page);
         cart.cartButton();
         cart.continueToDelivery();
 
+        CheckoutPage checkout= new CheckoutPage(page);
         checkout.chooseIl();
         checkout.chooseIlce();
         checkout.chooseMagaza();
@@ -42,8 +36,10 @@ public class CheckoutTests extends LoggedInBaseTest {
             "reaching the payment step opens the Ödeme payment modal - " +
             "no card details are entered, no payment is attempted")
     public void addressCreationAndHomeDelivery() {
+        CartPage cart = new CartPage(page);
         cart.cartButton();
         cart.continueToDelivery();
+        CheckoutPage checkout= new CheckoutPage(page);
         checkout.chooseOnline();
 
         if (page.getByText("Sistemimizde kayıtlı adresiniz bulunmamaktadır.").isVisible()) {
@@ -69,6 +65,7 @@ public class CheckoutTests extends LoggedInBaseTest {
 
     @Test(description = "TC_030 - Navigating directly to checkout with an empty cart blocks access")
     public void emptyCartBlocksCheckoutAccess() {
+        CartPage cart = new CartPage(page);
         cart.cartButton();
         cart.clearCart();
         cart.tamam();
