@@ -1,7 +1,7 @@
 package com.gratis.pages;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.options.AriaRole;
 
 public class CartPage {
 
@@ -9,6 +9,23 @@ public class CartPage {
 
     public CartPage(Page page) {
         this.page = page;
+    }
+
+    private Locator productRow(String productName) {
+        return page.locator("div.relative.flex.flex-row.border-b.border-gray-200.px-3.py-4.w-full.gap-3")
+                .filter(new Locator.FilterOptions().setHasText(productName));
+    }
+
+    public String quantityOf(String productName) {
+        return productRow(productName).locator(".font-semibold.text-black").innerText();
+    }
+
+    public Locator quantityLocator(String productName) {
+        return productRow(productName).locator(".font-semibold.text-black");
+    }
+
+    public Locator cartItem(String productName) {
+        return productRow(productName);
     }
 
     public void cartButton() {
@@ -31,14 +48,18 @@ public class CartPage {
 
     }
 
-    public void increaseQuantity() {
-        page.locator(".flex.flex-col.gap-2.justify-center .cursor-pointer").first().click();
-        // 1 3 5 gibi tek sayılar + 2 4 6 gibi olan cop veya - anlamına geliyor
+    private Locator quantityControls(String productName) {
+        return productRow(productName).locator("div.flex.flex-col.gap-2.justify-center.items-center.bg-primary-50");
 
     }
 
-    public void decreaseQuantity() {
-        page.locator(".flex.flex-col.gap-2.justify-center .cursor-pointer").nth(2).click();
+    public void increaseQuantity(String productName) {
+        quantityControls(productName).locator(".cursor-pointer").first().click();
+
+    }
+
+    public void decreaseQuantity(String productName) {
+        quantityControls(productName).locator(".cursor-pointer").last().click();
 
     }
 
@@ -59,14 +80,17 @@ public class CartPage {
 
     public void submitPromoCode() {
         page.getByText("UYGULA", new Page.GetByTextOptions().setExact(true)).first().click();
+
     }
 
     public void continueToDelivery() {
         page.getByText("TESLİMAT ADIMINA GEÇ").first().click();
+
     }
 
-    public void confrimEmpty() {
-        page.getByText("TAMAM").click();
+    public void removeProduct() {
+        page.getByText("Sil", new Page.GetByTextOptions().setExact(true)).click();
+
     }
 
 }

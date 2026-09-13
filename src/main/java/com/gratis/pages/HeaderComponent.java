@@ -2,6 +2,9 @@ package com.gratis.pages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.TimeoutError;
+
+import java.util.regex.Pattern;
 
 public class HeaderComponent {
 
@@ -48,6 +51,22 @@ public class HeaderComponent {
         page.mouse().move(0, 0);
     }
 
+    public void headerSacbakimForced() {
+        Locator link = page.locator("//a[text()=\"Saç Bakım\"]").first();
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            link.click(new Locator.ClickOptions().setForce(true));
+            page.mouse().move(0, 0);
+            try {
+                page.waitForURL(Pattern.compile(".*sac-bakim.*"), new Page.WaitForURLOptions().setTimeout(3000));
+                return;
+            } catch (TimeoutError e) {
+                if (attempt == 3) {
+                    throw e;
+                }
+            }
+        }
+    }
+
     public void search() {
         page.locator("#search-bar input:visible").fill("göz");
     }
@@ -77,6 +96,5 @@ public class HeaderComponent {
         page.getByText("Çıkış Yap").first().click();
 
     }
-
 
 }

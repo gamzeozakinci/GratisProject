@@ -1,6 +1,9 @@
 package com.gratis.pages;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.TimeoutError;
+import com.microsoft.playwright.options.AriaRole;
 
 public class CheckoutPage {
 
@@ -8,6 +11,14 @@ public class CheckoutPage {
 
     public CheckoutPage(Page page) {
         this.page = page;
+    }
+
+    public Locator addAddressModal() {
+        return page.locator("div").filter(new Locator.FilterOptions().setHasText("Yeni Adres Ekle")).nth(1);
+    }
+
+    public void openBillingAddressModal() {
+        page.getByText("YENİ ADRES EKLE").click();
     }
 
     public void chooseIl() {
@@ -28,8 +39,37 @@ public class CheckoutPage {
         page.locator("#checkout-consent div.cursor-pointer").click();
     }
 
+    // Clicking "ÖDEME ADIMINA GEÇ" opens an in-page "Ödeme" modal backed by
+    // a live third-party payment gateway (Masterpass) that is measurably
+    // slow and sometimes errors out outright ("Beklenmeyen bir hata
+    // oluştu"), so the click is retried - same pattern as
+    // HeaderComponent.headerSacbakimForced(). The modal itself is a real
+    // <h5>Ödeme</h5> in the main document (confirmed live) - its own
+    // "Pay with Card"/Masterpass content is rendered inside an iframe and
+    // is NOT visible to a plain page-level locator even though it's on
+    // screen, so that must not be used to detect success (confirmed live:
+    // document.body.innerText does not contain "Pay with Card" while the
+    // modal is fully open). The modal's backdrop (div.bg-white/90) covers
+    // the whole page while it's open and blocks clicks on the button
+    // underneath, so "Ödeme" is checked first each attempt to avoid
+    // re-clicking into the modal's own backdrop once it has opened.
     public void continueToPayment() {
-        page.getByText("ÖDEME ADIMINA GEÇ").click();
+        Locator button = page.getByText("ÖDEME ADIMINA GEÇ");
+        Locator paymentModal = page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName("Ödeme"));
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            if (paymentModal.isVisible()) {
+                return;
+            }
+            button.click();
+            try {
+                paymentModal.waitFor(new Locator.WaitForOptions().setTimeout(15000));
+                return;
+            } catch (TimeoutError e) {
+                if (attempt == 3) {
+                    throw e;
+                }
+            }
+        }
     }
 
     public void chooseOnline() {
@@ -53,19 +93,18 @@ public class CheckoutPage {
     }
 
     public void adresIL() {
-        page.locator("//label[text()='İl *']/following::button[1]").click();
-        page.getByText("ANTALYA", new Page.GetByTextOptions().setExact(true)).click();
-
+        addAddressModal().locator("//label[text()='İl *']/following::button[1]").click();
+        addAddressModal().getByText("ANTALYA", new Locator.GetByTextOptions().setExact(true)).click();
     }
 
     public void adresILCE() {
-        page.locator("//label[text()='İlçe *']/following::button[1]").click();
-        page.getByText("KONYAALTI", new Page.GetByTextOptions().setExact(true)).click();
+        addAddressModal().locator("//label[text()='İlçe *']/following::button[1]").click();
+        addAddressModal().getByText("KONYAALTI", new Locator.GetByTextOptions().setExact(true)).click();
     }
 
     public void adresStreet() {
-        page.locator("//label[text()='Mahalle *']/following::button[1]").click();
-        page.getByText("SİTELER", new Page.GetByTextOptions().setExact(true)).click();
+        addAddressModal().locator("//label[text()='Mahalle *']/following::button[1]").click();
+        addAddressModal().getByText("SİTELER", new Locator.GetByTextOptions().setExact(true)).click();
     }
 
     public void addressDetail() {
@@ -75,4 +114,6 @@ public class CheckoutPage {
     public void saveAddress() {
         page.getByText("ADRESİMİ KAYDET").click();
     }
+
+
 }

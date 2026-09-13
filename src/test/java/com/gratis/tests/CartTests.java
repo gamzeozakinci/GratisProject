@@ -2,61 +2,74 @@ package com.gratis.tests;
 
 import com.gratis.base.LoggedInBaseTest;
 import com.gratis.pages.*;
+import com.microsoft.playwright.Locator;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class CartTests extends LoggedInBaseTest {
 
+    HeaderComponent header;
+    CartPage cart;
+    PLPPage plp;
+    PDPPage pdp;
     String firstItem;
+
+    @BeforeMethod(alwaysRun = true)
+    public void initPageObjects() {
+        header = new HeaderComponent(page);
+        cart = new CartPage(page);
+        plp = new PLPPage(page);
+        pdp = new PDPPage(page);
+    }
 
     @Test(description = "TC_022 - Add Product to Cart from PLP and PDP")
     public void addProductsFromPlpAndPdp() {
-        HeaderComponent header = new HeaderComponent(page);
+
         header.headerSacbakim();
 
-        PLPPage plp = new PLPPage(page);
         plp.add1stItem();
         firstItem = page.locator("a[href*='-p-']").first().locator("h5").innerText();
-
-        CartPage cart = new CartPage(page);
         cart.cartButton();
 
-        Assert.assertTrue(page.locator("a[href*='-p-']").first().innerText().contains(firstItem));
+        // scoped to the actual cart-item row, not a plain a[href*='-p-'] -
+        // unscoped can match a promotional/recommendation-carousel link
+        // instead of the real cart row (same bug already found in
+        // FilterSortTests and PLPPage.clickFirstItem()).
+        assertThat(cart.cartItem(firstItem)).isVisible();
 
         cart.clearCart();
         cart.tamam();
         cart.logoCart();
 
-        header.headerSacbakim();
+        header.headerSacbakimForced();
         plp.clickFirstItem();
-
-        PDPPage pdp = new PDPPage(page);
         pdp.addToCart();
         cart.cartButton();
 
-        Assert.assertTrue(page.locator("a[href*='-p-']").first().innerText().contains(firstItem));
-
+        assertThat(cart.cartItem(firstItem)).isVisible();
 
     }
 
     @Test(description = "TC_023 - Update Product Quantity in Cart (Boundary & Limit Checks)",
             dependsOnMethods = "addProductsFromPlpAndPdp")
     public void quantityBoundaryChecksInCart() {
-        //bozuk bu sonra bak üsstekinden dolayı calısmıyo
-        CartPage cart = new CartPage(page);
         cart.cartButton();
-        String currQ = page.locator(".font-semibold.text-black").first().innerText();
 
-        cart.increaseQuantity();
+        Locator qty = cart.quantityLocator(firstItem);
+        String currQ = qty.innerText();
 
-        String newQ = page.locator(".font-semibold.text-black").first().innerText();
+        cart.increaseQuantity(firstItem);
+        assertThat(qty).not().hasText(currQ);
+        String newQ = qty.innerText();
 
         Assert.assertNotEquals(newQ, currQ, "Quantity of product did not change");
 
-        cart.decreaseQuantity();
-        newQ = page.locator(".font-semibold.text-black").first().innerText();
+        cart.decreaseQuantity(firstItem);
+        assertThat(qty).hasText(currQ);
+        newQ = qty.innerText();
 
         Assert.assertEquals(newQ, currQ, "Quantity of product did not change");
 
@@ -66,14 +79,15 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_024 - Remove Product from Shopping Cart",
             dependsOnMethods = "addProductsFromPlpAndPdp")
     public void removeProductFromCart() {
-        //baska bir ürün de varken birini sil kalanları assertle
-        CartPage cart = new CartPage(page);
         cart.cartButton();
 
-        cart.decreaseQuantity();
+        while (!cart.quantityOf(firstItem).equalsIgnoreCase("1")) {
+            cart.decreaseQuantity(firstItem);
+        }
+        cart.decreaseQuantity(firstItem);
+        cart.removeProduct();
 
-        assertThat(page.locator(".flex.flex-col.gap-4").getByText(firstItem)).isVisible();
-
+        assertThat(cart.cartItem(firstItem)).not().isVisible();
 
     }
 
@@ -81,7 +95,6 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_025 - Apply Invalid or Expired Promo Code")
     public void invalidAndExpiredPromoCodesAreRejected() {
         //only tried with invalid code because since this is s volunteery test i dont have access to test promo codes
-        CartPage cart = new CartPage(page);
         cart.cartButton();
         cart.openPromocode();
         cart.enterPromoCOde();
@@ -94,25 +107,20 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_026 - Shopping Cart Session Persistence")
     public void cartPersistsAcrossReloadAndReLogin() {
         //yanlıs calısıyo bu tekrar bak
-        HeaderComponent header = new HeaderComponent(page);
         header.headerSacbakim();
-        PLPPage plp = new PLPPage(page);
         plp.add1stItem();
 
         page.reload();
-
-        CartPage cart = new CartPage(page);
         cart.cartButton();
 
         assertThat(page.locator("a[href*='-p-']").first()).isVisible();
     }
 
-    @Test(description = "TC_027 - Actually deleting an item from the cart (not just decreasing quantity)")
+    @Test(description = "TC_027 - Deleting all items from the cart ",
+            dependsOnMethods = "removeProductFromCart")
     public void deleteItemFromCart() {
-        //isimlendirmesine bak hepsini sildik burada
-        CartPage cartpage = new CartPage(page);
-        cartpage.cartButton();
-        cartpage.deleteAllFromCart();
+        cart.cartButton();
+        cart.deleteAllFromCart();
 
         assertThat(page.getByText("Sepetinizde Ürün Bulunmuyor")).isVisible();
     }
