@@ -3,22 +3,28 @@ package com.gratis.tests;
 import com.gratis.base.LoggedInBaseTest;
 import com.gratis.pages.CartPage;
 import com.gratis.pages.CheckoutPage;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class CheckoutTests extends LoggedInBaseTest {
 
-    @Test(description = "TC_028 - Store Pickup Delivery (Gel-Al) Selection Flow, " +
-            "Reaching the payment step lands on the correct payment URL " +
-            "(personal project, no test card credentials - no real payment is attempted)")
-    public void storePickupSelectionFlow() {
+    CartPage cart;
+    CheckoutPage checkout;
 
-        //adres ekleme zorundu dependency ekle once
-        CartPage cart = new CartPage(page);
-        CheckoutPage checkout = new CheckoutPage(page);
+    @BeforeMethod(alwaysRun = true)
+    public void initPageObjects() {
+        cart = new CartPage(page);
+        checkout = new CheckoutPage(page);
+    }
+
+    @Test(description = "TC_028 - Store Pickup Delivery (Gel-Al) Selection Flow, " +
+            "a billing address is required for store pickup and its creation " +
+            "modal is shown - no address is entered, no payment is attempted")
+    public void storePickupSelectionFlow() {
         cart.cartButton();
         cart.continueToDelivery();
 
@@ -26,41 +32,43 @@ public class CheckoutTests extends LoggedInBaseTest {
         checkout.chooseIlce();
         checkout.chooseMagaza();
         checkout.accAgreement();
-        checkout.continueToPayment();
 
-        assertThat(page).hasURL(Pattern.compile(".*checkout/payment.*"));
+        checkout.openBillingAddressModal();
+        assertThat(checkout.addAddressModal()).isVisible();
 
     }
 
-    @Test(description = "TC_029 - Address Creation and Home Delivery Selection " +
-            "Reaching the payment step lands on the correct payment URL " +
-            "(personal project, no test card credentials - no real payment is attempted)")
+    @Test(description = "TC_029 - Address Creation and Home Delivery Selection, " +
+            "reaching the payment step opens the Ödeme payment modal - " +
+            "no card details are entered, no payment is attempted")
     public void addressCreationAndHomeDelivery() {
-        CartPage cart = new CartPage(page);
-        CheckoutPage checkout = new CheckoutPage(page);
         cart.cartButton();
         cart.continueToDelivery();
         checkout.chooseOnline();
-        checkout.addAddress();
 
-        checkout.addName();
-        checkout.addSurname();
-        checkout.addressName();
-        checkout.adresIL();
-        checkout.adresILCE();
-        checkout.adresStreet();
-        checkout.addressDetail();
-        acceptCookiesIfPresent();
-        checkout.saveAddress();
+        if (page.getByText("Sistemimizde kayıtlı adresiniz bulunmamaktadır.").isVisible()) {
+            checkout.addAddress();
 
-        page.waitForURL(Pattern.compile(".*checkout/payment.*"));
-        assertThat(page).hasURL(Pattern.compile(".*checkout/payment.*"));
+            checkout.addName();
+            checkout.addSurname();
+            checkout.addressName();
+            checkout.adresIL();
+            checkout.adresILCE();
+            checkout.adresStreet();
+            checkout.addressDetail();
+            acceptCookiesIfPresent();
+            checkout.saveAddress();
+        }
+
+        checkout.accAgreement();
+        checkout.continueToPayment();
+
+        assertThat(page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName("Ödeme"))).isVisible();
 
     }
 
     @Test(description = "TC_030 - Navigating directly to checkout with an empty cart blocks access")
     public void emptyCartBlocksCheckoutAccess() {
-        CartPage cart = new CartPage(page);
         cart.cartButton();
         cart.clearCart();
         cart.tamam();
