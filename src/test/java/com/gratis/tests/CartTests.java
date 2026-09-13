@@ -4,29 +4,20 @@ import com.gratis.base.LoggedInBaseTest;
 import com.gratis.pages.*;
 import com.microsoft.playwright.Locator;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class CartTests extends LoggedInBaseTest {
 
-    HeaderComponent header;
-    CartPage cart;
-    PLPPage plp;
-    PDPPage pdp;
     String firstItem;
-
-    @BeforeMethod(alwaysRun = true)
-    public void initPageObjects() {
-        header = new HeaderComponent(page);
-        cart = new CartPage(page);
-        plp = new PLPPage(page);
-        pdp = new PDPPage(page);
-    }
 
     @Test(description = "TC_022 - Add Product to Cart from PLP and PDP")
     public void addProductsFromPlpAndPdp() {
+        HeaderComponent header = new HeaderComponent(page);
+        PLPPage plp = new PLPPage(page);
+        CartPage cart = new CartPage(page);
+        PDPPage pdp = new PDPPage(page);
 
         header.headerSacbakim();
 
@@ -34,10 +25,6 @@ public class CartTests extends LoggedInBaseTest {
         firstItem = page.locator("a[href*='-p-']").first().locator("h5").innerText();
         cart.cartButton();
 
-        // scoped to the actual cart-item row, not a plain a[href*='-p-'] -
-        // unscoped can match a promotional/recommendation-carousel link
-        // instead of the real cart row (same bug already found in
-        // FilterSortTests and PLPPage.clickFirstItem()).
         assertThat(cart.cartItem(firstItem)).isVisible();
 
         cart.clearCart();
@@ -56,6 +43,7 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_023 - Update Product Quantity in Cart (Boundary & Limit Checks)",
             dependsOnMethods = "addProductsFromPlpAndPdp")
     public void quantityBoundaryChecksInCart() {
+        CartPage cart = new CartPage(page);
         cart.cartButton();
 
         Locator qty = cart.quantityLocator(firstItem);
@@ -79,6 +67,7 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_024 - Remove Product from Shopping Cart",
             dependsOnMethods = "addProductsFromPlpAndPdp")
     public void removeProductFromCart() {
+        CartPage cart = new CartPage(page);
         cart.cartButton();
 
         while (!cart.quantityOf(firstItem).equalsIgnoreCase("1")) {
@@ -95,6 +84,7 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_025 - Apply Invalid or Expired Promo Code")
     public void invalidAndExpiredPromoCodesAreRejected() {
         //only tried with invalid code because since this is s volunteery test i dont have access to test promo codes
+        CartPage cart = new CartPage(page);
         cart.cartButton();
         cart.openPromocode();
         cart.enterPromoCOde();
@@ -107,6 +97,10 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_026 - Shopping Cart Session Persistence")
     public void cartPersistsAcrossReloadAndReLogin() {
         //yanlıs calısıyo bu tekrar bak
+        HeaderComponent header = new HeaderComponent(page);
+        PLPPage plp = new PLPPage(page);
+        CartPage cart = new CartPage(page);
+
         header.headerSacbakim();
         plp.add1stItem();
 
@@ -119,6 +113,7 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_027 - Deleting all items from the cart ",
             dependsOnMethods = "removeProductFromCart")
     public void deleteItemFromCart() {
+        CartPage cart = new CartPage(page);
         cart.cartButton();
         cart.deleteAllFromCart();
 
