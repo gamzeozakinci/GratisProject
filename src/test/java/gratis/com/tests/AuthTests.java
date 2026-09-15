@@ -1,4 +1,4 @@
-package com.gratis.tests;
+package gratis.com.tests;
 
 import com.gratis.base.BaseTest;
 import com.gratis.config.ConfigReader;

@@ -1,4 +1,4 @@
-package com.gratis.tests;
+package gratis.com.tests;
 
 import com.gratis.base.BaseTest;
 import com.gratis.pages.HeaderComponent;
@@ -30,7 +30,7 @@ public class SearchTests extends BaseTest {
         }
     }
 
-    @Test(description = "TC_011 - Product Search with Valid Keyword")
+    @Test(description = "TC_011 - Product Search with Valid Keyword", groups = "smoke")
     public void searchWithValidKeywordShowsResults() {
 
         HeaderComponent hp = new HeaderComponent(page);

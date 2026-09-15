@@ -1,4 +1,4 @@
-package com.gratis.tests;
+package gratis.com.tests;
 
 import com.gratis.base.BaseTest;
 import com.gratis.driver.PlaywrightFactory;
@@ -34,7 +34,8 @@ public class SessionCaptureTests extends BaseTest {
         lp.enterRegisteredPhoneNumber();
         lp.clickDevamEt();
 
-        System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
+        System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) " +
+                "in the Playwright Inspector.");
         page.pause();
 
         page.waitForURL("https://www.gratis.com/");

@@ -1,4 +1,4 @@
-package com.gratis.tests;
+package gratis.com.tests;
 
 import com.gratis.base.LoggedInBaseTest;
 import com.gratis.pages.CartPage;
@@ -33,7 +33,7 @@ public class CheckoutTests extends LoggedInBaseTest {
 
     @Test(description = "TC_029 - Address Creation and Home Delivery Selection, " +
             "reaching the payment step opens the Ödeme payment modal - " +
-            "no card details are entered, no payment is attempted")
+            "no card details are entered, no payment is attempted", groups = "smoke")
     public void addressCreationAndHomeDelivery() {
         CartPage cp = new CartPage(page);
         cp.cartButton();

@@ -1,4 +1,4 @@
-package com.gratis.tests;
+package gratis.com.tests;
 
 import com.gratis.base.BaseTest;
 import com.gratis.pages.HeaderComponent;
@@ -13,7 +13,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class FilterSortTests extends BaseTest {
 
-    @Test(description = "TC_013 - Product Filtering by Brand and Price Range on PLP")
+    @Test(description = "TC_013 - Product Filtering by Brand and Price Range on PLP", groups = "smoke")
     public void filterByBrandAndPriceRange() {
         HeaderComponent hp = new HeaderComponent(page);
         hp.headerSacbakim();

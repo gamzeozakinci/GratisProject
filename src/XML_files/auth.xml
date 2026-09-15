@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- Run this manually, at the keyboard - every test here blocks on page.pause()
+     waiting for a real OTP typed into the browser by hand. Not part of
+     testng.xml (the unattended suite) for that reason.
+     Run with: mvn test -DsuiteXmlFile=src/XML_files/auth.xml -->
+<suite name="Gratis.com Auth Suite" verbose="1">
+    <test name="Auth">
+        <classes>
+            <class name="gratis.com.tests.AuthTests"/>
+        </classes>
+    </test>
+</suite>

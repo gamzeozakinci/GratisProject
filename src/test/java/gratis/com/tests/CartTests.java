@@ -1,4 +1,4 @@
-package com.gratis.tests;
+package gratis.com.tests;
 
 import com.gratis.base.LoggedInBaseTest;
 import com.gratis.pages.*;
@@ -12,7 +12,7 @@ public class CartTests extends LoggedInBaseTest {
 
     String firstItem;
 
-    @Test(description = "TC_022 - Add Product to Cart from PLP and PDP")
+    @Test(description = "TC_022 - Add Product to Cart from PLP and PDP", groups = "smoke")
     public void addProductsFromPlpAndPdp() {
         HeaderComponent hp = new HeaderComponent(page);
         PLPPage plp = new PLPPage(page);
