@@ -15,8 +15,8 @@ public class FilterSortTests extends BaseTest {
 
     @Test(description = "TC_013 - Product Filtering by Brand and Price Range on PLP")
     public void filterByBrandAndPriceRange() {
-        HeaderComponent header = new HeaderComponent(page);
-        header.headerSacbakim();
+        HeaderComponent hp = new HeaderComponent(page);
+        hp.headerSacbakim();
 
         PLPPage plp = new PLPPage(page);
         plp.filterMarka();
@@ -36,8 +36,8 @@ public class FilterSortTests extends BaseTest {
 
     @Test(description = "TC_014 - Product Sorting by Price and Sales Volume")
     public void sortByPriceLowToHighAndHighToLow() {
-        HeaderComponent header = new HeaderComponent(page);
-        header.headerSacbakim();
+        HeaderComponent hp = new HeaderComponent(page);
+        hp.headerSacbakim();
 
         PLPPage plp = new PLPPage(page);
         assertThat(page.locator("a[href*='-p-']").first()).isVisible();
@@ -53,15 +53,11 @@ public class FilterSortTests extends BaseTest {
 
     @Test(description = "TC_015 - Clearing an applied filter resets the product list")
     public void clearingFiltersResetsProductList() {
-        HeaderComponent header = new HeaderComponent(page);
-        header.headerSacbakim();
+        HeaderComponent hp = new HeaderComponent(page);
+        hp.headerSacbakim();
 
         acceptCookiesIfPresent();
 
-        // scoped to :has(h5) - a plain a[href*='-p-'] can match a promotional
-        // banner link instead of an actual product card (confirmed live: this
-        // grabbed "Astra Sadece Gratis'te" unscoped). Real product cards all
-        // have an <h5> name element; decoys don't.
         Locator firstProduct = page.locator("a[href*='-p-']:has(h5)").first();
         assertThat(firstProduct).isVisible(); // let the page settle first
         String product = firstProduct.innerText();
@@ -70,8 +66,6 @@ public class FilterSortTests extends BaseTest {
         plp.filterMarka();
         plp.selectMarka();
 
-        // this IS the check that the product changed, not just a wait - it
-        // fails with a clear timeout if the text never actually differs.
         assertThat(firstProduct).not().hasText(product);
     }
 }

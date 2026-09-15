@@ -13,28 +13,28 @@ public class AuthTests extends BaseTest {
 
     @Test(description = "TC_001 - Registering with a brand-new phone number completes the OTP flow and logs the user in")
     public void newPhoneNumberCompletesRegistration() {
-        HeaderComponent header = new HeaderComponent(page);
-        LoginPage login = new LoginPage(page);
+        HeaderComponent hp = new HeaderComponent(page);
+        LoginPage lp = new LoginPage(page);
 
-        header.openLoginOrRegister();
+        hp.openLoginOrRegister();
 
-        login.enterPhoneNumber();
-        login.clickDevamEt();
+        lp.enterPhoneNumber();
+        lp.clickDevamEt();
 
         System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
         page.pause();
 
-        login.registerName();
-        login.registerSurName();
-        login.registerEposta();
+        lp.registerName();
+        lp.registerSurName();
+        lp.registerEposta();
 
-        login.registerBirth();
-        login.gratisKartCheck();
-        login.agreementCheck();
+        lp.registerBirth();
+        lp.gratisKartCheck();
+        lp.agreementCheck();
 
-        login.acceptCookies();
+        lp.acceptCookies();
 
-        login.registerConfirm();
+        lp.registerConfirm();
 
         assertThat(page).hasURL("https://www.gratis.com/");
 
@@ -42,13 +42,13 @@ public class AuthTests extends BaseTest {
 
     @Test(description = "TC_002 - An already-registered phone number routes through OTP login")
     public void existingPhoneNumberRoutesToLogin() {
-        HeaderComponent header = new HeaderComponent(page);
-        LoginPage loginPage = new LoginPage(page);
+        HeaderComponent hp = new HeaderComponent(page);
+        LoginPage lp = new LoginPage(page);
 
-        header.openLoginOrRegister();
+        hp.openLoginOrRegister();
 
-        loginPage.enterRegisteredPhoneNumber();
-        loginPage.clickDevamEt();
+        lp.enterRegisteredPhoneNumber();
+        lp.clickDevamEt();
 
         System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
         page.pause();
@@ -59,13 +59,13 @@ public class AuthTests extends BaseTest {
 
     @Test(description = "TC_003 - An incorrect OTP is rejected with a validation error and does not authenticate.")
     public void invalidOtpShowsError() {
-        HeaderComponent header = new HeaderComponent(page);
-        LoginPage loginPage = new LoginPage(page);
+        HeaderComponent hp = new HeaderComponent(page);
+        LoginPage lp = new LoginPage(page);
 
-        header.openLoginOrRegister();
+        hp.openLoginOrRegister();
 
-        loginPage.enterRegisteredPhoneNumber();
-        loginPage.clickDevamEt();
+        lp.enterRegisteredPhoneNumber();
+        lp.clickDevamEt();
 
         System.out.println("Enter an invalid OTP number, then click Resume (▶) in the Playwright Inspector.");
         page.pause();
@@ -76,13 +76,13 @@ public class AuthTests extends BaseTest {
 
     @Test(description = "TC_004 - An invalid phone number format is blocked before an OTP is ever sent.")
     public void invalidPhoneFormatBlocksContinue() {
-        HeaderComponent header = new HeaderComponent(page);
-        LoginPage loginPage = new LoginPage(page);
+        HeaderComponent hp = new HeaderComponent(page);
+        LoginPage lp = new LoginPage(page);
 
-        header.openLoginOrRegister();
+        hp.openLoginOrRegister();
 
-        loginPage.invalidPhoneNumber();
-        loginPage.clickDevamEt();
+        lp.invalidPhoneNumber();
+        lp.clickDevamEt();
 
         assertThat(page.getByText("Son 7 hane aynı olamaz.")).isVisible();
     }
@@ -93,9 +93,9 @@ public class AuthTests extends BaseTest {
         page = PlaywrightFactory.initLoggedInPage();
         page.navigate(ConfigReader.baseUrl());
 
-        HeaderComponent header = new HeaderComponent(page);
-        header.headerHesabim();
-        header.hesabimLogOut();
+        HeaderComponent hp = new HeaderComponent(page);
+        hp.headerHesabim();
+        hp.hesabimLogOut();
 
     }
 
