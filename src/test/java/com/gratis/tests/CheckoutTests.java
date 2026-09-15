@@ -5,7 +5,6 @@ import com.gratis.pages.CartPage;
 import com.gratis.pages.CheckoutPage;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -17,18 +16,18 @@ public class CheckoutTests extends LoggedInBaseTest {
             "a billing address is required for store pickup and its creation " +
             "modal is shown - no address is entered, no payment is attempted")
     public void storePickupSelectionFlow() {
-        CartPage cart = new CartPage(page);
-        cart.cartButton();
-        cart.continueToDelivery();
+        CartPage cp = new CartPage(page);
+        cp.cartButton();
+        cp.continueToDelivery();
 
-        CheckoutPage checkout= new CheckoutPage(page);
-        checkout.chooseIl();
-        checkout.chooseIlce();
-        checkout.chooseMagaza();
-        checkout.accAgreement();
+        CheckoutPage chp = new CheckoutPage(page);
+        chp.chooseIl();
+        chp.chooseIlce();
+        chp.chooseMagaza();
+        chp.accAgreement();
 
-        checkout.openBillingAddressModal();
-        assertThat(checkout.addAddressModal()).isVisible();
+        chp.openBillingAddressModal();
+        assertThat(chp.addAddressModal()).isVisible();
 
     }
 
@@ -36,28 +35,28 @@ public class CheckoutTests extends LoggedInBaseTest {
             "reaching the payment step opens the Ödeme payment modal - " +
             "no card details are entered, no payment is attempted")
     public void addressCreationAndHomeDelivery() {
-        CartPage cart = new CartPage(page);
-        cart.cartButton();
-        cart.continueToDelivery();
-        CheckoutPage checkout= new CheckoutPage(page);
-        checkout.chooseOnline();
+        CartPage cp = new CartPage(page);
+        cp.cartButton();
+        cp.continueToDelivery();
+        CheckoutPage chp = new CheckoutPage(page);
+        chp.chooseOnline();
 
         if (page.getByText("Sistemimizde kayıtlı adresiniz bulunmamaktadır.").isVisible()) {
-            checkout.addAddress();
+            chp.addAddress();
 
-            checkout.addName();
-            checkout.addSurname();
-            checkout.addressName();
-            checkout.adresIL();
-            checkout.adresILCE();
-            checkout.adresStreet();
-            checkout.addressDetail();
+            chp.addName();
+            chp.addSurname();
+            chp.addressName();
+            chp.adresIL();
+            chp.adresILCE();
+            chp.adresStreet();
+            chp.addressDetail();
             acceptCookiesIfPresent();
-            checkout.saveAddress();
+            chp.saveAddress();
         }
 
-        checkout.accAgreement();
-        checkout.continueToPayment();
+        chp.accAgreement();
+        chp.continueToPayment();
 
         assertThat(page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName("Ödeme"))).isVisible();
 
@@ -65,10 +64,10 @@ public class CheckoutTests extends LoggedInBaseTest {
 
     @Test(description = "TC_030 - Navigating directly to checkout with an empty cart blocks access")
     public void emptyCartBlocksCheckoutAccess() {
-        CartPage cart = new CartPage(page);
-        cart.cartButton();
-        cart.clearCart();
-        cart.tamam();
+        CartPage cp = new CartPage(page);
+        cp.cartButton();
+        cp.clearCart();
+        cp.tamam();
 
         assertThat(page.getByText("Sepetinizde Ürün Bulunmuyor")).isVisible();
         assertThat(page.getByText("TESLİMAT ADIMINA GEÇ")).not().isVisible();

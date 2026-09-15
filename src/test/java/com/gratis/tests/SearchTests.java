@@ -15,17 +15,17 @@ public class SearchTests extends BaseTest {
 
     @Test(description = "TC_010 - Product Search using Autocomplete Suggestions")
     public void autocompleteSuggestionsAppearWhileTyping() {
-        HeaderComponent header = new HeaderComponent(page);
+        HeaderComponent hp = new HeaderComponent(page);
 
-        header.search();
+        hp.search();
 
-        Locator suggestions = header.searchSuggestions();
+        Locator suggestions = hp.searchSuggestions();
         assertThat(suggestions.first()).isVisible();
 
-        int count = header.searchSuggestions().count();
+        int count = hp.searchSuggestions().count();
 
         for (int i = 0; i < count; i++) {
-            String text = header.searchSuggestions().nth(i).innerText();
+            String text = hp.searchSuggestions().nth(i).innerText();
             Assert.assertTrue(text.toLowerCase().contains("göz"), "Item " + i + " did not contain 'Göz': " + text);
         }
     }
@@ -33,9 +33,9 @@ public class SearchTests extends BaseTest {
     @Test(description = "TC_011 - Product Search with Valid Keyword")
     public void searchWithValidKeywordShowsResults() {
 
-        HeaderComponent header = new HeaderComponent(page);
+        HeaderComponent hp = new HeaderComponent(page);
 
-        header.search();
+        hp.search();
         page.keyboard().press("Enter");
 
         PLPPage plp = new PLPPage(page);
@@ -53,9 +53,9 @@ public class SearchTests extends BaseTest {
 
     @Test(description = "TC_012 - Searching a nonsense keyword shows the empty-results state")
     public void searchWithNoResultsShowsEmptyState() {
-        HeaderComponent header = new HeaderComponent(page);
+        HeaderComponent hp = new HeaderComponent(page);
 
-        header.invalidSearch();
+        hp.invalidSearch();
         page.keyboard().press("Enter");
 
         assertThat(page.getByText("Sonuç Bulunamadı")).isVisible();

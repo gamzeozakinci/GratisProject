@@ -14,48 +14,48 @@ public class CartTests extends LoggedInBaseTest {
 
     @Test(description = "TC_022 - Add Product to Cart from PLP and PDP")
     public void addProductsFromPlpAndPdp() {
-        HeaderComponent header = new HeaderComponent(page);
+        HeaderComponent hp = new HeaderComponent(page);
         PLPPage plp = new PLPPage(page);
-        CartPage cart = new CartPage(page);
+        CartPage cp = new CartPage(page);
         PDPPage pdp = new PDPPage(page);
 
-        header.headerSacbakim();
+        hp.headerSacbakim();
 
         plp.add1stItem();
         firstItem = page.locator("a[href*='-p-']").first().locator("h5").innerText();
-        cart.cartButton();
+        cp.cartButton();
 
-        assertThat(cart.cartItem(firstItem)).isVisible();
+        assertThat(cp.cartItem(firstItem)).isVisible();
 
-        cart.clearCart();
-        cart.tamam();
-        cart.logoCart();
+        cp.clearCart();
+        cp.tamam();
+        cp.logoCart();
 
-        header.headerSacbakimForced();
+        hp.headerSacbakimForced();
         plp.clickFirstItem();
         pdp.addToCart();
-        cart.cartButton();
+        cp.cartButton();
 
-        assertThat(cart.cartItem(firstItem)).isVisible();
+        assertThat(cp.cartItem(firstItem)).isVisible();
 
     }
 
     @Test(description = "TC_023 - Update Product Quantity in Cart (Boundary & Limit Checks)",
             dependsOnMethods = "addProductsFromPlpAndPdp")
     public void quantityBoundaryChecksInCart() {
-        CartPage cart = new CartPage(page);
-        cart.cartButton();
+        CartPage cp = new CartPage(page);
+        cp.cartButton();
 
-        Locator qty = cart.quantityLocator(firstItem);
+        Locator qty = cp.quantityLocator(firstItem);
         String currQ = qty.innerText();
 
-        cart.increaseQuantity(firstItem);
+        cp.increaseQuantity(firstItem);
         assertThat(qty).not().hasText(currQ);
         String newQ = qty.innerText();
 
         Assert.assertNotEquals(newQ, currQ, "Quantity of product did not change");
 
-        cart.decreaseQuantity(firstItem);
+        cp.decreaseQuantity(firstItem);
         assertThat(qty).hasText(currQ);
         newQ = qty.innerText();
 
@@ -67,16 +67,16 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_024 - Remove Product from Shopping Cart",
             dependsOnMethods = "addProductsFromPlpAndPdp")
     public void removeProductFromCart() {
-        CartPage cart = new CartPage(page);
-        cart.cartButton();
+        CartPage cp = new CartPage(page);
+        cp.cartButton();
 
-        while (!cart.quantityOf(firstItem).equalsIgnoreCase("1")) {
-            cart.decreaseQuantity(firstItem);
+        while (!cp.quantityOf(firstItem).equalsIgnoreCase("1")) {
+            cp.decreaseQuantity(firstItem);
         }
-        cart.decreaseQuantity(firstItem);
-        cart.removeProduct();
+        cp.decreaseQuantity(firstItem);
+        cp.removeProduct();
 
-        assertThat(cart.cartItem(firstItem)).not().isVisible();
+        assertThat(cp.cartItem(firstItem)).not().isVisible();
 
     }
 
@@ -84,11 +84,11 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_025 - Apply Invalid or Expired Promo Code")
     public void invalidAndExpiredPromoCodesAreRejected() {
         //only tried with invalid code because since this is s volunteery test i dont have access to test promo codes
-        CartPage cart = new CartPage(page);
-        cart.cartButton();
-        cart.openPromocode();
-        cart.enterPromoCOde();
-        cart.submitPromoCode();
+        CartPage cp = new CartPage(page);
+        cp.cartButton();
+        cp.openPromocode();
+        cp.enterPromoCOde();
+        cp.submitPromoCode();
 
         assertThat(page.locator("//*[text()=\"Kupon Kodu geçersizdir.\"]").first()).isVisible();
 
@@ -97,15 +97,15 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_026 - Shopping Cart Session Persistence")
     public void cartPersistsAcrossReloadAndReLogin() {
         //yanlıs calısıyo bu tekrar bak
-        HeaderComponent header = new HeaderComponent(page);
+        HeaderComponent hp = new HeaderComponent(page);
         PLPPage plp = new PLPPage(page);
-        CartPage cart = new CartPage(page);
+        CartPage cp = new CartPage(page);
 
-        header.headerSacbakim();
+        hp.headerSacbakim();
         plp.add1stItem();
 
         page.reload();
-        cart.cartButton();
+        cp.cartButton();
 
         assertThat(page.locator("a[href*='-p-']").first()).isVisible();
     }
@@ -113,9 +113,9 @@ public class CartTests extends LoggedInBaseTest {
     @Test(description = "TC_027 - Deleting all items from the cart ",
             dependsOnMethods = "removeProductFromCart")
     public void deleteItemFromCart() {
-        CartPage cart = new CartPage(page);
-        cart.cartButton();
-        cart.deleteAllFromCart();
+        CartPage cp = new CartPage(page);
+        cp.cartButton();
+        cp.deleteAllFromCart();
 
         assertThat(page.getByText("Sepetinizde Ürün Bulunmuyor")).isVisible();
     }

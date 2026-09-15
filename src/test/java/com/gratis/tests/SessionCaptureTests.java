@@ -27,12 +27,12 @@ public class SessionCaptureTests extends BaseTest {
 
     @Test(description = "One-time: log in manually and save the session for reuse")
     public void captureLoggedInSession() {
-        HeaderComponent header = new HeaderComponent(page);
-        LoginPage loginPage = new LoginPage(page);
+        HeaderComponent hp = new HeaderComponent(page);
+        LoginPage lp = new LoginPage(page);
 
-        header.openLoginOrRegister();
-        loginPage.enterRegisteredPhoneNumber();
-        loginPage.clickDevamEt();
+        hp.openLoginOrRegister();
+        lp.enterRegisteredPhoneNumber();
+        lp.clickDevamEt();
 
         System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
         page.pause();

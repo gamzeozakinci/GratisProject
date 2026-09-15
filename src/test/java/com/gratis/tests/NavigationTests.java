@@ -15,10 +15,10 @@ public class NavigationTests extends BaseTest {
     @Test(description = "TC_006 - Mega Menu Category Hover and Redirection (Desktop)")
     public void megaMenuHoverAndRedirect() {
 
-        HeaderComponent header = new HeaderComponent(page);
+        HeaderComponent hp = new HeaderComponent(page);
 
-        header.headerMakyaj();
-        header.hoverTORuj();
+        hp.headerMakyaj();
+        hp.hoverTORuj();
 
         assertThat(page).hasURL("https://www.gratis.com/makyaj/ruj-c-5010101");
 
@@ -33,13 +33,13 @@ public class NavigationTests extends BaseTest {
         page = PlaywrightFactory.initMobilePage();
         page.navigate(ConfigReader.baseUrl());
 
-        HeaderComponent header = new HeaderComponent(page);
+        HeaderComponent hp = new HeaderComponent(page);
 
-        header.mobileAcceptCookies();
-        header.mobileHeader();
-        header.mobileHeaderCiltbakim();
-        header.mobileHeaderYuzbakim();
-        header.mobileHeaderTonikler();
+        hp.mobileAcceptCookies();
+        hp.mobileHeader();
+        hp.mobileHeaderCiltbakim();
+        hp.mobileHeaderYuzbakim();
+        hp.mobileHeaderTonikler();
 
         assertThat(page.getByText("Tonikler")).isVisible();
 
@@ -54,10 +54,10 @@ public class NavigationTests extends BaseTest {
         page = PlaywrightFactory.initLoggedInPage();
         page.navigate(ConfigReader.baseUrl());
 
-        HeaderComponent header = new HeaderComponent(page);
+        HeaderComponent hp = new HeaderComponent(page);
         PLPPage plp = new PLPPage(page);
 
-        header.headerSacbakim();
+        hp.headerSacbakim();
 
         plp.add1stItem();
         Assert.assertEquals(plp.check1stItem(), "1");
@@ -69,8 +69,8 @@ public class NavigationTests extends BaseTest {
 
     @Test(description = "TC_009 - Header Logo Redirection from Subpages")
     public void logoRedirectsHomeFromSubpage() {
-        HeaderComponent header = new HeaderComponent(page);
-        header.headerSacbakim();
+        HeaderComponent hp = new HeaderComponent(page);
+        hp.headerSacbakim();
 
         PLPPage plp = new PLPPage(page);
         plp.logo();
