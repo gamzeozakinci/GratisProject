@@ -49,12 +49,6 @@ public class PLPPage {
     }
 
     public void clickFirstItem() {
-        // scoped to :has(h5) - a plain a[href*='-p-'] can match a promotional
-        // banner link instead of a real product card (confirmed live and again
-        // via a real test failure: this matched "Astra Sadece Gratis'te", whose
-        // href happens to contain "-p-" too, sitting in a carousel wrapper that
-        // permanently covers it - hence the endless "intercepts pointer events"
-        // retries). Real product cards all have an <h5> name element; decoys don't.
         page.locator("a[href*='-p-']:has(h5)").first().click();
 
     }
@@ -92,10 +86,24 @@ public class PLPPage {
 
     }
 
-    public void listingWishlist() {
+    public void addRWishlist1() {
         page.locator("span.hover\\:scale-110").first().click();
 
     }
 
+    public void addRWishlist2() {
+        page.locator("span.hover\\:scale-110").nth(2).click();
+
+    }
+
+    public void fav1() {
+        page.locator(".relative.flex.flex-col.justify-between").first().click();
+
+    }
+
+    public void fav2() {
+        page.locator(".relative.flex.flex-col.justify-between").nth(2).click();
+
+    }
 
 }

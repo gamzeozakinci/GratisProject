@@ -1,4 +1,4 @@
-package com.gratis.tests;
+package gratis.com.tests;
 
 import com.gratis.base.BaseTest;
 import com.gratis.config.ConfigReader;
@@ -12,7 +12,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class NavigationTests extends BaseTest {
 
-    @Test(description = "TC_006 - Mega Menu Category Hover and Redirection (Desktop)")
+    @Test(description = "TC_006 - Mega Menu Category Hover and Redirection (Desktop)", groups = "smoke")
     public void megaMenuHoverAndRedirect() {
 
         HeaderComponent hp = new HeaderComponent(page);

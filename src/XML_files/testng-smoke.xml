@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<!-- Quick subset: just the Auth cases (TC_001-005) for a fast sanity check.
+<!-- One representative, OTP-free test per feature area (tagged groups="smoke"
+     on the @Test annotation) - a fast sanity check that each area's core path
+     still works. Excludes AuthTests/SessionCaptureTests entirely since those
+     block on a real OTP typed in by hand and can't run unattended.
      Run with: mvn test -DsuiteXmlFile=src/XML_files/testng-smoke.xml -->
 <suite name="Gratis.com Smoke Suite" verbose="1">
     <test name="Smoke">
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
         <classes>
-            <class name="com.gratis.tests.AuthTests"/>
+            <class name="gratis.com.tests.NavigationTests"/>
+            <class name="gratis.com.tests.SearchTests"/>
+            <class name="gratis.com.tests.FilterSortTests"/>
+            <class name="gratis.com.tests.CatalogTests"/>
+            <class name="gratis.com.tests.CartTests"/>
+            <class name="gratis.com.tests.CheckoutTests"/>
         </classes>
     </test>
 </suite>

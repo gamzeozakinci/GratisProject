@@ -1,4 +1,4 @@
-package com.gratis.tests;
+package gratis.com.tests;
 
 import com.gratis.base.BaseTest;
 import com.gratis.config.ConfigReader;
@@ -6,6 +6,7 @@ import com.gratis.driver.PlaywrightFactory;
 import com.gratis.pages.HeaderComponent;
 import com.gratis.pages.PDPPage;
 import com.gratis.pages.PLPPage;
+import com.gratis.pages.WishListPage;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
@@ -18,7 +19,9 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class CatalogTests extends BaseTest {
 
-    @Test(description = "TC_016 - Verify Product Detail Page Information Layout")
+    String product;
+
+    @Test(description = "TC_016 - Verify Product Detail Page Information Layout", groups = "smoke")
     public void pdpLayoutShowsAllRequiredElements() {
         HeaderComponent hp = new HeaderComponent(page);
         hp.headerSacbakim();
@@ -31,7 +34,7 @@ public class CatalogTests extends BaseTest {
     }
 
     @Test(description = "TC_017 - Verify Product Stock Status (In-Stock vs Out-of-Stock)")
-    public void stockStatusReflectsAvailability() throws InterruptedException {
+    public void stockStatusReflectsAvailability() {
         PlaywrightFactory.tearDown();
         page = PlaywrightFactory.initLoggedInPage();
         page.navigate(ConfigReader.baseUrl());
@@ -67,7 +70,6 @@ public class CatalogTests extends BaseTest {
 
         Assert.assertNotEquals(after, before, "Main image did not change after clicking next arrow");
 
-
         pdp.openImageLightbox();
         pdp.clickZoomIn();
         pdp.clickZoomOut();
@@ -85,18 +87,29 @@ public class CatalogTests extends BaseTest {
         PlaywrightFactory.tearDown();
         page = PlaywrightFactory.initLoggedInPage();
         page.navigate(ConfigReader.baseUrl());
+        acceptCookiesIfPresent();
 
         HeaderComponent hp = new HeaderComponent(page);
         hp.headerSacbakim();
+        acceptCookiesIfPresent();
 
         PLPPage plp = new PLPPage(page);
-        plp.listingWishlist();
+
+        product = page.locator("a[href*='-p-']:has(h5)")
+                .first().innerText().replace(" ", "-");
+        System.out.println("product: " + product);
+
+        plp.addRWishlist1();
+        plp.submitButton();
+
+        plp.addRWishlist2();
         plp.submitButton();
 
         assertThat(page.locator("//*[text()=\"Favori listesine başarılı bir şekilde eklendi.\"]")).isVisible();
 
         Thread.sleep(1000);
-        plp.listingWishlist();
+
+        plp.addRWishlist2();
         assertThat(page.locator("//*[text()=\"Favori listesine başarılı bir şekilde kaldırıldı.\"]")).isVisible();
 
     }
@@ -112,7 +125,7 @@ public class CatalogTests extends BaseTest {
 
         hp.headerSacbakim();
         PLPPage plp = new PLPPage(page);
-        plp.listingWishlist();
+        plp.add1stItem();
         assertThat(page).hasURL(Pattern.compile(".*/login"));
 
         page.navigate("https://www.gratis.com/");
@@ -129,6 +142,13 @@ public class CatalogTests extends BaseTest {
     @Test(description = "TC_021 - Remove Product from Wishlist (Logged-In User)")
     public void removeProductFromWishlistWhenLoggedIn() {
         HeaderComponent hp = new HeaderComponent(page);
+        hp.headerWishist();
+
+        WishListPage wp = new WishListPage(page);
+        wp.wishFirstItem();
+
+
+
 
 
 

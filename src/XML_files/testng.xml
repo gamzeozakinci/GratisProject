@@ -4,49 +4,44 @@
      ThreadLocal, so running <test> blocks in parallel would have multiple threads
      fighting over the same browser/page. Keep this suite sequential unless
      PlaywrightFactory goes back to ThreadLocal. -->
+<!-- Auth (AuthTests) is deliberately not part of this suite - it blocks on a
+     real OTP typed in by hand and can't run unattended. Run it separately
+     via src/XML_files/auth.xml when you're at the keyboard for it. -->
 <suite name="Gratis.com Suite" verbose="1">
-
-    <!-- Module 1: Auth - single phone+OTP flow covers both login and registration -->
-    <test name="Auth">
-        <classes>
-            <class name="com.gratis.tests.AuthTests"/>
-        </classes>
-    </test>
 
     <!-- Module 2: Navigation & Header -->
     <test name="Navigation">
         <classes>
-            <class name="com.gratis.tests.NavigationTests"/>
+            <class name="gratis.com.tests.NavigationTests"/>
         </classes>
     </test>
 
     <!-- Module 3: Search, Sorting & Filtering -->
     <test name="SearchAndFiltering">
         <classes>
-            <class name="com.gratis.tests.SearchTests"/>
-            <class name="com.gratis.tests.FilterSortTests"/>
+            <class name="gratis.com.tests.SearchTests"/>
+            <class name="gratis.com.tests.FilterSortTests"/>
         </classes>
     </test>
 
     <!-- Module 4: Product Catalog (PLP/PDP) -->
     <test name="Catalog">
         <classes>
-            <class name="com.gratis.tests.CatalogTests"/>
+            <class name="gratis.com.tests.CatalogTests"/>
         </classes>
     </test>
 
     <!-- Module 5: Cart -->
     <test name="Cart">
         <classes>
-            <class name="com.gratis.tests.CartTests"/>
+            <class name="gratis.com.tests.CartTests"/>
         </classes>
     </test>
 
     <!-- Module 6: Checkout & Payment -->
     <test name="Checkout">
         <classes>
-            <class name="com.gratis.tests.CheckoutTests"/>
-            <class name="com.gratis.tests.OrderTests"/>
+            <class name="gratis.com.tests.CheckoutTests"/>
         </classes>
     </test>
 
