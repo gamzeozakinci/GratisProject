@@ -26,6 +26,20 @@ public class CheckoutTests extends LoggedInBaseTest {
         chp.chooseMagaza();
         chp.accAgreement();
 
+        if (page.getByText("Sistemimizde kayıtlı adresiniz bulunmamaktadır.").isVisible()) {
+            chp.addAddress();
+
+            chp.addName();
+            chp.addSurname();
+            chp.addressName();
+            chp.adresIL();
+            chp.adresILCE();
+            chp.adresStreet();
+            chp.addressDetail();
+            acceptCookiesIfPresent();
+            chp.saveAddress();
+        }
+
         chp.openBillingAddressModal();
         assertThat(chp.addAddressModal()).isVisible();
 
