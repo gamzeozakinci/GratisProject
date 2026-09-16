@@ -96,7 +96,6 @@ public class CartTests extends LoggedInBaseTest {
 
     @Test(description = "TC_026 - Shopping Cart Session Persistence")
     public void cartPersistsAcrossReloadAndReLogin() {
-        //yanlıs calısıyo bu tekrar bak
         HeaderComponent hp = new HeaderComponent(page);
         PLPPage plp = new PLPPage(page);
         CartPage cp = new CartPage(page);
@@ -119,4 +118,5 @@ public class CartTests extends LoggedInBaseTest {
 
         assertThat(page.getByText("Sepetinizde Ürün Bulunmuyor")).isVisible();
     }
+
 }

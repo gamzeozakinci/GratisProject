@@ -35,7 +35,7 @@ src/main/java/com/gratis/
 │                own class comment for why; initPage/initMobilePage/initLoggedInPage)
 └── pages/       Page Objects: HeaderComponent, LoginPage (handles both login AND
                  registration - see "Auth Flow" below), PLPPage, PDPPage, CartPage,
-                 CheckoutPage, WishListPage (early stub, see TEST_CASES.md TC_021)
+                 CheckoutPage, WishListPage
 
 src/test/java/gratis/com/tests/
 ├── AuthTests.java           TC_001–TC_005 (login and registration are one flow on this site)
@@ -58,6 +58,11 @@ class fields wired up in `@BeforeMethod` — sidesteps a real NPE bug hit early 
 field-initializer page objects were constructed before `page` itself existed (object
 construction runs before any `@BeforeMethod`, including the one that creates `page`).
 Consistent short names throughout: `hp`, `plp`, `pdp`, `lp`, `cp`, `chp`.
+
+`HeaderComponent.headerSacbakim()` (the "Saç Bakım" nav link most tests use to get onto
+a product listing) is genuinely non-deterministic when clicked plainly - confirmed both
+live and via a real automated-run failure. It now force-clicks and verifies the
+navigation actually landed, retried up to 3 times; every caller gets this for free.
 
 ```
 src/XML_files/testng.xml          Full, unattended regression suite - one <test> block
@@ -160,39 +165,3 @@ start out logged in (e.g. `TC_020` specifically tests the guest redirect itself)
 A few test cases assume backend state a UI-only framework can't create on the fly: an
 existing account reachable at `registered.phone.number`. This lives in
 `config.properties` rather than being seeded automatically.
-
-## Out of Scope / Future Work
-
-- **Real OTP/SMS delivery** needs a real SMS provider API (Twilio, etc.) to automate
-  fully — not implemented; tests pause (`page.pause()`) for a human to enter the code.
-- **Payment** was deliberately removed, not left as a TODO — this is a personal
-  project against the live production site with no test card credentials, and
-  completing a real payment isn't something to automate here. There's also no
-  payment *URL* to reach on this site — confirmed live that "ÖDEME ADIMINA GEÇ"
-  opens an in-page "Ödeme" modal (a real Masterpass card-entry iframe) while the
-  page stays on `/checkout` the whole time. `TC_028` stops even earlier (asserts
-  the billing-address-creation modal opens, for store pickup specifically);
-  `TC_029` stops once the "Ödeme" modal is confirmed visible. Nothing past that
-  point — no card fields, no submit — is exercised in either.
-- **Order confirmation / post-order validation** (a former `OrderTests` class) would
-  need a real order to actually go through, which isn't attempted here for the same
-  no-real-payment reason above — not implemented.
-- **A refresh-token flow for the saved login session** would remove the ~15-minute
-  window described above, but would mean reverse-engineering Retter.io's own refresh
-  endpoint — more complexity than this project needs right now.
-- **`TC_001`'s phone number is static**, so a second run of the "brand-new number"
-  registration test hits "already registered" instead of a fresh signup. A
-  unique-phone-number generator would fix this and isn't wired in yet.
-- **TC_019 (wishlist add/remove) is confirmed failing** by an actual automated run —
-  `PLPPage`'s wishlist-toggle methods click a generic, unscoped Tailwind hover-effect
-  class at a fixed index rather than a locator scoped to one specific product's heart
-  icon, so the "remove" step likely favorites a *different* product instead of
-  un-favoriting the one just added. Root cause identified, not yet fixed — see
-  `TEST_CASES.md` TC_019.
-- **TC_005, TC_012, TC_015, TC_021, TC_023–027, TC_028, TC_030** now have real bodies,
-  but several are still known-broken, an early stub, or simply unconfirmed by a fresh
-  run since their last rewrite — see `TEST_CASES.md` for the current status of each.
-- **CI**: intentionally kept out of this version. A GitHub Actions workflow (checkout →
-  Playwright browser install → `mvn test` → upload `test-output/`) is a natural next
-  step, though the manual-OTP and short-lived-session pieces above would need solving
-  first for anything login-dependent to run unattended.
