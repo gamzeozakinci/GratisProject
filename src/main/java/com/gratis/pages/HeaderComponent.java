@@ -46,12 +46,13 @@ public class HeaderComponent {
         page.locator("//span[text()=\"Tonikler\"]").first().click();
     }
 
+    // The plain, unforced click on this link is genuinely non-deterministic -
+    // confirmed live (and again via a real automated-run stack trace showing
+    // "element is not stable" / "element is outside of the viewport" /
+    // a persistent overlay intercepting pointer events, alternating across
+    // retries). Force-clicking and verifying the navigation actually
+    // happened, retried, is the only version that's held up.
     public void headerSacbakim() {
-        page.locator("//a[text()=\"Saç Bakım\"]").first().click();
-        page.mouse().move(0, 0);
-    }
-
-    public void headerSacbakimForced() {
         Locator link = page.locator("//a[text()=\"Saç Bakım\"]").first();
         for (int attempt = 1; attempt <= 3; attempt++) {
             link.click(new Locator.ClickOptions().setForce(true));
@@ -82,8 +83,15 @@ public class HeaderComponent {
         return items;
     }
 
+    // 4 elements share this href - a real, currently-visible header icon
+    // (desktop or mobile variant, toggled by CSS breakpoint classes like
+    // "hidden lg:block") plus 2 zero-size "Favorilerim" text links inside a
+    // closed dropdown - confirmed live. .first() picked one of the
+    // zero-size ones, causing every click to time out ("element is not
+    // visible") no matter how long we waited. :visible picks whichever
+    // match is actually rendered at the current viewport.
     public void headerWishist() {
-        page.locator("//a[@href=\"/my-account/wishlist\"]").first().click();
+        page.locator("a[href='/my-account/wishlist']:visible").first().click();
 
     }
 

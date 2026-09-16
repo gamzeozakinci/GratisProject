@@ -96,7 +96,7 @@ public class CatalogTests extends BaseTest {
         PLPPage plp = new PLPPage(page);
 
         product = page.locator("a[href*='-p-']:has(h5)")
-                .first().innerText().replace(" ", "-");
+                .first().locator("h5").innerText();
         System.out.println("product: " + product);
 
         plp.addRWishlist1();
@@ -105,12 +105,32 @@ public class CatalogTests extends BaseTest {
         plp.addRWishlist2();
         plp.submitButton();
 
-        assertThat(page.locator("//*[text()=\"Favori listesine başarılı bir şekilde eklendi.\"]")).isVisible();
+        assertThat(page.locator("//*[text()=\"Favori listesine başarılı bir şekilde eklendi.\"]").first()).isVisible();
 
         Thread.sleep(1000);
 
         plp.addRWishlist2();
-        assertThat(page.locator("//*[text()=\"Favori listesine başarılı bir şekilde kaldırıldı.\"]")).isVisible();
+        assertThat(page.locator("//*[text()=\"Favori listesinden başarılı bir şekilde kaldırıldı.\"]")).isVisible();
+
+        WishListPage wp = new WishListPage(page);
+
+        hp.headerWishist();
+        int button = 0;
+        for (int i = 0; i < wp.wishlistProducts().size(); i++) {
+            if (wp.wishlistProducts().get(i).equalsIgnoreCase(product)) {
+                button = 1;
+
+            }
+
+            if (button == 1) {
+                break;
+            }
+
+        }
+
+        if (button == 0) {
+            System.out.println(product + " favorilere eklenemedi.");
+        }
 
     }
 
@@ -141,17 +161,18 @@ public class CatalogTests extends BaseTest {
 
     @Test(description = "TC_021 - Remove Product from Wishlist (Logged-In User)")
     public void removeProductFromWishlistWhenLoggedIn() {
+        PlaywrightFactory.tearDown();
+        page = PlaywrightFactory.initLoggedInPage();
+        page.navigate(ConfigReader.baseUrl());
+        acceptCookiesIfPresent();
+
         HeaderComponent hp = new HeaderComponent(page);
         hp.headerWishist();
 
         WishListPage wp = new WishListPage(page);
         wp.wishFirstItem();
 
-
-
-
-
-
+        assertThat(page.getByText("Favori listesinden başarılı bir şekilde kaldırıldı.")).isVisible();
 
     }
 }

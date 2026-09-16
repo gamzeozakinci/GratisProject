@@ -3,6 +3,8 @@ package com.gratis.pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
+import java.util.List;
+
 public class PLPPage {
 
     private final Page page;
@@ -83,7 +85,10 @@ public class PLPPage {
 
     public void submitButton() {
         page.getByText("Kaydet", new Page.GetByTextOptions().setExact(true)).click();
-
+        Locator overlay = page.locator("div[class*='bg-white/90']");
+        for (int i = 0; i < 20 && overlay.isVisible(); i++) {
+            page.waitForTimeout(250);
+        }
     }
 
     public void addRWishlist1() {
@@ -93,16 +98,6 @@ public class PLPPage {
 
     public void addRWishlist2() {
         page.locator("span.hover\\:scale-110").nth(2).click();
-
-    }
-
-    public void fav1() {
-        page.locator(".relative.flex.flex-col.justify-between").first().click();
-
-    }
-
-    public void fav2() {
-        page.locator(".relative.flex.flex-col.justify-between").nth(2).click();
 
     }
 
