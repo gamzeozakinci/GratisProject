@@ -31,7 +31,7 @@ public class CartTests extends LoggedInBaseTest {
         cp.tamam();
         cp.logoCart();
 
-        hp.headerSacbakimForced();
+        hp.headerSacbakim();
         plp.clickFirstItem();
         pdp.addToCart();
         cp.cartButton();
