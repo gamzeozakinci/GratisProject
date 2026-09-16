@@ -35,34 +35,54 @@ src/main/java/com/gratis/
 │                own class comment for why; initPage/initMobilePage/initLoggedInPage)
 └── pages/       Page Objects: HeaderComponent, LoginPage (handles both login AND
                  registration - see "Auth Flow" below), PLPPage, PDPPage, CartPage,
-                 CheckoutPage (in progress)
+                 CheckoutPage, WishListPage (early stub, see TEST_CASES.md TC_021)
 
-src/test/java/com/gratis/tests/
+src/test/java/gratis/com/tests/
 ├── AuthTests.java           TC_001–TC_005 (login and registration are one flow on this site)
 ├── NavigationTests.java     TC_006–TC_009
 ├── SearchTests.java         TC_010–TC_012
 ├── FilterSortTests.java     TC_013–TC_015
 ├── CatalogTests.java        TC_016–TC_021
 ├── CartTests.java           TC_022–TC_027
-├── CheckoutTests.java       TC_028–TC_030 (payment intentionally stops at URL check)
+├── CheckoutTests.java       TC_028–TC_030 (payment intentionally stops at an
+│                            in-page modal - no real payment gateway is used)
 └── SessionCaptureTests.java Not part of the suite - run manually to (re)create a
                              saved login session; see "Login & Sessions" below
+```
+Note the test package is `gratis.com.tests` (reversed from `com.gratis.tests`) — a
+deliberate rename; page objects/base/config/driver code stays under `com.gratis.*`.
 
-src/XML_files/testng.xml          Full suite, one <test> block per module, sequential
-                                   (no parallel="..." - see PlaywrightFactory's comment)
-src/XML_files/testng-smoke.xml    Smoke-only subset (TC_001–005)
+Every test method constructs the page objects it needs locally, at the top of the
+method (`HeaderComponent hp = new HeaderComponent(page);` etc.) rather than as shared
+class fields wired up in `@BeforeMethod` — sidesteps a real NPE bug hit early on where
+field-initializer page objects were constructed before `page` itself existed (object
+construction runs before any `@BeforeMethod`, including the one that creates `page`).
+Consistent short names throughout: `hp`, `plp`, `pdp`, `lp`, `cp`, `chp`.
+
+```
+src/XML_files/testng.xml          Full, unattended regression suite - one <test> block
+                                   per module (Navigation/Search+Filter/Catalog/Cart/
+                                   Checkout). Sequential, no parallel="..." (see
+                                   PlaywrightFactory's comment). Auth is deliberately
+                                   excluded - it blocks on a real OTP typed by hand.
+src/XML_files/auth.xml            AuthTests alone - run manually, at the keyboard,
+                                   whenever you actually need it.
+src/XML_files/testng-smoke.xml    One representative, OTP-free test per feature area,
+                                   selected via a `groups = "smoke"` tag on the @Test
+                                   annotation (TC_006, 011, 013, 016, 022, 029).
 ```
 
 ## Running
 
 ```bash
-mvn test                                                          # full suite
-mvn test -DsuiteXmlFile=src/XML_files/testng-smoke.xml            # smoke subset only
+mvn test -DsuiteXmlFile=src/XML_files/testng.xml         # full unattended regression
+mvn test -DsuiteXmlFile=src/XML_files/testng-smoke.xml   # smoke subset (6 tests, no OTP)
+mvn test -DsuiteXmlFile=src/XML_files/auth.xml            # Auth only - needs a real OTP
 ```
 Run a single module by pointing `mvn test` at a one-off suite XML listing just that
 module's class(es), or run a class/method directly from your IDE.
 Report: open `test-output/index.html` after a run. Failure screenshots land in
-`test-output/screenshots/`.
+`test-output/screenshots/` (gitignored, safe to clear anytime).
 
 ## Configuration
 
@@ -147,9 +167,13 @@ existing account reachable at `registered.phone.number`. This lives in
   fully — not implemented; tests pause (`page.pause()`) for a human to enter the code.
 - **Payment** was deliberately removed, not left as a TODO — this is a personal
   project against the live production site with no test card credentials, and
-  completing a real payment isn't something to automate here. `TC_028`/`TC_029` only
-  check that checkout reaches the correct payment URL; nothing past that point is
-  exercised.
+  completing a real payment isn't something to automate here. There's also no
+  payment *URL* to reach on this site — confirmed live that "ÖDEME ADIMINA GEÇ"
+  opens an in-page "Ödeme" modal (a real Masterpass card-entry iframe) while the
+  page stays on `/checkout` the whole time. `TC_028` stops even earlier (asserts
+  the billing-address-creation modal opens, for store pickup specifically);
+  `TC_029` stops once the "Ödeme" modal is confirmed visible. Nothing past that
+  point — no card fields, no submit — is exercised in either.
 - **Order confirmation / post-order validation** (a former `OrderTests` class) would
   need a real order to actually go through, which isn't attempted here for the same
   no-real-payment reason above — not implemented.
@@ -159,10 +183,15 @@ existing account reachable at `registered.phone.number`. This lives in
 - **`TC_001`'s phone number is static**, so a second run of the "brand-new number"
   registration test hits "already registered" instead of a fresh signup. A
   unique-phone-number generator would fix this and isn't wired in yet.
-- **TC_005, TC_012, TC_015, TC_021, TC_027, TC_030** (logout, no-results search, clear
-  filters, wishlist removal, actual cart-item deletion, empty-cart checkout guard) now
-  have real bodies, but several are still known-broken or unconfirmed — see
-  `TEST_CASES.md` for the current status of each.
+- **TC_019 (wishlist add/remove) is confirmed failing** by an actual automated run —
+  `PLPPage`'s wishlist-toggle methods click a generic, unscoped Tailwind hover-effect
+  class at a fixed index rather than a locator scoped to one specific product's heart
+  icon, so the "remove" step likely favorites a *different* product instead of
+  un-favoriting the one just added. Root cause identified, not yet fixed — see
+  `TEST_CASES.md` TC_019.
+- **TC_005, TC_012, TC_015, TC_021, TC_023–027, TC_028, TC_030** now have real bodies,
+  but several are still known-broken, an early stub, or simply unconfirmed by a fresh
+  run since their last rewrite — see `TEST_CASES.md` for the current status of each.
 - **CI**: intentionally kept out of this version. A GitHub Actions workflow (checkout →
   Playwright browser install → `mvn test` → upload `test-output/`) is a natural next
   step, though the manual-OTP and short-lived-session pieces above would need solving
