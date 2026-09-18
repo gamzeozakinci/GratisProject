@@ -10,8 +10,8 @@ This is the **Playwright + TestNG** entry in a 4-part QA automation portfolio
 JMeter project).
 
 Every locator in this project was checked against gratis.com's real, live DOM —
-not guessed from a spec. See `TEST_CASES.md` for the current, code-accurate status
-of every test case, including known issues found along the way.
+not guessed from a spec. See `TEST_CASES.md` for the purpose of every test case and
+the techniques used.
 
 ## Tech Stack
 

@@ -14,7 +14,6 @@ public class NavigationTests extends BaseTest {
 
     @Test(description = "TC_006 - Mega Menu Category Hover and Redirection (Desktop)", groups = "smoke")
     public void megaMenuHoverAndRedirect() {
-
         HeaderComponent hp = new HeaderComponent(page);
 
         hp.headerMakyaj();
@@ -26,9 +25,6 @@ public class NavigationTests extends BaseTest {
 
     @Test(description = "TC_007 - Mobile Hamburger Menu Navigation & Accordion Drilldown")
     public void mobileHamburgerMenuDrilldown() {
-        // BaseTest.setUp() already opened a desktop page - close it and swap in a
-        // mobile-sized one instead, just for this test.
-
         PlaywrightFactory.tearDown();
         page = PlaywrightFactory.initMobilePage();
         page.navigate(ConfigReader.baseUrl());
@@ -47,9 +43,6 @@ public class NavigationTests extends BaseTest {
 
     @Test(description = "TC_008 - Header Basket Icon Counter Synchronization")
     public void basketCounterSyncsDynamically() {
-        // needs to be logged in (cart requires it) - swap to a logged-in page,
-        // same pattern TC_007 uses to swap to a mobile one.
-
         PlaywrightFactory.tearDown();
         page = PlaywrightFactory.initLoggedInPage();
         page.navigate(ConfigReader.baseUrl());
