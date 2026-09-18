@@ -32,7 +32,6 @@ public class SearchTests extends BaseTest {
 
     @Test(description = "TC_011 - Product Search with Valid Keyword", groups = "smoke")
     public void searchWithValidKeywordShowsResults() {
-
         HeaderComponent hp = new HeaderComponent(page);
 
         hp.search();

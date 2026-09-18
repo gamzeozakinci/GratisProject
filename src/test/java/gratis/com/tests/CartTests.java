@@ -83,7 +83,6 @@ public class CartTests extends LoggedInBaseTest {
 
     @Test(description = "TC_025 - Apply Invalid or Expired Promo Code")
     public void invalidAndExpiredPromoCodesAreRejected() {
-        //only tried with invalid code because since this is s volunteery test i dont have access to test promo codes
         CartPage cp = new CartPage(page);
         cp.cartButton();
         cp.openPromocode();
