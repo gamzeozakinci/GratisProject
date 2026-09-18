@@ -1,5 +1,6 @@
 package com.gratis.pages;
 
+import com.gratis.config.ConfigReader;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
@@ -74,7 +75,7 @@ public class CartPage {
     }
 
     public void enterPromoCOde() {
-        page.getByPlaceholder("Kodunuzu giriniz").fill("Promocode!!");
+        page.getByPlaceholder("Kodunuzu giriniz").fill(ConfigReader.get("invalid.promo.code"));
 
     }
 

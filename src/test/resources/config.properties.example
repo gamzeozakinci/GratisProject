@@ -15,11 +15,34 @@ screenshot.dir=test-output/screenshots
 # via page.pause() - see AuthTests).
 registered.phone.number=5XXXXXXXXX
 
+# Number used by AuthTests TC_001 to register - use the same number as above
+phone.number=5XXXXXXXXX
+
 # Header text shown once logged in, replacing "Üye olun ya da Giriş Yapın"
 registered.account.name=YourNameHere
 
+# Registration form data (TC_001) - use any details you like
+register.first.name=Test
+register.last.name=User
+register.email=test.user@example.com
+register.birth.date=01011990
+
+# Invalid phone number typed by TC_004
+invalid.phone.number=000000000
+
+# Address typed at checkout (TC_029). City and district are also used to pick the
+# store in the store pickup test (TC_028). Write them exactly as the site's
+# dropdowns show them (upper case, Turkish characters).
+address.first.name=Test
+address.last.name=User
+address.title=Ev adresi
+address.city=ANTALYA
+address.district=KONYAALTI
+address.neighborhood=SİTELER
+address.detail=Test Sokak No:1 Daire:1
+
 # Promo codes
 valid.promo.code=YAZ20
-invalid.promo.code=INVALIDCODE
+invalid.promo.code=Promocode!!
 expired.promo.code=WINTER50
 

@@ -25,23 +25,23 @@ public class LoginPage {
     }
 
     public void invalidPhoneNumber() {
-        page.locator("input[name='phoneNumber']").pressSequentially("000000000");
+        page.locator("input[name='phoneNumber']").pressSequentially(ConfigReader.get("invalid.phone.number"));
     }
 
     public void registerName() {
-        page.getByPlaceholder("Adınızı giriniz").first().fill("Test");
+        page.getByPlaceholder("Adınızı giriniz").first().fill(ConfigReader.get("register.first.name"));
     }
 
     public void registerSurName() {
-        page.getByPlaceholder("Soyadınızı giriniz").fill("User");
+        page.getByPlaceholder("Soyadınızı giriniz").fill(ConfigReader.get("register.last.name"));
     }
 
     public void registerEposta() {
-        page.getByPlaceholder("E-Posta adresinizi giriniz").fill("test.user@example.com");
+        page.getByPlaceholder("E-Posta adresinizi giriniz").fill(ConfigReader.get("register.email"));
     }
 
     public void registerBirth() {
-        page.getByPlaceholder("GG.AA.YYYY").fill("01011990");
+        page.getByPlaceholder("GG.AA.YYYY").fill(ConfigReader.get("register.birth.date"));
     }
 
     public void gratisKartCheck() {

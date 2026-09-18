@@ -1,5 +1,6 @@
 package com.gratis.pages;
 
+import com.gratis.config.ConfigReader;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
@@ -24,12 +25,12 @@ public class CheckoutPage {
 
     public void chooseIl() {
         page.locator("#checkout-city-select button").click();
-        page.getByText("ANTALYA", new Page.GetByTextOptions().setExact(true)).click();
+        page.getByText(ConfigReader.get("address.city"), new Page.GetByTextOptions().setExact(true)).click();
     }
 
     public void chooseIlce() {
         page.locator("#checkout-district-select button").click();
-        page.getByText("KONYAALTI", new Page.GetByTextOptions().setExact(true)).click();
+        page.getByText(ConfigReader.get("address.district"), new Page.GetByTextOptions().setExact(true)).click();
     }
 
     public void chooseMagaza() {
@@ -68,34 +69,34 @@ public class CheckoutPage {
     }
 
     public void addName() {
-        page.getByPlaceholder("Adınız").first().fill("Test");
+        page.getByPlaceholder("Adınız").first().fill(ConfigReader.get("address.first.name"));
     }
 
     public void addSurname() {
-        page.getByPlaceholder("Soyadınız").fill("User");
+        page.getByPlaceholder("Soyadınız").fill(ConfigReader.get("address.last.name"));
     }
 
     public void addressName() {
-        page.getByPlaceholder("Adres İsmi *").fill("Ev adresi");
+        page.getByPlaceholder("Adres İsmi *").fill(ConfigReader.get("address.title"));
     }
 
     public void adresIL() {
         addAddressModal().locator("//label[text()='İl *']/following::button[1]").click();
-        addAddressModal().getByText("ANTALYA", new Locator.GetByTextOptions().setExact(true)).click();
+        addAddressModal().getByText(ConfigReader.get("address.city"), new Locator.GetByTextOptions().setExact(true)).click();
     }
 
     public void adresILCE() {
         addAddressModal().locator("//label[text()='İlçe *']/following::button[1]").click();
-        addAddressModal().getByText("KONYAALTI", new Locator.GetByTextOptions().setExact(true)).click();
+        addAddressModal().getByText(ConfigReader.get("address.district"), new Locator.GetByTextOptions().setExact(true)).click();
     }
 
     public void adresStreet() {
         addAddressModal().locator("//label[text()='Mahalle *']/following::button[1]").click();
-        addAddressModal().getByText("SİTELER", new Locator.GetByTextOptions().setExact(true)).click();
+        addAddressModal().getByText(ConfigReader.get("address.neighborhood"), new Locator.GetByTextOptions().setExact(true)).click();
     }
 
     public void addressDetail() {
-        page.getByPlaceholder("Açık adresinizi ekleyiniz").fill("Test Sokak No:1 Daire:1");
+        page.getByPlaceholder("Açık adresinizi ekleyiniz").fill(ConfigReader.get("address.detail"));
     }
 
     public void saveAddress() {
