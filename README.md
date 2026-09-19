@@ -135,6 +135,11 @@ cp src/test/resources/config.properties.example src/test/resources/config.proper
 `config.properties` is gitignored because it holds a real phone number. Keep
 `config.properties.example` (placeholders only) in sync when you add a key.
 
+Save `config.properties` as **UTF-8**: it contains Turkish characters (for example the
+search word `göz`) and is read as UTF-8, so another encoding turns them into `�` and the
+search tests fail. In IntelliJ, set this under Settings → Editor → File Encodings →
+"Default encoding for properties files" → UTF-8.
+
 ### Before running the suites
 
 1. **Set your phone number and register it.** Put the same phone number in both
