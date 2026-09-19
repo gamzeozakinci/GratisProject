@@ -141,14 +141,14 @@ public class CatalogTests extends BaseTest {
         hp.headerWishist();
         assertThat(page).hasURL(Pattern.compile(".*/login"));
 
-        page.navigate("https://www.gratis.com/");
+        page.navigate(ConfigReader.baseUrl());
 
         hp.headerSacbakim();
         PLPPage plp = new PLPPage(page);
         plp.add1stItem();
         assertThat(page).hasURL(Pattern.compile(".*/login"));
 
-        page.navigate("https://www.gratis.com/");
+        page.navigate(ConfigReader.baseUrl());
         hp.headerSacbakim();
         plp.clickFirstItem();
 
