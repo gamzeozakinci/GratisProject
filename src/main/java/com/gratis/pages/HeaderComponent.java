@@ -1,5 +1,6 @@
 package com.gratis.pages;
 
+import com.gratis.config.ConfigReader;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
@@ -69,7 +70,7 @@ public class HeaderComponent {
     }
 
     public void search() {
-        page.locator("#search-bar input:visible").fill("göz");
+        page.locator("#search-bar input:visible").fill(ConfigReader.get("search.keyword"));
     }
 
     public void invalidSearch() {

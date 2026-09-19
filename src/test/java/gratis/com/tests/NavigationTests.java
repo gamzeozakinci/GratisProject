@@ -19,7 +19,7 @@ public class NavigationTests extends BaseTest {
         hp.headerMakyaj();
         hp.hoverTORuj();
 
-        assertThat(page).hasURL("https://www.gratis.com/makyaj/ruj-c-5010101");
+        assertThat(page).hasURL(ConfigReader.baseUrl() + "makyaj/ruj-c-5010101");
 
     }
 
@@ -68,7 +68,7 @@ public class NavigationTests extends BaseTest {
         PLPPage plp = new PLPPage(page);
         plp.logo();
 
-        assertThat(page).hasURL("https://www.gratis.com/");
+        assertThat(page).hasURL(ConfigReader.baseUrl());
 
     }
 }

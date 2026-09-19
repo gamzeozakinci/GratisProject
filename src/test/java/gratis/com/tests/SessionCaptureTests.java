@@ -1,6 +1,7 @@
 package gratis.com.tests;
 
 import com.gratis.base.BaseTest;
+import com.gratis.config.ConfigReader;
 import com.gratis.driver.PlaywrightFactory;
 import com.gratis.pages.HeaderComponent;
 import com.gratis.pages.LoginPage;
@@ -38,7 +39,7 @@ public class SessionCaptureTests extends BaseTest {
                 "in the Playwright Inspector.");
         page.pause();
 
-        page.waitForURL("https://www.gratis.com/");
+        page.waitForURL(ConfigReader.baseUrl());
 
         PlaywrightFactory.saveLoginState();
     }

@@ -1,6 +1,7 @@
 package gratis.com.tests;
 
 import com.gratis.base.BaseTest;
+import com.gratis.config.ConfigReader;
 import com.gratis.pages.HeaderComponent;
 import com.gratis.pages.PLPPage;
 import com.microsoft.playwright.Locator;
@@ -17,6 +18,8 @@ public class SearchTests extends BaseTest {
     public void autocompleteSuggestionsAppearWhileTyping() {
         HeaderComponent hp = new HeaderComponent(page);
 
+        String keyword = ConfigReader.get("search.keyword");
+
         hp.search();
 
         Locator suggestions = hp.searchSuggestions();
@@ -26,13 +29,15 @@ public class SearchTests extends BaseTest {
 
         for (int i = 0; i < count; i++) {
             String text = hp.searchSuggestions().nth(i).innerText();
-            Assert.assertTrue(text.toLowerCase().contains("göz"), "Item " + i + " did not contain 'Göz': " + text);
+            Assert.assertTrue(text.toLowerCase().contains(keyword.toLowerCase()),
+                    "Item " + i + " did not contain '" + keyword + "': " + text);
         }
     }
 
     @Test(description = "TC_011 - Product Search with Valid Keyword", groups = "smoke")
     public void searchWithValidKeywordShowsResults() {
         HeaderComponent hp = new HeaderComponent(page);
+        String keyword = ConfigReader.get("search.keyword");
 
         hp.search();
         page.keyboard().press("Enter");
@@ -41,12 +46,12 @@ public class SearchTests extends BaseTest {
 
         plp.checkSearchWord();
 
-        assertThat(page.locator("//h1[text()=\"“göz“\"]")).hasText("“göz“");
+        assertThat(page.locator("//h1[text()=\"“" + keyword + "“\"]")).hasText("“" + keyword + "“");
 
         plp.clickFirstItem();
 
         assertThat(page.locator("div.overflow-x-auto.no-scrollbar"))
-                .hasText(Pattern.compile(".*göz.*", Pattern.CASE_INSENSITIVE));
+                .hasText(Pattern.compile(".*" + Pattern.quote(keyword) + ".*", Pattern.CASE_INSENSITIVE));
 
     }
 

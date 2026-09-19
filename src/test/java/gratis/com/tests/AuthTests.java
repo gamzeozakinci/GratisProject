@@ -36,7 +36,7 @@ public class AuthTests extends BaseTest {
 
         lp.registerConfirm();
 
-        assertThat(page).hasURL("https://www.gratis.com/");
+        assertThat(page).hasURL(ConfigReader.baseUrl());
 
     }
 
@@ -53,7 +53,7 @@ public class AuthTests extends BaseTest {
         System.out.println("Check your phone, type the OTP directly into the browser, then click Resume (▶) in the Playwright Inspector.");
         page.pause();
 
-        assertThat(page).hasURL("https://www.gratis.com/");
+        assertThat(page).hasURL(ConfigReader.baseUrl());
         assertThat(page.getByText(ConfigReader.get("registered.account.name"))).isVisible();
     }
 
