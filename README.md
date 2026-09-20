@@ -10,9 +10,6 @@ went into making tests reliable against a production front end: OTP-only login,
 look-alike elements, flaky clicks and a third-party payment widget. The choices made
 for those are described below.
 
-> This is the Playwright + TestNG entry in a four-part QA automation portfolio, alongside
-> a Selenium + Cucumber project, an Appium project and a REST Assured + JMeter project.
-
 ## Highlights
 
 - **30 test cases in 7 areas** (Auth, Navigation, Search, Filter & Sort, Catalog, Cart,
