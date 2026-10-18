@@ -10,6 +10,18 @@ went into making tests reliable against a production front end: OTP-only login,
 look-alike elements, flaky clicks and a third-party payment widget. The choices made
 for those are described below.
 
+## ⚠️ Responsible use
+
+This project is for **educational and portfolio purposes only**. It is an independent project and is **not affiliated with, endorsed by or sponsored by Gratis**.
+
+The tests run against the public gratis.com website, so they are written to stay light and harmless:
+
+- **No load testing.** Tests run one at a time, like a single visitor, with no parallel execution.
+- **No orders and no payments.** Checkout tests stop when the payment modal opens. No card details are entered and no order is placed.
+- **No credentials are stored in this repository.** The site uses SMS one-time codes, so logged-in tests reuse a session that the person running them captures manually.
+
+Please run it sparingly, and respect the website's terms of use. If you are a representative of Gratis and would like changes or the repository removed, please open an issue.
+
 ## Highlights
 
 - **30 test cases in 7 areas** (Auth, Navigation, Search, Filter & Sort, Catalog, Cart,
