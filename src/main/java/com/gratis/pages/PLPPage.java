@@ -1,6 +1,5 @@
 package com.gratis.pages;
 
-import com.gratis.config.ConfigReader;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
@@ -43,11 +42,6 @@ public class PLPPage {
 
     public void logo() {
         page.locator("//a[@href=\"/\"]").first().click();
-
-    }
-
-    public void checkSearchWord() {
-        page.locator("//h1[text()=\"“" + ConfigReader.get("search.keyword") + "“\"]");
 
     }
 

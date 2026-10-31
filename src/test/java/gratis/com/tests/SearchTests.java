@@ -44,8 +44,6 @@ public class SearchTests extends BaseTest {
 
         PLPPage plp = new PLPPage(page);
 
-        plp.checkSearchWord();
-
         assertThat(page.locator("//h1[text()=\"“" + keyword + "“\"]")).hasText("“" + keyword + "“");
 
         plp.clickFirstItem();
