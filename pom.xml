@@ -80,7 +80,7 @@
             </plugin>
 
             <!-- Runs src/XML_files/testng.xml; TestNG's own HTML/XML report
-                 is generated under test-output/ after every run -->
+                 is generated under target/surefire-reports/ after every run -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

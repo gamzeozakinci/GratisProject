@@ -183,8 +183,10 @@ on the command line, for example `mvn test -Dheadless=false`.
 
 ### Reports
 
-After a run, open `test-output/index.html` for TestNG's HTML report. Failure screenshots are
-saved to `test-output/screenshots/`.
+Reports are TestNG's built-in ones, written by Maven Surefire after every run. Open
+`target/surefire-reports/index.html` for the full report, or
+`target/surefire-reports/emailable-report.html` for a one-page summary. Failure screenshots
+are saved to `test-output/screenshots/`.
 
 ## Configuration
 
@@ -204,3 +206,7 @@ All environment and test-data values live in `src/test/resources/config.properti
 | `address.first.name`, `address.last.name`, `address.title`, `address.city`, `address.district`, `address.neighborhood`, `address.detail` | Address typed at checkout (TC_029); city and district also pick the store in TC_028. Write them as the site's dropdowns show them (upper case, Turkish characters) |
 | `invalid.promo.code` | Fake promo code typed by the invalid-promo-code test (TC_025) |
 | `screenshot.on.failure`, `screenshot.dir` | Failure screenshot behaviour and location |
+
+## License
+
+Released under the [MIT License](LICENSE).
