@@ -1,44 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<!-- No parallel="..." here on purpose: PlaywrightFactory uses plain static fields, not
-     ThreadLocal, so running <test> blocks in parallel would have multiple threads
-     fighting over the same browser/page. Keep this suite sequential unless
-     PlaywrightFactory goes back to ThreadLocal. -->
-<!-- Auth (AuthTests) is deliberately not part of this suite - it blocks on a
-     real OTP typed in by hand and can't run unattended. Run it separately
-     via src/XML_files/auth.xml when you're at the keyboard for it. -->
+<!-- Full unattended regression suite: one <test> block per area, run in order.
+     Run with: mvn test -DsuiteXmlFile=src/XML_files/testng.xml
+
+     Sequential on purpose (no parallel="..."): PlaywrightFactory keeps the browser
+     and page in plain static fields, not ThreadLocal, so parallel threads would
+     fight over the same browser. Keep it sequential unless PlaywrightFactory
+     goes back to ThreadLocal.
+
+     AuthTests is not part of this suite: it blocks on a real OTP typed in by hand
+     and can't run unattended. Run it separately with src/XML_files/auth.xml. -->
 <suite name="Gratis.com Suite" verbose="1">
 
-    <!-- Module 2: Navigation & Header -->
     <test name="Navigation">
         <classes>
             <class name="gratis.com.tests.NavigationTests"/>
         </classes>
     </test>
 
-    <!-- Module 3: Search, Sorting & Filtering -->
-    <test name="SearchAndFiltering">
+    <test name="Search">
         <classes>
             <class name="gratis.com.tests.SearchTests"/>
+        </classes>
+    </test>
+
+    <test name="FilterSort">
+        <classes>
             <class name="gratis.com.tests.FilterSortTests"/>
         </classes>
     </test>
 
-    <!-- Module 4: Product Catalog (PLP/PDP) -->
     <test name="Catalog">
         <classes>
             <class name="gratis.com.tests.CatalogTests"/>
         </classes>
     </test>
 
-    <!-- Module 5: Cart -->
     <test name="Cart">
         <classes>
             <class name="gratis.com.tests.CartTests"/>
         </classes>
     </test>
 
-    <!-- Module 6: Checkout & Payment -->
     <test name="Checkout">
         <classes>
             <class name="gratis.com.tests.CheckoutTests"/>

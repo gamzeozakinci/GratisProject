@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- Navigation area only (TC_006-009).
+     TC_008 (basket counter) needs the saved login session: run
+     SessionCaptureTests.captureLoggedInSession shortly before (it lasts about 15 minutes).
+     The other tests run as a guest.
+     Run with: mvn test -DsuiteXmlFile=src/XML_files/navigation.xml -->
+<suite name="Gratis.com Navigation Suite" verbose="1">
+
+    <test name="Navigation">
+        <classes>
+            <class name="gratis.com.tests.NavigationTests"/>
+        </classes>
+    </test>
+
+</suite>

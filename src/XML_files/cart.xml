@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- Cart area only (TC_022-027).
+     Needs the saved login session: run SessionCaptureTests.captureLoggedInSession
+     shortly before (the session lasts about 15 minutes).
+     Run with: mvn test -DsuiteXmlFile=src/XML_files/cart.xml -->
+<suite name="Gratis.com Cart Suite" verbose="1">
+
+    <test name="Cart">
+        <classes>
+            <class name="gratis.com.tests.CartTests"/>
+        </classes>
+    </test>
+
+</suite>

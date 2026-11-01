@@ -25,6 +25,7 @@
         <log4j.version>2.23.1</log4j.version>
         <jackson.version>2.17.2</jackson.version>
         <surefire.version>3.3.1</surefire.version>
+        <extentreports.version>5.1.2</extentreports.version>
 
         <!-- Overridable: mvn test -DsuiteXmlFile=src/XML_files/testng-smoke.xml -->
         <suiteXmlFile>src/XML_files/testng.xml</suiteXmlFile>
@@ -43,6 +44,13 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
+        </dependency>
+
+        <!-- Test report (HTML) -->
+        <dependency>
+            <groupId>com.aventstack</groupId>
+            <artifactId>extentreports</artifactId>
+            <version>${extentreports.version}</version>
         </dependency>
 
         <!-- Logging: SLF4J + Log4j2 (same pattern used in the Selenium/Cucumber project) -->
@@ -79,8 +87,10 @@
                 <version>3.13.0</version>
             </plugin>
 
-            <!-- Runs src/XML_files/testng.xml; TestNG's own HTML/XML report
-                 is generated under target/surefire-reports/ after every run -->
+            <!-- Runs src/XML_files/testng.xml. The only report is the ExtentReports
+                 HTML file (target/extent-report/index.html, written by
+                 com.gratis.reporting.ExtentListener); TestNG's default HTML/XML
+                 reporters and Surefire's XML and text reports are switched off. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -89,6 +99,14 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
                     </suiteXmlFiles>
+                    <useFile>false</useFile>
+                    <disableXmlReport>true</disableXmlReport>
+                    <properties>
+                        <property>
+                            <name>usedefaultlisteners</name>
+                            <value>false</value>
+                        </property>
+                    </properties>
                 </configuration>
             </plugin>
         </plugins>

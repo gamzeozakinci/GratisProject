@@ -31,8 +31,10 @@ Please run it sparingly, and respect the website's terms of use. If you are a re
 - **Web-first assertions and auto-waiting** (`assertThat(locator).isVisible()`, `hasText`,
   `hasURL`) instead of fixed sleeps.
 - **Logged-in tests without automating the OTP**, by reusing saved session cookies.
-- **Three suites**: full regression, a tagged smoke suite, and a manual auth suite.
-- **Desktop and mobile viewports**, failure screenshots, and TestNG's HTML report.
+- **Nine suites**: full regression, a tagged smoke suite, a manual auth suite, and one
+  suite per area.
+- **Desktop and mobile viewports**, and an ExtentReports HTML report with failure
+  screenshots embedded.
 
 ## What Is Covered
 
@@ -54,6 +56,7 @@ Please run it sparingly, and respect the website's terms of use. If you are a re
 | Browser automation | Playwright for Java 1.47 |
 | Test runner | TestNG 7.10 |
 | Build | Maven |
+| Reporting | ExtentReports 5 (HTML) |
 | Logging | SLF4J + Log4j2 |
 
 ## Browser Support
@@ -101,6 +104,7 @@ src/main/java/com/gratis/
 │                LoggedInBaseTest (same, but starts logged in from the saved session)
 ├── config/      ConfigReader (loads config.properties)
 ├── driver/      PlaywrightFactory (desktop, mobile and logged-in browser setup)
+├── reporting/   ExtentListener (writes the ExtentReports HTML report)
 └── pages/       Page objects: HeaderComponent, LoginPage, PLPPage, PDPPage,
                  WishListPage, CartPage, CheckoutPage
 
@@ -117,7 +121,13 @@ src/test/java/gratis/com/tests/
 src/XML_files/
 ├── testng.xml                Full unattended regression suite, one <test> block per area
 ├── testng-smoke.xml          One representative test per area, selected by groups="smoke"
-└── auth.xml                  AuthTests only, run manually (needs a real OTP)
+├── auth.xml                  AuthTests only, run manually (needs a real OTP)
+├── navigation.xml            NavigationTests only
+├── search.xml                SearchTests only
+├── filter-sort.xml           FilterSortTests only
+├── catalog.xml               CatalogTests only
+├── cart.xml                  CartTests only
+└── checkout.xml              CheckoutTests only
 
 src/test/resources/
 ├── config.properties.example Template for your local config
@@ -178,15 +188,22 @@ mvn test -DsuiteXmlFile=src/XML_files/testng-smoke.xml   # smoke subset (6 tests
 mvn test -DsuiteXmlFile=src/XML_files/auth.xml            # Auth only, needs a real OTP
 ```
 
+To run a single area, use its suite: `navigation.xml`, `search.xml`, `filter-sort.xml`,
+`catalog.xml`, `cart.xml` or `checkout.xml` in `src/XML_files/`, for example
+`mvn test -DsuiteXmlFile=src/XML_files/search.xml`. Search and filter/sort run as a guest;
+the others contain tests that start from the saved login session (see step 4 above), as noted
+at the top of each file.
+
 You can also run a single class or method from your IDE. Any config key can be overridden
 on the command line, for example `mvn test -Dheadless=false`.
 
 ### Reports
 
-Reports are TestNG's built-in ones, written by Maven Surefire after every run. Open
-`target/surefire-reports/index.html` for the full report, or
-`target/surefire-reports/emailable-report.html` for a one-page summary. Failure screenshots
-are saved to `test-output/screenshots/`.
+The only report is an **ExtentReports** HTML file, written after every run to
+`target/extent-report/index.html`. Open it in a browser: it lists every test with its
+status, the failure message, and a full-page screenshot embedded at the moment of failure
+(the PNG files are also kept in `test-output/screenshots/`). TestNG's and Surefire's
+default reports are switched off in `pom.xml`.
 
 ## Configuration
 

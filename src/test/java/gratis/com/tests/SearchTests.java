@@ -5,10 +5,9 @@ import com.gratis.config.ConfigReader;
 import com.gratis.pages.HeaderComponent;
 import com.gratis.pages.PLPPage;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.assertions.LocatorAssertions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
@@ -49,7 +48,7 @@ public class SearchTests extends BaseTest {
         plp.clickFirstItem();
 
         assertThat(page.locator("div.overflow-x-auto.no-scrollbar"))
-                .hasText(Pattern.compile(".*" + Pattern.quote(keyword) + ".*", Pattern.CASE_INSENSITIVE));
+                .containsText(keyword, new LocatorAssertions.ContainsTextOptions().setIgnoreCase(true));
 
     }
 

@@ -2,6 +2,7 @@ package com.gratis.base;
 
 import com.gratis.config.ConfigReader;
 import com.gratis.driver.PlaywrightFactory;
+import com.gratis.reporting.ExtentListener;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import org.slf4j.Logger;
@@ -9,10 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 
 import java.io.File;
 import java.nio.file.Path;
 
+@Listeners(ExtentListener.class)
 public abstract class BaseTest {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -53,6 +56,7 @@ public abstract class BaseTest {
             Path target = dir.resolve(testName + "_" + System.currentTimeMillis() + ".png");
             page.screenshot(new Page.ScreenshotOptions().setPath(target).setFullPage(true));
             log.warn("Test {} failed - screenshot saved to {}", testName, target);
+            ExtentListener.attachScreenshot(target);
         } catch (Exception e) {
             log.error("Could not capture failure screenshot for {}", testName, e);
         }

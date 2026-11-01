@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- Search area only (TC_010-012).
+     All tests run as a guest, no saved login needed.
+     Run with: mvn test -DsuiteXmlFile=src/XML_files/search.xml -->
+<suite name="Gratis.com Search Suite" verbose="1">
+
+    <test name="Search">
+        <classes>
+            <class name="gratis.com.tests.SearchTests"/>
+        </classes>
+    </test>
+
+</suite>

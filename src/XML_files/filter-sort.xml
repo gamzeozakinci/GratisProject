@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- FilterSort area only (TC_013-015).
+     All tests run as a guest, no saved login needed.
+     Run with: mvn test -DsuiteXmlFile=src/XML_files/filter-sort.xml -->
+<suite name="Gratis.com Filter and Sort Suite" verbose="1">
+
+    <test name="FilterSort">
+        <classes>
+            <class name="gratis.com.tests.FilterSortTests"/>
+        </classes>
+    </test>
+
+</suite>

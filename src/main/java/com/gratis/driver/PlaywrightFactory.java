@@ -31,6 +31,13 @@ public final class PlaywrightFactory {
     private PlaywrightFactory() {
     }
 
+    // A headed browser is maximized, so it keeps the real window size (null). A headless
+    // one has no window and falls back to a small default that makes gratis.com serve its
+    // mobile layout, so give it a desktop-sized viewport.
+    private static ViewportSize desktopViewport() {
+        return ConfigReader.getBoolean("headless") ? new ViewportSize(1920, 1080) : null;
+    }
+
     public static Page initPage() {
         playwright = Playwright.create();
 
@@ -39,7 +46,7 @@ public final class PlaywrightFactory {
                 .setArgs(List.of("--start-maximized")));
 
         context = browser.newContext(new Browser.NewContextOptions()
-                .setViewportSize(null)
+                .setViewportSize(desktopViewport())
                 .setLocale("tr-TR"));
         context.setDefaultTimeout(ConfigReader.getInt("default.timeout"));
 
@@ -76,7 +83,7 @@ public final class PlaywrightFactory {
                 .setArgs(List.of("--start-maximized")));
 
         Browser.NewContextOptions options = new Browser.NewContextOptions()
-                .setViewportSize(null)
+                .setViewportSize(desktopViewport())
                 .setLocale("tr-TR");
 
         if (Files.exists(AUTH_STATE_PATH)) {

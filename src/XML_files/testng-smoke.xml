@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<!-- One representative, OTP-free test per feature area (tagged groups="smoke"
-     on the @Test annotation) - a fast sanity check that each area's core path
-     still works. Excludes AuthTests/SessionCaptureTests entirely since those
-     block on a real OTP typed in by hand and can't run unattended.
-     Run with: mvn test -DsuiteXmlFile=src/XML_files/testng-smoke.xml -->
+<!-- Smoke suite: one representative, OTP-free test per area (the tests tagged
+     groups="smoke" on their @Test annotation), as a fast check that each area's
+     core path still works.
+     Run with: mvn test -DsuiteXmlFile=src/XML_files/testng-smoke.xml
+
+     AuthTests and SessionCaptureTests are left out: they block on a real OTP typed
+     in by hand and can't run unattended. -->
 <suite name="Gratis.com Smoke Suite" verbose="1">
+
     <test name="Smoke">
         <groups>
             <run>
@@ -21,4 +24,5 @@
             <class name="gratis.com.tests.CheckoutTests"/>
         </classes>
     </test>
+
 </suite>

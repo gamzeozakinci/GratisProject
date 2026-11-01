@@ -8,7 +8,7 @@
 - **Web-first assertions and auto-waiting** (`assertThat(locator).isVisible()`, `hasText`, `hasURL`) instead of fixed sleeps, so tests wait for the real page state.
 - **Scoped locators** (product card, cart row, modal) so a test never clicks the wrong one of several look-alike elements on the page.
 - **Retry with verification** for the few genuinely flaky UI actions (the "Saç Bakım" nav link, the payment step), so a click is only trusted once its result is confirmed.
-- **Fresh browser per test** with screenshot-on-failure saved to `test-output/screenshots/`.
+- **Fresh browser per test** with screenshot-on-failure, embedded in the ExtentReports HTML report (`target/extent-report/index.html`) and saved to `test-output/screenshots/`.
 - **Suites**: `testng.xml` (full unattended regression), `testng-smoke.xml` (one representative test per area, tagged `groups = "smoke"`), and `auth.xml` (OTP tests, run manually).
 
 ## Login and OTP (cookies)
